@@ -1,0 +1,12 @@
+.btn-group {
+    height: 10em;
+    width: 100%;
+    overflow-y: auto;
+    /* padding: auto,0; */
+}
+
+.btn-toggle {
+    height:1em;
+    font-size: small !important;
+    text-align: justify;
+}
