@@ -35,7 +35,7 @@ export default class UserInput extends React.Component {
 
     fileSelectHandler(e) {
         //this.setState({fileInvalid:true});
-        if (e.target.files.length != 0 && e.target.files[0].type == 'text/tab-separated-values') {
+        if (e.target.files.length !== 0 && e.target.files[0].type === 'text/tab-separated-values') {
             //let totalInvalid = false || this.state.controlsInvalid || this.state.replicatesInvalid || this.state.conditionsInvalid || this.state.toleranceInvalid;
             this.setState({fileInvalid: false, 
                            //invalid: totalInvalid
@@ -51,7 +51,7 @@ export default class UserInput extends React.Component {
     numberChangeHandler(e) {
         let value = Number(e.target.value);
         let id = e.target.id;
-        if (e.target.id === 'controls') {
+        if (id === 'controls') {
             //this.setState({controlsInvalid: true});
             if (value && Number.isInteger(value) && value>0) {
                 //let totalInvalid = this.state.fileInvalid || false || this.state.replicatesInvalid || this.state.conditionsInvalid || this.state.toleranceInvalid;
@@ -67,7 +67,7 @@ export default class UserInput extends React.Component {
             }
         }
         
-        if (e.target.id === 'replicates') {
+        if (id === 'replicates') {
             //this.setState({replicatesInvalid: true});
             if (value && Number.isInteger(value) && value>0) {
                 //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || false || this.state.conditionsInvalid || this.state.toleranceInvalid;
@@ -83,7 +83,7 @@ export default class UserInput extends React.Component {
             }
         }
 
-        if (e.target.id === 'conditions') {
+        if (id === 'conditions') {
             //this.setState({conditionsInvalid: true});
             if (value && Number.isInteger(value) && value>=1) {
                 //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || false || this.state.toleranceInvalid;
@@ -99,7 +99,7 @@ export default class UserInput extends React.Component {
             }
         }
 
-        if (e.target.id === 'tolerance') {
+        if (id === 'tolerance') {
             if ((value===0 || value) && Number.isInteger(value) && value>=0 && value <= this.state.controls*this.state.replicates*this.state.conditions) {
                 //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || this.state.conditionsInvalid || false;
                 this.setState({tolerance: value,
@@ -120,10 +120,10 @@ export default class UserInput extends React.Component {
     render() {
         return (
           <div className='section'>  
+            
             <h4 className='section-title my-4 px-3'>User Input</h4>
+            
             <div className='section-main' id='user-input-container'>
-                
-
                 <Form className='mx-3' onSubmit={this.submit} encType='multipart/form-data'>
                     <Form.Group as={Row} className='mt-4 px-3'>
                         <Form.Label column sm={5}>Mass spec file</Form.Label>
