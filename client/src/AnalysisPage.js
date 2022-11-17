@@ -11,7 +11,13 @@ export default class Analysis extends React.Component{
 
         this.state = {
             userInputSubmitted: false,
-            resultsId: '33925cd8-a73e-4031-a893-1f92116ce74a',
+            resultsReceived: true,
+            ratioPlots: ['../results/TPR_FPR_Ratio_128C_127C.png',
+                        '../results/TPR_FPR_Ratio_128C_129N.png',
+                        '../results/TPR_FPR_Ratio_129C_127C.png'],
+            rocPlots: ['../results/ROC_Ratio_128C_127C.png', 
+                      '../results/ROC_Ratio_128C_129N.png',
+                      '../results/ROC_Ratio_129C_127C.png'],
         }
 
         this.submitIndicator = this.submitIndicator.bind(this);
@@ -24,8 +30,8 @@ export default class Analysis extends React.Component{
             );
     }
 
-    resultsIndicator(id) {
-        this.setState({resultsId: id}
+    resultsIndicator(status) {
+        this.setState({resultsReceived: status}
             , function(){console.log('parent resultsIndicator', this.state)}
             )
     }
@@ -36,10 +42,12 @@ export default class Analysis extends React.Component{
             <div id='top'>
                 <Header />
                 <UserInput submitIndicator={this.submitIndicator} resultsIndicator={this.resultsIndicator} />
-                {(this.state.userInputSubmitted || this.state.resultsId) ?
+                {(this.state.userInputSubmitted || this.state.resultsReceived) ?
                 <Results 
                   userInputSubmitted={this.state.userInputSubmitted} 
-                  resultsId={this.state.resultsId} />
+                  resultsReceived={this.state.resultsReceived} 
+                  ratioPlots={this.state.ratioPlots}
+                  rocPlots={this.state.rocPlots}/>
                 : null}
             </div>
         )

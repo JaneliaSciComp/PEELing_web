@@ -9,20 +9,12 @@ export default class Results extends React.Component {
         super(props);
         //console.log(this.props);
 
-        this.state = {
-            ratioPlots: ['../results/TPR_FPR_Ratio_128C_127C.png',
-                        '../results/TPR_FPR_Ratio_128C_129N.png',
-                        '../results/TPR_FPR_Ratio_129C_127C.png'],
-            rocPlots: ['../results/ROC_Ratio_128C_127C.png', 
-                      '../results/ROC_Ratio_128C_129N.png',
-                      '../results/ROC_Ratio_129C_127C.png'],
-            proteins: [],
-        }
-
-
+        // this.state = {
+        //     ratioPlots: [],
+        //     rocPlots: [],
+        //     proteins: [],
+        // }
     }
-
-    //TODO: a function to request results by id.
 
 
     render() {
@@ -32,7 +24,7 @@ export default class Results extends React.Component {
             <h4 className='section-title my-4 px-3'>Results</h4>
             
             <div className='section-main' id='results-container'>
-                {this.props.resultsId ?
+                {this.props.resultsReceived ?
                 <Plots ratioPlots={this.props.ratioPlots} rocPlots={this.props.rocPlots} />
                 :
                 <div className='info mx-3 my-4 d-flex flex-row justify-content-center'>
