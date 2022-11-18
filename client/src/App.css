@@ -29,9 +29,21 @@
   color: #61dafb;
 } */
 
-.btn-submit, .btn-download {
-  width: 80px !important;
+.box {
+  background-color: #eee;
+  overflow-y: auto;
+  border-radius: 10px;
+}
+
+.btn-submit {
+  width: 5em !important;
   margin-right: 12px;
+}
+
+.btn-download {
+  width: 8em !important;
+  margin-right: 12px !important;
+  /* align-items: flex-end !important; */
 }
 
 .btn-icon {
@@ -89,7 +101,7 @@
 
 .section-title {
   text-align: start;
-  width: 60%;
+  width: 70%;
   margin: 1em auto 1em auto;
 }
 

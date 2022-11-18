@@ -48,13 +48,13 @@ daemon.start()
 @app.get("/")
 async def root():
     logger.info('"/"')
-    return FileResponse('../client/index.html')
+    return FileResponse('../client_old/index.html')
 
 
 @app.get("/code.js")
 async def sendJs():
     logger.info('"/code.js"')
-    return FileResponse('../client/code.js')
+    return FileResponse('../client_old/code.js')
 
 
 @app.post("/submit/")
@@ -86,7 +86,7 @@ def sendResultsInfo(unique_id:str):
     # construc protein list from tsv
     protein_df = pd.read_table(path+'/condition1/surface_proteins.tsv', header=0) #TODO
     protein_list = list(protein_df.iloc[:, 0])
-    response['proteins'] = ','.join(protein_list) #TODO is this format convenient for downstream analysis?
+    response['proteins'] = ', '.join(protein_list) #TODO is this format convenient for downstream analysis?
 
     # get list of paths of plots
     plots = os.listdir(path+'/condition1/plots') #TODO

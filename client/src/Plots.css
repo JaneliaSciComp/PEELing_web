@@ -9,6 +9,7 @@
 
 .btn-group-container {
     height: 100%;
+    /* border: 1px solid #555; */
 }
 
 .btn-toggle {
@@ -17,7 +18,13 @@
     text-align: center !important;
     border: none;
     background-color: #eee;
+    overflow-x: auto !important;
 }
+
+/* .plots-container {
+    border: 1px solid #555;
+    border-radius: 5px;
+} */
 
 
 

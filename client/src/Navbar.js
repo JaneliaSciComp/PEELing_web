@@ -1,5 +1,5 @@
 import React from 'react';
-import MenuIcon from '@material-ui/icons/Menu'
+import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import './Navbar.css'
