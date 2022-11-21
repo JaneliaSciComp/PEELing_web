@@ -25,12 +25,25 @@ export default class UserInput extends React.Component {
     }
 
 
-    submit(e) {
+    submit(e) { //TODO: async?
         e.preventDefault();
         this.props.submitIndicator(true);
-        let url = "http://127.0.0.1:8000/submit/";
-        console.log('child', url);
-
+        fetch("http://localhost:8000/submit/", {  //TODO: change url; await?
+            method: 'POST',
+            body: new FormData(e.target),
+        }).then(res => {
+            if (res.ok) {
+                return res.text(); //TODO: await?
+            } else {
+                this.props.setServerError(res.statusText);
+                this.props.submitIndicator(false);
+            }
+        }, err => {
+            console.log(err);
+        }).then((resultsId)=>{
+            this.props.setResultsId(resultsId);
+            this.props.submitIndicator(false);
+        })
     }
 
     fileSelectHandler(e) {

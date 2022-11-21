@@ -7,7 +7,8 @@ async function submit(e) {
     e.preventDefault();
     downloadBtn.disabled = true;
     downloadBtn.innerText = 'Waiting for results';
-    let url = "/submit/";
+    let url = "/submit/"; //http://127.0.0.1:8000/submit/
+    console.log(url);
     let formData = new FormData(form);
     let response = await fetch(url, {method:'POST', 
                                     //  headers: {
@@ -26,7 +27,7 @@ async function submit(e) {
         //href = '/download/'+results;
         href = '/results/'+results;
         anchor.href = href.replaceAll('"','');
-        console.log(anchor.href);
+        console.log('right code', anchor.href);
         anchor.innerHTML = 'Download Results';
         //anchor.download = 'results.tar';
 

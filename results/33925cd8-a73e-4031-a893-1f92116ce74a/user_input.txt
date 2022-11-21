@@ -1,5 +1,0 @@
-Mass spec file: User Submission File.tsv
-Number of controls: 2
-Number of replicates: 3
-Number of conditions: 1
-Tolerance: 0

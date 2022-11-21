@@ -100,7 +100,7 @@ class Processor(ABC):
         data[col_list].plot(use_index=False, xticks = []) 
         
         plt.title('TPR, FPR, TPR-FPR_'+col_list[0][4:])
-        plt.savefig(f'{output_dir}/TPR_FPR_{col_list[0][4:]}.svg')
+        plt.savefig(f'{output_dir}/TPR_FPR_{col_list[0][4:]}.jpg')
         plt.close()
     
 
@@ -132,7 +132,7 @@ class Processor(ABC):
         plt.text(0, 0.9, 'AUC = ' + str(round(auc(data.iloc[:, -3], data.iloc[:, -4]), 2)))
         plt.plot(cutoff_fpr, cutoff_tpr, marker='o', color='r')
         ax.annotate('Cut-off Point\nFPR='+str(round(cutoff_fpr,3))+'\nTPR='+str(round(cutoff_tpr,3)), (cutoff_fpr+0.05, cutoff_tpr-0.15))
-        plt.savefig(f'{output_dir}/ROC_{data.columns[-3][4:]}.svg')
+        plt.savefig(f'{output_dir}/ROC_{data.columns[-3][4:]}.jpg')
         plt.close()
     
 

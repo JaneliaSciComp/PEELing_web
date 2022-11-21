@@ -11,22 +11,32 @@ export default class Analysis extends React.Component{
 
         this.state = {
             userInputSubmitted: false,
-            resultsId: '33925cd8-a73e-4031-a893-1f92116ce74a',
+            resultsId: null, //'99f82c04-dcf8-4b9d-9ab7-d5fba67b290e',
+            serverError: null, //'error'
         }
 
         this.submitIndicator = this.submitIndicator.bind(this);
-        this.resultsIndicator = this.resultsIndicator.bind(this);
+        this.setResultsId = this.setResultsId.bind(this);
+        this.setServerError = this.setServerError.bind(this);
     }
+
 
     submitIndicator(status) {
         this.setState({userInputSubmitted: status}
-            , function(){console.log('parent submitIndicator', this.state)}
+            // , function(){console.log('parent submitIndicator', this.state)}
             );
     }
 
-    resultsIndicator(status) {
-        this.setState({resultsReceived: status}
-            , function(){console.log('parent resultsIndicator', this.state)}
+    setResultsId(id) {
+        id = id.replaceAll('\"', '');
+        this.setState({resultsId: id}
+            // , function(){console.log('parent resultsId', this.state)}
+            )
+    }
+
+    setServerError(error) {
+        this.setState({serverError: error}
+            // , function(){console.log('parent serverError', this.state)}
             )
     }
 
@@ -35,11 +45,16 @@ export default class Analysis extends React.Component{
         return (
             <div id='top'>
                 <Header />
-                <UserInput submitIndicator={this.submitIndicator} resultsIndicator={this.resultsIndicator} />
-                {(this.state.userInputSubmitted || this.state.resultsId) ?
+                <UserInput 
+                submitIndicator={this.submitIndicator} 
+                setResultsId={this.setResultsId} 
+                setServerError={this.setServerError} />
+                {(this.state.userInputSubmitted || this.state.resultsId || this.state.serverError) ?
                 <Results 
                   userInputSubmitted={this.state.userInputSubmitted} 
-                  resultsId={this.state.resultsId} />
+                  resultsId={this.state.resultsId} 
+                  serverError={this.state.serverError}
+                  setServerError={this.setServerError} />
                 : null}
             </div>
         )

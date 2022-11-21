@@ -1,10 +1,10 @@
 import React from 'react';
 import {ToggleButtonGroup, ToggleButton, Image, Row, Col} from 'react-bootstrap';
 import './Plots.css';
-import ratioPlot_128C_127C from './TPR_FPR_Ratio_128C_127C.png';
-import ratioPlot_128C_129N from './TPR_FPR_Ratio_128C_129N.png';
-import rocPlot_128C_127C from './ROC_Ratio_128C_127C.png';
-import rocPlot_128C_129N from './ROC_Ratio_128C_129N.png';
+// import ratioPlot_128C_127C from './TPR_FPR_Ratio_128C_127C.png';
+// import ratioPlot_128C_129N from './TPR_FPR_Ratio_128C_129N.png';
+// import rocPlot_128C_127C from './ROC_Ratio_128C_127C.png';
+// import rocPlot_128C_129N from './ROC_Ratio_128C_129N.png';
 
 
 
@@ -13,19 +13,38 @@ export default class Plots extends React.Component {
         super(props); // resultsId
         
         this.state = {
-            //TODO: generate plots list by resultsId
-            ratioPlots: [ratioPlot_128C_127C,
-                        ratioPlot_128C_129N,
-                        ],
-            rocPlots: [rocPlot_128C_127C, 
-                      rocPlot_128C_129N,
-                      ],
-            plotNames: ['Ratio_128C_127C', 'Ratio_128C_129N'],  //this.state.ratioPlots.map(this.extractName),
+            ratioPlots:[],
+            rocPlots:[],
+            plotNames: [],
             active: 0,
         }
-        //console.log(this.state.rocNames);
 
         this.switchPlot = this.switchPlot.bind(this);
+    }
+
+    
+    componentDidMount() {
+        //TODO: change url
+        fetch('http://localhost:8000/plotslist/'+this.props.resultsId, {
+            method: 'GET'
+        }).then(res => {
+            //console.log(res);
+            if (res.ok) {
+                return res.json(); //TODO: await?
+            } else {
+                this.props.setServerError(res.statusText);
+            }
+        }, err => {
+            console.log(err); //TODO: remove
+        }).then(plotslist => {
+            //console.log(plotslist);
+            this.setState({
+                ratioPlots: plotslist['ratioPlots'],
+                rocPlots: plotslist['rocPlots'],
+                plotNames: plotslist['rocPlots'].map(this.extractName)}
+                //, function() {console.log('http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.ratioPlots[this.state.active])}
+                )
+        })
     }
 
     extractName(url) {
@@ -65,10 +84,16 @@ export default class Plots extends React.Component {
                         
                     </Col>
                     <Col md={5}>
-                        <Image className='my-3' src={this.state.ratioPlots[this.state.active]} alt='logo' fluid='true'></Image>
+                        {/* TODO:change url */}
+                        <Image className='my-3' src={this.state.ratioPlots[0] ? 
+                        'http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.ratioPlots[this.state.active]
+                        : ''} alt='logo' fluid='true'></Image>
                     </Col>
                     <Col md={5}>
-                        <Image className='my-3' src={this.state.rocPlots[this.state.active]} alt='logo' fluid='true'></Image>
+                        {/* TODO:change url */}
+                        <Image className='my-3' src={this.state.rocPlots[0] ? 
+                        'http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.rocPlots[this.state.active]
+                        : ''} alt='logo' fluid='true'></Image>
                     </Col>
                 </Row>
             </div>
