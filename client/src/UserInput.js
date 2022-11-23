@@ -28,6 +28,8 @@ export default class UserInput extends React.Component {
     submit(e) { //TODO: async?
         e.preventDefault();
         this.props.submitIndicator(true);
+        this.props.setResultsId(null);
+        this.props.setServerError(null);
         fetch("http://localhost:8000/submit/", {  //TODO: change url; await?
             method: 'POST',
             body: new FormData(e.target),
@@ -36,6 +38,7 @@ export default class UserInput extends React.Component {
                 return res.text(); //TODO: await?
             } else {
                 this.props.setServerError(res.statusText);
+                this.props.setResultsId(null);
                 this.props.submitIndicator(false);
             }
         }, err => {
@@ -43,6 +46,7 @@ export default class UserInput extends React.Component {
         }).then((resultsId)=>{
             this.props.setResultsId(resultsId);
             this.props.submitIndicator(false);
+            this.props.setServerError(null);
         })
     }
 

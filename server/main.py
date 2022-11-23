@@ -73,14 +73,15 @@ async def sendJs():
 
 
 @app.post("/submit/")
-async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), conditions: Union[int, None] = Form(default=1), tolerance: Union[int, None] = Form(default=0)):
+async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), conditions: Union[int, None] = Form(default=1), tolerance: Union[int, None] = Form(default=0)): #, plot_format: Union[str, None] = Form(default='pdf')
     logger.info('"/submit/"')
-    return '99f82c04-dcf8-4b9d-9ab7-d5fba67b290e'
+    #return  #'99f82c04-dcf8-4b9d-9ab7-d5fba67b290e' #for home
+    return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
     #To do: shall we allow user input annotation files?
     # try:
     #     start_time = datetime.now()
     #     logger.info(f'{start_time} Analysis starts...')
-    #     user_input_reader = WebUserInputReader(mass_file, controls, replicates, conditions, tolerance) 
+    #     user_input_reader = WebUserInputReader(mass_file, controls, replicates, conditions, tolerance) #, plot_format 
     #     processor = WebProcessor(user_input_reader, uniprot_communicator)
     #     unique_id = await processor.start()
 
