@@ -22,22 +22,18 @@ export default class Analysis extends React.Component{
 
 
     submitIndicator(status) {
-        this.setState({userInputSubmitted: status}
-            // , function(){console.log('parent submitIndicator', this.state)}
-            );
+        this.setState({userInputSubmitted: status});
     }
 
     setResultsId(id) {
-        id = id.replaceAll('\"', '');
-        this.setState({resultsId: id}
-            // , function(){console.log('parent resultsId', this.state)}
-            )
+        if (id) {
+            id = id.replaceAll('\"', '');
+        }
+        this.setState({resultsId: id})
     }
 
     setServerError(error) {
-        this.setState({serverError: error}
-            // , function(){console.log('parent serverError', this.state)}
-            )
+        this.setState({serverError: error})
     }
 
 

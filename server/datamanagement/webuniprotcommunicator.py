@@ -48,7 +48,7 @@ class WebUniProtCommunicator(UniProtCommunicator):
     def _retrieve_annotation_surface(self):
         #TODO
         # results = super()._retrieve_annotation_surface()
-#         self.__annotation_surface = results
+        # self.__annotation_surface = results
         self.__annotation_surface = pd.read_table('../retrieved_data/annotation_surface.tsv', sep='\t')
         self.__annotation_surface = self.__annotation_surface[['Entry']]
     
@@ -57,7 +57,7 @@ class WebUniProtCommunicator(UniProtCommunicator):
     def _retrieve_annotation_cyto(self):
         #TODO
         # results = super()._retrieve_annotation_cyto()
-#         self.__annotation_cyto = results
+        # self.__annotation_cyto = results
         self.__annotation_cyto = pd.read_table('../retrieved_data/annotation_cyto.tsv', sep='\t')
         self.__annotation_cyto = self.__annotation_cyto[['Entry']]
 

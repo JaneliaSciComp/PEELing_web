@@ -73,25 +73,25 @@ async def sendJs():
 
 
 @app.post("/submit/")
-async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), conditions: Union[int, None] = Form(default=1), tolerance: Union[int, None] = Form(default=0)): #, plot_format: Union[str, None] = Form(default='pdf')
+async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), conditions: Union[int, None] = Form(default=1), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): #
     logger.info('"/submit/"')
     #return  #'99f82c04-dcf8-4b9d-9ab7-d5fba67b290e' #for home
-    return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
+    #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
     #To do: shall we allow user input annotation files?
-    # try:
-    #     start_time = datetime.now()
-    #     logger.info(f'{start_time} Analysis starts...')
-    #     user_input_reader = WebUserInputReader(mass_file, controls, replicates, conditions, tolerance) #, plot_format 
-    #     processor = WebProcessor(user_input_reader, uniprot_communicator)
-    #     unique_id = await processor.start()
+    try:
+        start_time = datetime.now()
+        logger.info(f'{start_time} Analysis starts...')
+        user_input_reader = WebUserInputReader(mass_file, controls, replicates, conditions, tolerance, plot_format) #
+        processor = WebProcessor(user_input_reader, uniprot_communicator)
+        unique_id = await processor.start()
 
-    #     end_time = datetime.now()
-    #     logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
-    #     return unique_id
-    # except:
-    #     f = open('../log.txt','a')
-    #     traceback.print_exc(file=f)
-    #     f.close()
+        end_time = datetime.now()
+        logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
+        return unique_id
+    except:
+        f = open('../log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
 
 
 @app.get("/plotslist/{unique_id}")
@@ -101,7 +101,7 @@ def getPlotsList(unique_id:str):
     path = os.path.join('../results/', unique_id)
 
     # get list of paths of plots
-    plots = os.listdir(path+'/condition1/plots') #TODO
+    plots = os.listdir(path+'/web_plots') #TODO
     ratio_plots = []
     roc_plots = []
     for plot in plots:
@@ -117,7 +117,7 @@ def getPlotsList(unique_id:str):
 @app.get("/plot/{unique_id}/{plot_name}")
 def getRatioPlot(unique_id:str, plot_name: str):
     logger.info(f'"/plot/{unique_id}/{plot_name}"')
-    path = f'../results/{unique_id}/condition1/plots/{plot_name}'
+    path = f'../results/{unique_id}/web_plots/{plot_name}'
     return FileResponse(path, media_type='image/png')
 
 
@@ -127,7 +127,7 @@ def getProteins(unique_id:str):
     path = os.path.join('../results/', unique_id)
 
     # construc protein list from tsv
-    protein_df = pd.read_table(path+'/condition1/surface_proteins.tsv', header=0) #TODO
+    protein_df = pd.read_table(path+'/results/condition1/surface_proteins.tsv', header=0) #TODO
     protein_list = list(protein_df.iloc[:, 0])
     #TODO is this format convenient for downstream analysis?
     return ', '.join(protein_list)
@@ -136,7 +136,7 @@ def getProteins(unique_id:str):
 @app.get("/download/{unique_id}")
 def sendResultsTar(unique_id:str):
     logger.info('"/download/"')
-    path = '../results/'+unique_id+'.tar'
+    path = '../results/'+unique_id+'/results.zip'
     return FileResponse(path)
 
 

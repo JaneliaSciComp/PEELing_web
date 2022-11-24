@@ -54,7 +54,7 @@ export default class Plots extends React.Component {
     }
 
     switchPlot(value) { //value is the value property of the toggleButton
-        this.setState({active: value}, ()=>console.log(this.state.active));
+        this.setState({active: value});
         ;
     }
 
@@ -67,6 +67,7 @@ export default class Plots extends React.Component {
            
                 <Row className='plots-container mx-3 my-4'>
                     <Col className='px-0' md={2}>
+                        {this.state.plotNames[0] ?
                         <div className='btn-group-container my-3'>
                             <ToggleButtonGroup className='btn-group flex-column justify-content-start' 
                             vertical type='radio' name='ratios' 
@@ -81,19 +82,23 @@ export default class Plots extends React.Component {
                                 }
                             </ToggleButtonGroup>
                         </div> 
+                        : null
+                        }
                         
                     </Col>
                     <Col md={5}>
                         {/* TODO:change url */}
-                        <Image className='my-3' src={this.state.ratioPlots[0] ? 
-                        'http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.ratioPlots[this.state.active]
-                        : ''} alt='logo' fluid='true'></Image>
+                        {this.state.ratioPlots[0] ?
+                        <Image className='my-3' src={'http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.ratioPlots[this.state.active]} alt='logo' fluid='true'></Image>
+                        : null
+                        }
                     </Col>
                     <Col md={5}>
                         {/* TODO:change url */}
-                        <Image className='my-3' src={this.state.rocPlots[0] ? 
-                        'http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.rocPlots[this.state.active]
-                        : ''} alt='logo' fluid='true'></Image>
+                        {this.state.rocPlots[0] ? 
+                        <Image className='my-3' src={'http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.rocPlots[this.state.active]} alt='logo' fluid='true'></Image>
+                        : null
+                        }
                     </Col>
                 </Row>
             </div>
