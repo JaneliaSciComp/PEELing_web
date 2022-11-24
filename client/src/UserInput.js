@@ -9,8 +9,9 @@ export default class UserInput extends React.Component {
         this.state = {
             controls: 0,
             replicates: 0,
-            conditions: 1,
+            //conditions: 1,
             tolerance:0,
+            plotFormat: 'png',
             fileInvalid:false,
             controlsInvalid:false,
             replicatesInvalid:false,
@@ -21,6 +22,7 @@ export default class UserInput extends React.Component {
 
         this.submit = this.submit.bind(this);
         this.fileSelectHandler = this.fileSelectHandler.bind(this);
+        this.plotFormatChangeHandler = this.plotFormatChangeHandler.bind(this);
         this.numberChangeHandler = this.numberChangeHandler.bind(this);
     }
 
@@ -65,6 +67,10 @@ export default class UserInput extends React.Component {
         }
     }
 
+    plotFormatChangeHandler(e) {
+
+    }
+
     numberChangeHandler(e) {
         let value = Number(e.target.value);
         let id = e.target.id;
@@ -100,21 +106,21 @@ export default class UserInput extends React.Component {
             }
         }
 
-        if (id === 'conditions') {
-            //this.setState({conditionsInvalid: true});
-            if (value && Number.isInteger(value) && value>=1) {
-                //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || false || this.state.toleranceInvalid;
-                this.setState({conditions: value,
-                               conditionsInvalid: false, 
-                               //invalid: totalInvalid
-                            });
-            } else {
-                //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || true || this.state.toleranceInvalid;
-                this.setState({conditionsInvalid: true,
-                               //invalid: totalInvalid
-                            });
-            }
-        }
+        // if (id === 'conditions') {
+        //     //this.setState({conditionsInvalid: true});
+        //     if (value && Number.isInteger(value) && value>=1) {
+        //         //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || false || this.state.toleranceInvalid;
+        //         this.setState({conditions: value,
+        //                        conditionsInvalid: false, 
+        //                        //invalid: totalInvalid
+        //                     });
+        //     } else {
+        //         //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || true || this.state.toleranceInvalid;
+        //         this.setState({conditionsInvalid: true,
+        //                        //invalid: totalInvalid
+        //                     });
+        //     }
+        // }
 
         if (id === 'tolerance') {
             if ((value===0 || value) && Number.isInteger(value) && value>=0 && value <= this.state.controls*this.state.replicates*this.state.conditions) {
@@ -174,24 +180,24 @@ export default class UserInput extends React.Component {
                         </Col>
                     </Form.Group>
 
-                    <Form.Group as={Row} className='mt-4 px-3' controlId='conditions'>
-                        <Form.Label column sm={5}># Conditions (optional)</Form.Label>
-                        <Col sm={7}>
-                            <Form.Control type='number' name='conditions' placeholder='1' min='1' onChange={this.numberChangeHandler}/>
-                            <Form.Control.Feedback type='invalid'>Please provide a positive integer.</Form.Control.Feedback>
-                            {this.state.conditionsInvalid ? 
-                            <p className='invalid' display='none'>Please provide a positive integer.</p>
-                            : null}
-                        </Col>
-                    </Form.Group>
-
                     <Form.Group as={Row} className='mt-4 px-3' controlId='tolerance'>
-                        <Form.Label column sm={5}>Tolerance (optional)</Form.Label>
+                        <Form.Label column sm={5}>Tolerance</Form.Label>
                         <Col sm={7}>
                             <Form.Control type='number' name='tolerance' placeholder='0' min='0' max={this.state.controls*this.state.replicates*this.state.conditions} onChange={this.numberChangeHandler}/>
                             <Form.Control.Feedback type='invalid'>Please provide a non-negative integer with value ≤ controls * replicates * conditions.</Form.Control.Feedback>
                             {this.state.toleranceInvalid ? 
                             <p className='invalid' display='none'>Please provide an integer in [0, #controls * #replicates * #conditions].</p>
+                            : null}
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} className='mt-4 px-3' controlId='plot_format'>
+                        <Form.Label column sm={5}>Plot Format</Form.Label>
+                        <Col sm={7}>
+                            <Form.Control type='text' name='plot_format' placeholder='png' onChange={this.plotFormatChangeHandler}/>
+                            <Form.Control.Feedback type='invalid'>Please provide a format for the generated plots: png, svg, pdf, etc.</Form.Control.Feedback>
+                            {this.state.plotFormatInvalid ? 
+                            <p className='invalid' display='none'>Please provide a format for the generated plots: png, svg, pdf, etc.</p>
                             : null}
                         </Col>
                     </Form.Group>
