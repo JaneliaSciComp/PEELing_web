@@ -9,6 +9,7 @@ import schedule
 from threading import Thread
 import logging, sys, os, traceback
 import pandas as pd
+import matplotlib.pyplot as plt
 from datamanagement.webuniprotcommunicator import WebUniProtCommunicator
 from datamanagement.webuserinputreader import WebUserInputReader
 from processors.webprocessor import WebProcessor
@@ -42,6 +43,7 @@ uniprot_communicator = WebUniProtCommunicator()
 uniprot_communicator.update_data()
 
 
+
 ######## Background Thread ########
 def backgroud_update():
     #TODO
@@ -57,8 +59,8 @@ daemon = Thread(target=backgroud_update, daemon=True, name='background_update')
 daemon.start()  
 
 
-######## Main Thread ########
 
+######## Main Thread ########
 
 @app.get("/")
 async def root():
@@ -72,26 +74,32 @@ async def sendJs():
     return FileResponse('../client_old/code.js')
 
 
+@app.get("/format/")
+async def getFormats():
+    logger.info('"/format/"')
+    return {'formats': list(plt.gcf().canvas.get_supported_filetypes().keys())}
+
+
 @app.post("/submit/")
 async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
     logger.info('"/submit/"')
-    return  #'e9e59156-5ce1-4b90-85ac-03aa8f60ecf7' #for home
+    #return  #'e9e59156-5ce1-4b90-85ac-03aa8f60ecf7' #for home
     #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
     #To do: shall we allow user input annotation files?
-    # try:
-    #     start_time = datetime.now()
-    #     logger.info(f'{start_time} Analysis starts...')
-    #     user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
-    #     processor = WebProcessor(user_input_reader, uniprot_communicator)
-    #     unique_id = await processor.start()
+    try:
+        start_time = datetime.now()
+        logger.info(f'{start_time} Analysis starts...')
+        user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
+        processor = WebProcessor(user_input_reader, uniprot_communicator)
+        unique_id = await processor.start()
 
-    #     end_time = datetime.now()
-    #     logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
-    #     return unique_id
-    # except:
-    #     f = open('../log.txt','a')
-    #     traceback.print_exc(file=f)
-    #     f.close()
+        end_time = datetime.now()
+        logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
+        return unique_id
+    except:
+        f = open('../log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
 
 
 @app.get("/plotslist/{unique_id}")

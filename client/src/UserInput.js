@@ -9,9 +9,9 @@ export default class UserInput extends React.Component {
         this.state = {
             controls: 0,
             replicates: 0,
-            //conditions: 1,
             tolerance:0,
             plotFormat: 'png',
+            plotFormatList: ['png'],
             fileInvalid:false,
             controlsInvalid:false,
             replicatesInvalid:false,
@@ -22,8 +22,27 @@ export default class UserInput extends React.Component {
 
         this.submit = this.submit.bind(this);
         this.fileSelectHandler = this.fileSelectHandler.bind(this);
-        this.plotFormatChangeHandler = this.plotFormatChangeHandler.bind(this);
         this.numberChangeHandler = this.numberChangeHandler.bind(this);
+        this.formatChangeHandler = this.formatChangeHandler.bind(this);
+    }
+
+
+    componentDidMount() {
+        fetch("http://localhost:8000/format/", { //TODO: change url
+            method: 'GET'
+        }).then(res => {
+            //console.log(res);
+            if (res.ok) {
+                return res.json(); 
+            } else {
+                console.log(res.statusText);
+            }
+        }, err => {
+            console.log(err); //TODO: remove
+        }).then(formats => {
+            this.setState({
+                plotFormatList: formats['formats']})
+        })
     }
 
 
@@ -67,9 +86,6 @@ export default class UserInput extends React.Component {
         }
     }
 
-    plotFormatChangeHandler(e) {
-
-    }
 
     numberChangeHandler(e) {
         let value = Number(e.target.value);
@@ -106,24 +122,8 @@ export default class UserInput extends React.Component {
             }
         }
 
-        // if (id === 'conditions') {
-        //     //this.setState({conditionsInvalid: true});
-        //     if (value && Number.isInteger(value) && value>=1) {
-        //         //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || false || this.state.toleranceInvalid;
-        //         this.setState({conditions: value,
-        //                        conditionsInvalid: false, 
-        //                        //invalid: totalInvalid
-        //                     });
-        //     } else {
-        //         //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || true || this.state.toleranceInvalid;
-        //         this.setState({conditionsInvalid: true,
-        //                        //invalid: totalInvalid
-        //                     });
-        //     }
-        // }
-
         if (id === 'tolerance') {
-            if ((value===0 || value) && Number.isInteger(value) && value>=0 && value <= this.state.controls*this.state.replicates*this.state.conditions) {
+            if ((value===0 || value) && Number.isInteger(value) && value>=0 && value < this.state.controls*this.state.replicates*this.state.conditions) {
                 //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || this.state.conditionsInvalid || false;
                 this.setState({tolerance: value,
                                toleranceInvalid: false, 
@@ -139,6 +139,12 @@ export default class UserInput extends React.Component {
 
     }
 
+    formatChangeHandler(e) {
+        this.setState({
+            plotFormat: e.target.value
+        })
+    }
+
 
     render() {
         return (
@@ -149,7 +155,7 @@ export default class UserInput extends React.Component {
             <div className='section-main' id='user-input-container'>
                 <Form className='mx-3' onSubmit={this.submit} encType='multipart/form-data'>
                     <Form.Group as={Row} className='mt-4 px-3'>
-                        <Form.Label column sm={5}>Mass spec file</Form.Label>
+                        <Form.Label column sm={5}>Mass spec file (.tsv)</Form.Label>
                         <Col sm={7}>
                             <Form.Control type='file' name='mass_file' required accept='.tsv' onChange={this.fileSelectHandler}/>
                             {this.state.fileInvalid ? 
@@ -181,24 +187,28 @@ export default class UserInput extends React.Component {
                     </Form.Group>
 
                     <Form.Group as={Row} className='mt-4 px-3' controlId='tolerance'>
-                        <Form.Label column sm={5}>Tolerance</Form.Label>
+                        <Form.Label column sm={5}>Tolerance (optional)</Form.Label>
                         <Col sm={7}>
-                            <Form.Control type='number' name='tolerance' placeholder='0' min='0' max={this.state.controls*this.state.replicates*this.state.conditions} onChange={this.numberChangeHandler}/>
+                            <Form.Control type='number' name='tolerance' placeholder='0' min='0' max={this.state.controls*this.state.replicates} onChange={this.numberChangeHandler}/>
                             <Form.Control.Feedback type='invalid'>Please provide a non-negative integer with value ≤ controls * replicates * conditions.</Form.Control.Feedback>
                             {this.state.toleranceInvalid ? 
-                            <p className='invalid' display='none'>Please provide an integer in [0, #controls * #replicates * #conditions].</p>
+                            <p className='invalid' display='none'>Please provide an integer in [0, #controls * #replicates).</p>
                             : null}
                         </Col>
                     </Form.Group>
 
                     <Form.Group as={Row} className='mt-4 px-3' controlId='plot_format'>
-                        <Form.Label column sm={5}>Plot Format</Form.Label>
+                        <Form.Label column sm={5}>Plot Format (optional)</Form.Label>
                         <Col sm={7}>
-                            <Form.Control type='text' name='plot_format' placeholder='png' onChange={this.plotFormatChangeHandler}/>
-                            <Form.Control.Feedback type='invalid'>Please provide a format for the generated plots: png, svg, pdf, etc.</Form.Control.Feedback>
-                            {this.state.plotFormatInvalid ? 
-                            <p className='invalid' display='none'>Please provide a format for the generated plots: png, svg, pdf, etc.</p>
-                            : null}
+                            <Form.Select name='plot_format' value={this.state.plotFormat} onChange={this.formatChangeHandler}>
+                                {/* <option >svg</option>
+                                <option selected>png</option> */}
+                            {this.state.plotFormatList.map((format, i) =>
+                            //  format==='png' ? 
+                             <option key={i} value={format} >{format}</option> 
+                            //  : <option key={i} value={format}>{format}</option>
+                            )}
+                            </Form.Select>
                         </Col>
                     </Form.Group>
 

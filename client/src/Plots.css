@@ -19,9 +19,9 @@
     text-align: center !important;
     border: none;
     background-color: #eee;
-    /* overflow-x: auto !important; */
+    overflow-x: auto !important;
     overflow: hidden;
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis; */
 }
 
 /* .plots-container {
