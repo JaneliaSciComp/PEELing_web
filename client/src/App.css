@@ -1,6 +1,7 @@
 .App {
   text-align: center;
   font-family: 'Poppins', sans-serif;
+  height: 100%;
 }
 
 .App-logo {
@@ -103,6 +104,10 @@
   text-align: start;
   width: 70%;
   margin: 1em auto 1em auto;
+}
+
+.top {
+  height: 100%;
 }
 
 

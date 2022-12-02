@@ -1,0 +1,30 @@
+.content {
+    text-align: start;
+    height: 100%;
+    /* width: 70%; */
+    min-width: 350px;
+    max-width: 1000px;
+    margin: 0 auto;
+    /* background-color: #ffffff; */
+    border-left: solid #eeeeee;
+    border-right: solid #eeeeee;
+    /* display: flex;
+    flex-grow: 1; */
+}
+
+/* .accordion {
+    
+}
+
+.accordion-header {
+    font-size: 4em !important;
+} */
+
+/* .tutorial-title {
+    
+} */
+
+.main {
+    height: 100%;
+    text-align: start;
+}

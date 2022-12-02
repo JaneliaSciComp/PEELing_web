@@ -12,7 +12,7 @@ export default class Header extends React.Component {
         return (
             //<div>
             <header className='header'>
-                <h3>PEELing</h3>
+                <h2>PEELing</h2>
                 <Navbar />
             </header>
             //</div>

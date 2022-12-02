@@ -39,7 +39,7 @@ export default class Analysis extends React.Component{
 
     render() {
         return (
-            <div id='top'>
+            <div className='top'>
                 <Header />
                 <UserInput 
                 submitIndicator={this.submitIndicator} 
