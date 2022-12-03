@@ -27,7 +27,7 @@ export default class Analysis extends React.Component{
 
     setResultsId(id) {
         if (id) {
-            id = id.replaceAll('\"', '');
+            id = id.replaceAll('"', '');
         }
         this.setState({resultsId: id})
     }

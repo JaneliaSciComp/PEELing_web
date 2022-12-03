@@ -155,7 +155,7 @@ export default class UserInput extends React.Component {
             <div className='section-main' id='user-input-container'>
                 <Form className='mx-3' onSubmit={this.submit} encType='multipart/form-data'>
                     <Form.Group as={Row} className='mt-4 px-3'>
-                        <Form.Label column sm={5}>Mass spec file (.tsv)</Form.Label>
+                        <Form.Label column sm={5}>Mass Spec File (.tsv)</Form.Label>
                         <Col sm={7}>
                             <Form.Control type='file' name='mass_file' required accept='.tsv' onChange={this.fileSelectHandler}/>
                             {this.state.fileInvalid ? 
@@ -165,7 +165,7 @@ export default class UserInput extends React.Component {
                     </Form.Group>
 
                     <Form.Group as={Row} className='mt-4 px-3' controlId='controls'>
-                        <Form.Label column sm={5}># Controls</Form.Label>
+                        <Form.Label column sm={5}># Non-labelled Controls</Form.Label>
                         <Col sm={7}>
                             <Form.Control type='number' name='controls' required min='1' onChange={this.numberChangeHandler}/>
                             <Form.Control.Feedback type='invalid'>Please provide a positive integer.</Form.Control.Feedback>
@@ -176,7 +176,7 @@ export default class UserInput extends React.Component {
                     </Form.Group>
 
                     <Form.Group as={Row} className='mt-4 px-3' controlId='replicates'>
-                        <Form.Label column sm={5}># Replicates per Control</Form.Label>
+                        <Form.Label column sm={5}># Labelled Replicates</Form.Label>
                         <Col sm={7}>
                             <Form.Control type='number' name='replicates' required min='1' onChange={this.numberChangeHandler}/>
                             <Form.Control.Feedback type='invalid'>Please provide a positive integer.</Form.Control.Feedback>
@@ -201,12 +201,8 @@ export default class UserInput extends React.Component {
                         <Form.Label column sm={5}>Plot Format (optional)</Form.Label>
                         <Col sm={7}>
                             <Form.Select name='plot_format' value={this.state.plotFormat} onChange={this.formatChangeHandler}>
-                                {/* <option >svg</option>
-                                <option selected>png</option> */}
                             {this.state.plotFormatList.map((format, i) =>
-                            //  format==='png' ? 
                              <option key={i} value={format} >{format}</option> 
-                            //  : <option key={i} value={format}>{format}</option>
                             )}
                             </Form.Select>
                         </Col>

@@ -83,7 +83,7 @@ async def getFormats():
 @app.post("/submit/")
 async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
     logger.info('"/submit/"')
-    #return  #'e9e59156-5ce1-4b90-85ac-03aa8f60ecf7' #for home
+    return  'e9e59156-5ce1-4b90-85ac-03aa8f60ecf7' #for home
     #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
     #To do: shall we allow user input annotation files?
     try:
@@ -138,7 +138,7 @@ def getProteins(unique_id:str):
     protein_df = pd.read_table(path+'/results/surface_proteins.tsv', header=0) #TODO
     protein_list = list(protein_df.iloc[:, 0])
     #TODO is this format convenient for downstream analysis?
-    return ', '.join(protein_list)
+    return {'protein_list': protein_list}
 
 
 @app.get("/download/{unique_id}")

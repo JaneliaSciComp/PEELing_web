@@ -13,25 +13,26 @@ export default class Navbar extends React.Component {
             open: false
         }
 
-        this.handleClick = this.handleClick.bind(this);
-        this.handleClose = this.handleClose.bind(this);
+        this.menuClickHandler = this.menuClickHandler.bind(this);
+        this.closeHandler = this.closeHandler.bind(this);
     }
 
 
-    handleClick(e) {
+    menuClickHandler(e) {
         this.setState({
             anchorEl: e.currentTarget,
             open: true
         });
     }
 
-    handleClose(e) {
+    closeHandler(e) {
         this.setState({
             anchorEl: null,
             open: false
         });
     }
 
+   
     render() {
         return (
             
@@ -55,20 +56,26 @@ export default class Navbar extends React.Component {
                   aria-controls={this.state.open ? 'menu' : undefined} 
                   aria-haspopup="true"
                   aria-expanded={this.state.open ? 'true' : undefined}
-                  onClick={this.handleClick}>
+                  onClick={this.menuClickHandler}>
                     <MenuIcon />
                 </button>
                 <Menu
                   id = 'menu' 
                   anchorEl = {this.state.anchorEl}
                   open = {this.state.open}
-                  onClose={this.handleClose}
+                  onClose={this.closeHandler}
                   menulistprops={{
                     'aria-labelledby': 'menu-button',
                   }}>
-                    <MenuItem href='/analysis' onClick={this.handleClose}>Analysis</MenuItem>
-                    <MenuItem href='/tutorial' onClick={this.handleClose}>Tutorial</MenuItem>
-                    <MenuItem href='/blog' onClick={this.handleClose}>Blog</MenuItem>
+                    <MenuItem onClick={this.closeHandler}>
+                        <a href='/analysis' className='link link-nav'>Analysis</a>
+                    </MenuItem>
+                    <MenuItem onClick={this.closeHandler}>
+                        <a href='/tutorial' className='link link-nav'>Tutorial</a>
+                    </MenuItem>
+                    <MenuItem onClick={this.closeHandler}>
+                        <a href='/blog' className='link link-nav'>Blog</a>
+                    </MenuItem>
                 </Menu>
             </nav>
             
