@@ -15,7 +15,7 @@ export default class Proteins extends React.Component {
 
     componentDidMount() {
         //TODO: change url
-        fetch('http://localhost:8000/proteins/'+this.props.resultsId, {
+        fetch('/api/proteins/'+this.props.resultsId, {
             method: 'GET'
         }).then(res => {
             //console.log(res);

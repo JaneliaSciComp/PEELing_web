@@ -32,7 +32,7 @@ export default class Results extends React.Component {
                         <Button className='btn-download' type='submit'>
                             <DownloadIcon />
                             {/* TODO: change url */}
-                            <a className='anchor-download' href={'http://localhost:8000/download/'+this.props.resultsId}>Download</a>
+                            <a className='anchor-download' href={'/api/download/'+this.props.resultsId}>Download</a>
                         </Button>
                     </Row>
                 </div>

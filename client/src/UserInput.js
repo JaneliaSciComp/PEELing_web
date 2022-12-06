@@ -28,7 +28,7 @@ export default class UserInput extends React.Component {
 
 
     componentDidMount() {
-        fetch("http://localhost:8000/format/", { //TODO: change url
+        fetch("/api/format/", { 
             method: 'GET'
         }).then(res => {
             //console.log(res);
@@ -51,7 +51,7 @@ export default class UserInput extends React.Component {
         this.props.submitIndicator(true);
         this.props.setResultsId(null);
         this.props.setServerError(null);
-        fetch("http://localhost:8000/submit/", {  //TODO: change url; await?
+        fetch("/api/submit/", {
             method: 'POST',
             body: new FormData(e.target),
         }).then(res => {

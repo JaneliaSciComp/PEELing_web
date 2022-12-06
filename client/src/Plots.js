@@ -24,8 +24,7 @@ export default class Plots extends React.Component {
 
     
     componentDidMount() {
-        //TODO: change url
-        fetch('http://localhost:8000/plotslist/'+this.props.resultsId, {
+        fetch('/api/plotslist/'+this.props.resultsId, {
             method: 'GET'
         }).then(res => {
             //console.log(res);
@@ -42,7 +41,6 @@ export default class Plots extends React.Component {
                 ratioPlots: plotslist['ratioPlots'],
                 rocPlots: plotslist['rocPlots'],
                 plotNames: plotslist['rocPlots'].map(this.extractName)}
-                //, function() {console.log('http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.ratioPlots[this.state.active])}
                 )
         })
     }
@@ -89,14 +87,14 @@ export default class Plots extends React.Component {
                     <Col md={5}>
                         {/* TODO:change url */}
                         {this.state.ratioPlots[0] ?
-                        <Image className='my-3' src={'http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.ratioPlots[this.state.active]} alt='logo' fluid='true'></Image>
+                        <Image className='my-3' src={'/api/plot/'+this.props.resultsId+'/'+this.state.ratioPlots[this.state.active]} alt='logo' fluid='true'></Image>
                         : null
                         }
                     </Col>
                     <Col md={5}>
                         {/* TODO:change url */}
                         {this.state.rocPlots[0] ? 
-                        <Image className='my-3' src={'http://localhost:8000/plot/'+this.props.resultsId+'/'+this.state.rocPlots[this.state.active]} alt='logo' fluid='true'></Image>
+                        <Image className='my-3' src={'/api/plot/'+this.props.resultsId+'/'+this.state.rocPlots[this.state.active]} alt='logo' fluid='true'></Image>
                         : null
                         }
                     </Col>
