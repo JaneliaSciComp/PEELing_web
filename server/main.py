@@ -56,34 +56,22 @@ def backgroud_update():
         sleep(3600)
 
 daemon = Thread(target=backgroud_update, daemon=True, name='background_update')
-daemon.start()  
+daemon.start()
 
 
 
 ######## Main Thread ########
 
-@app.get("/")
-async def root():
-    logger.info('"/"')
-    return FileResponse('../client_old/index.html')
-
-
-@app.get("/code.js")
-async def sendJs():
-    logger.info('"/code.js"')
-    return FileResponse('../client_old/code.js')
-
-
-@app.get("/format/")
+@app.get("/api/format/")
 async def getFormats():
     logger.info('"/format/"')
     return {'formats': list(plt.gcf().canvas.get_supported_filetypes().keys())}
 
 
-@app.post("/submit/")
+@app.post("/api/submit/")
 async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
     logger.info('"/submit/"')
-    return  'e9e59156-5ce1-4b90-85ac-03aa8f60ecf7' #for home
+    # return  'e9e59156-5ce1-4b90-85ac-03aa8f60ecf7' #for home
     #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
     #To do: shall we allow user input annotation files?
     try:
@@ -102,7 +90,7 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         f.close()
 
 
-@app.get("/plotslist/{unique_id}")
+@app.get("/api/plotslist/{unique_id}")
 def getPlotsList(unique_id:str):
     logger.info(f'"/plotslist/{unique_id}"')
     response = {}
@@ -122,14 +110,14 @@ def getPlotsList(unique_id:str):
     return response
 
 
-@app.get("/plot/{unique_id}/{plot_name}")
+@app.get("/api/plot/{unique_id}/{plot_name}")
 def getRatioPlot(unique_id:str, plot_name: str):
     logger.info(f'"/plot/{unique_id}/{plot_name}"')
     path = f'../results/{unique_id}/web_plots/{plot_name}'
     return FileResponse(path, media_type='image/png')
 
 
-@app.get("/proteins/{unique_id}")
+@app.get("/api/proteins/{unique_id}")
 def getProteins(unique_id:str):
     logger.info(f'"/proteins/{unique_id}"')
     path = os.path.join('../results/', unique_id)
@@ -141,7 +129,7 @@ def getProteins(unique_id:str):
     return {'protein_list': protein_list}
 
 
-@app.get("/download/{unique_id}")
+@app.get("/api/download/{unique_id}")
 def sendResultsTar(unique_id:str):
     logger.info('"/download/"')
     path = '../results/'+unique_id+'/results.zip'
