@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -39,13 +40,13 @@ export default class Navbar extends React.Component {
             <nav className='navbar'>
                 <ul className='nav-list'>
                     <li className='nav-item'>
-                        <a href='/analysis' className='link link-nav'>Analysis</a>
+                        <Link to='/' className='link link-nav'>Analysis</Link>
                     </li>
                     <li className='nav-item'>
-                        <a href='/tutorial' className='link link-nav'>Tutorial</a>
+                        <Link to='/tutorial' className='link link-nav'>Tutorial</Link>
                     </li>
                     <li className='nav-item'>
-                        <a href='/blog' className='link link-nav'>Blog</a>
+                        <Link to='/blog' className='link link-nav'>Blog</Link>
                     </li>
                 </ul>
 
@@ -68,13 +69,13 @@ export default class Navbar extends React.Component {
                     'aria-labelledby': 'menu-button',
                   }}>
                     <MenuItem onClick={this.closeHandler}>
-                        <a href='/analysis' className='link link-nav'>Analysis</a>
+                        <Link to='/' className='link link-nav'>Analysis</Link>
                     </MenuItem>
                     <MenuItem onClick={this.closeHandler}>
-                        <a href='/tutorial' className='link link-nav'>Tutorial</a>
+                        <Link to='/tutorial' className='link link-nav'>Tutorial</Link>
                     </MenuItem>
                     <MenuItem onClick={this.closeHandler}>
-                        <a href='/blog' className='link link-nav'>Blog</a>
+                        <Link to='/blog' className='link link-nav'>Blog</Link>
                     </MenuItem>
                 </Menu>
             </nav>
