@@ -17,11 +17,11 @@ export default class App extends React.Component {
         <div className="App">
           <Router>
               <Routes>
-                  <Route path='/analysis' 
+                  <Route path='/'
                     element={<Analysis />}/>
-                  <Route path='/tutorial' 
+                  <Route path='/tutorial'
                     element={<Tutorial />}/>
-                  <Route path='/blog' 
+                  <Route path='/blog'
                     element={<Tutorial2 />}/>
               </Routes>
 
@@ -29,7 +29,6 @@ export default class App extends React.Component {
         </div>
       );
   }
- 
 }
 
 
