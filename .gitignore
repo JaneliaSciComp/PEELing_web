@@ -25,3 +25,5 @@ yarn-error.log*
 /results
 __pycache__/
 node_modules
+
+data
