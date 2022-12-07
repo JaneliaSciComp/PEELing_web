@@ -6,8 +6,9 @@ import {
 import React from 'react';
 import './App.css';
 import Analysis from './AnalysisPage';
-import Tutorial from './TutorialPage';
+// import Tutorial from './TutorialPage';
 import Tutorial2 from './TutorialPage2';
+import Blog from './Blog';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default class App extends React.Component {
@@ -20,9 +21,9 @@ export default class App extends React.Component {
                   <Route path='/'
                     element={<Analysis />}/>
                   <Route path='/tutorial'
-                    element={<Tutorial />}/>
-                  <Route path='/blog'
                     element={<Tutorial2 />}/>
+                  <Route path='/blog'
+                    element={<Blog />}/>
               </Routes>
 
           </Router>

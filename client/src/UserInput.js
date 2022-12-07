@@ -123,7 +123,7 @@ export default class UserInput extends React.Component {
         }
 
         if (id === 'tolerance') {
-            if ((value===0 || value) && Number.isInteger(value) && value>=0 && value < this.state.controls*this.state.replicates*this.state.conditions) {
+            if ((value===0 || value) && Number.isInteger(value) && value>=0 && value < this.state.controls*this.state.replicates) {
                 //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || this.state.conditionsInvalid || false;
                 this.setState({tolerance: value,
                                toleranceInvalid: false, 

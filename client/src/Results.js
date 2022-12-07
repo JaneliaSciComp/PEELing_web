@@ -10,7 +10,6 @@ import Proteins from './Proteins';
 export default class Results extends React.Component {
     constructor(props) {
         super(props);
-        
     }
 
 
