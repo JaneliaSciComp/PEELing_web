@@ -1,7 +1,7 @@
 import {
 	BrowserRouter as Router,
 	Route,
-	Routes
+	Routes,
 } from 'react-router-dom';
 import React from 'react';
 import './App.css';
@@ -19,6 +19,8 @@ export default class App extends React.Component {
           <Router>
               <Routes>
                   <Route path='/'
+                    element={<Analysis />}/>
+                  <Route path='/:id'
                     element={<Analysis />}/>
                   <Route path='/tutorial'
                     element={<Tutorial2 />}/>

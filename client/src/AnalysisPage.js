@@ -3,15 +3,17 @@ import Header from './Header';
 import './AnalysisPage.css';
 import UserInput from './UserInput';
 import Results from './Results';
+import withRouter from './utils';
 
 
-export default class Analysis extends React.Component{
+class Analysis extends React.Component{
     constructor(props) {
         super(props);
-
+        console.log(this.props.router.params);
+        console.log(this.props.router.location);
         this.state = {
             userInputSubmitted: false,
-            resultsId: null, //'99f82c04-dcf8-4b9d-9ab7-d5fba67b290e',
+            resultsId: this.props.router.params.id, //'99f82c04-dcf8-4b9d-9ab7-d5fba67b290e',
             serverError: null, //'error'
         }
 
@@ -44,7 +46,8 @@ export default class Analysis extends React.Component{
                 <UserInput 
                 submitIndicator={this.submitIndicator} 
                 setResultsId={this.setResultsId} 
-                setServerError={this.setServerError} />
+                setServerError={this.setServerError} 
+                navigate={this.props.router.navigate}/>
                 {(this.state.userInputSubmitted || this.state.resultsId || this.state.serverError) ?
                 <Results 
                   userInputSubmitted={this.state.userInputSubmitted} 
@@ -57,3 +60,4 @@ export default class Analysis extends React.Component{
     }
 }
 
+export default withRouter(Analysis);
