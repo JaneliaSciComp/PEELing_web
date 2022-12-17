@@ -39,7 +39,7 @@ export default class Proteins extends React.Component {
 
                 <div className='box box-protein my-4 mx-3'>
                     {this.state.proteins.map((protein, i) =>
-                        <a className='link protein-link' href={'https://www.uniprot.org/uniprotkb/'+protein}  target="_blank" rel="noreferrer">{protein}, </a>
+                        <a key={i} className='link protein-link' href={'https://www.uniprot.org/uniprotkb/'+protein}  target="_blank" rel="noreferrer">{protein}, </a>
                     )}
                 </div>
             </div>

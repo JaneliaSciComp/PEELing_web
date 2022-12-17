@@ -94,7 +94,7 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
 def getPlotsList(unique_id:str):
     logger.info(f'"/plotslist/{unique_id}"')
     response = {}
-    path = os.path.join('../results/', unique_id)
+    path = os.path.join('/results/', unique_id)
 
     # get list of paths of plots
     plots = os.listdir(path+'/web_plots') #TODO

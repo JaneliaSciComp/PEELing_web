@@ -97,8 +97,9 @@ class Processor(ABC):
         '''
         col_list = data.columns[-3:]
         plt.figure()
-        data[col_list].plot(use_index=False, xticks = []) 
+        data[col_list].plot(use_index=False, )  #xticks = []
         
+        plt.xlabel('Rank')
         plt.title('TPR, FPR, TPR-FPR_'+col_list[0][4:])
         fig_name = f'TPR_FPR_{col_list[0][4:]}'
         plt.savefig(f'{output_dir}/{fig_name}.{self.__user_input_reader.get_plot_format()}')

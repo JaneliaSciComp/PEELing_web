@@ -1,0 +1,5 @@
+Mass spec file: User Submission File.tsv
+Number of controls: 2
+Number of replicates: 3
+Tolerance: 0
+Plot format: jpg

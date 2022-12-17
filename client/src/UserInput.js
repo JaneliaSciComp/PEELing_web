@@ -1,7 +1,7 @@
 import React from 'react';
 import {Form, Row, Col, Button} from 'react-bootstrap';
 import './UserInput.css'
-import {redirect} from 'react-router-dom';
+
 
 export default class UserInput extends React.Component {
     constructor(props) {
@@ -66,11 +66,13 @@ export default class UserInput extends React.Component {
         }, err => {
             console.log(err);
         }).then((resultsId)=>{
-            // this.props.setResultsId(resultsId);
-            // this.props.submitIndicator(false);
-            // this.props.setServerError(null);
-            this.props.navigate(`/${resultsId.replaceAll('"', '')}`);
-            //return redirect(`/${resultsId.replaceAll('"', '')}`);
+            if (resultsId) {
+                resultsId = resultsId.replaceAll('"', '');
+            }
+            this.props.setResultsId(resultsId);
+            this.props.submitIndicator(false);
+            this.props.setServerError(null);
+            // this.props.navigate(`/${resultsId}`);
         })
     }
 
