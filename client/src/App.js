@@ -9,6 +9,7 @@ import Analysis from './AnalysisPage';
 // import Tutorial from './TutorialPage';
 import Tutorial2 from './TutorialPage2';
 import Blog from './Blog';
+import Footer from "./Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default class App extends React.Component {
@@ -45,6 +46,7 @@ export default class App extends React.Component {
               </Routes>
 
           </Router>
+          <Footer/>
         </div>
       );
   }
