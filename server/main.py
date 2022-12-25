@@ -13,11 +13,11 @@ import matplotlib.pyplot as plt
 from datamanagement.webuniprotcommunicator import WebUniProtCommunicator
 from datamanagement.webuserinputreader import WebUserInputReader
 from processors.webprocessor import WebProcessor
-
+import asyncio
 
 logger = logging.getLogger('peeling')
 #TODO: set level based on verbose option
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 #log_handler = logging.FileHandler('../log.txt')
 log_handler = logging.StreamHandler()
 log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s'))
@@ -40,15 +40,20 @@ app.add_middleware(
 
 
 uniprot_communicator = WebUniProtCommunicator()
-uniprot_communicator.update_data()
 
-
+coroutine_loop = asyncio.get_running_loop()
 
 ######## Background Thread ########
+def update_task():
+    coro = uniprot_communicator.update_data()
+    future = asyncio.run_coroutine_threadsafe(coro, coroutine_loop)
+    future.result()
+    
 def backgroud_update():
+    update_task()
     #TODO
     #schedule.every().monday.at("01:00").do(uniprot_communicator.update_data)
-    schedule.every(60).minutes.do(uniprot_communicator.update_data)
+    schedule.every(60).minutes.do(update_task)
     while True:
         #logger.info(f'{datetime.now()} Background update...')
         logger.debug(schedule.get_jobs())
@@ -71,6 +76,8 @@ async def getFormats():
 @app.post("/api/submit/")
 async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
     logger.info('"/submit/"')
+    logger.info(os.listdir('./'))
+    logger.info(os.listdir('../'))
     # return  'e9e59156-5ce1-4b90-85ac-03aa8f60ecf7' #for home
     #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
     #To do: shall we allow user input annotation files?
@@ -93,8 +100,10 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
 @app.get("/api/plotslist/{unique_id}")
 def getPlotsList(unique_id:str):
     logger.info(f'"/plotslist/{unique_id}"')
+    logger.info(os.listdir('./'))
+    logger.info(os.listdir('../'))
     response = {}
-    path = os.path.join('/results/', unique_id)
+    path = os.path.join('../results/', unique_id)
 
     # get list of paths of plots
     plots = os.listdir(path+'/web_plots') #TODO
@@ -113,6 +122,8 @@ def getPlotsList(unique_id:str):
 @app.get("/api/plot/{unique_id}/{plot_name}")
 def getRatioPlot(unique_id:str, plot_name: str):
     logger.info(f'"/plot/{unique_id}/{plot_name}"')
+    logger.info(os.listdir('./'))
+    logger.info(os.listdir('../'))
     path = f'../results/{unique_id}/web_plots/{plot_name}'
     return FileResponse(path, media_type='image/png')
 
@@ -136,5 +147,6 @@ def sendResultsTar(unique_id:str):
     return FileResponse(path)
 
 
-def main():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+async def main():
+    # uvicorn.run(app, host="0.0.0.0", port=8000)
+    await uniprot_communicator.update_data()
