@@ -18,8 +18,9 @@ class WebProcessor(Processor):
     # implement abstract method
     async def _get_id_mapping_data(self, mass_data):
         old_ids = list(mass_data.iloc[:, 0])
-        new_ids_df = await self._get_uniprot_communicator().get_latest_id(old_ids).copy() 
-        return new_ids_df
+        logger.debug('get_latest_id')
+        new_ids_df = await self._get_uniprot_communicator().get_latest_id(old_ids)
+        return new_ids_df.copy()
 
 
     # implement abstract method
@@ -27,10 +28,10 @@ class WebProcessor(Processor):
         '''
         type: 'surface' or 'cyto'
         '''
-        annotation = await self._get_uniprot_communicator().get_annotation(type).copy() 
+        annotation = await self._get_uniprot_communicator().get_annotation(type) 
         #annotation.columns = ['From']
         logger.debug(f'\n{annotation.head()}')
-        return annotation
+        return annotation.copy()
     
 
     # implement abstract method
@@ -59,6 +60,7 @@ class WebProcessor(Processor):
     async def start(self):
         data = await self._get_user_input_reader().get_mass_data()
         results_path = self._construct_path()
+        logger.debug('_analyze')
         await self._analyze(data, results_path)
         self._write_args(results_path)
         logger.info(f'Results saved at {self.__uuid}')

@@ -25,6 +25,7 @@ class WebUniProtCommunicator(UniProtCommunicator):
     async def get_latest_id(self, old_ids=None):
         if old_ids is not None: #for merge ids
             if self.__ids is None:
+                logger.debug('_retrieve_latest_id')
                 self.__ids = await self._retrieve_latest_id(old_ids)
                 return self.__ids
             else:

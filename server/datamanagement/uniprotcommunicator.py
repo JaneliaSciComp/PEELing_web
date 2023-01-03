@@ -154,6 +154,7 @@ class UniProtCommunicator(ABC):
     
 
     async def _retrieve_latest_id(self, old_ids):
+        logger.debug('_retrieve_latest_id inside')
         start_time = datetime.now()
 
         if self.__client is None:
@@ -245,6 +246,12 @@ class UniProtCommunicator(ABC):
     
 
     async def _retrieve_annotation(self):
+        # for dev stage
+        self.__annotation_surface = pd.read_table('../retrieved_data/annotation_surface.tsv', sep='\t')
+        self.__annotation_cyto = pd.read_table('../retrieved_data/annotation_cyto.tsv', sep='\t')
+        logger.debug(f'\n{self.__annotation_surface.head()}')
+        return
+
         start_time = datetime.now()
 
         if self.__client is None:
@@ -258,10 +265,6 @@ class UniProtCommunicator(ABC):
       
 
     async def get_annotation(self, type):
-        # for dev stage
-        # self.__annotation_surface = pd.read_table('../retrieved_data/annotation_surface.tsv', sep='\t')
-        # self.__annotation_cyto = pd.read_table('../retrieved_data/annotation_cyto.tsv', sep='\t')
-
         if self.__annotation_surface is None or self.__annotation_cyto is None:
                 await self._retrieve_annotation()
         if type=='surface':

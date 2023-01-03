@@ -95,6 +95,7 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         f = open('../log.txt','a')
         traceback.print_exc(file=f)
         f.close()
+        return 'Analysis Error'
 
 
 @app.get("/api/plotslist/{unique_id}")
