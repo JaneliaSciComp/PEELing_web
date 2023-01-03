@@ -17,7 +17,7 @@ import asyncio
 
 logger = logging.getLogger('peeling')
 #TODO: set level based on verbose option
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 #log_handler = logging.FileHandler('../log.txt')
 log_handler = logging.StreamHandler()
 log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s'))
@@ -53,7 +53,7 @@ def backgroud_update():
     update_task()
     #TODO
     #schedule.every().monday.at("01:00").do(uniprot_communicator.update_data)
-    schedule.every(60).minutes.do(update_task)
+    schedule.every(300).minutes.do(update_task)
     while True:
         #logger.info(f'{datetime.now()} Background update...')
         logger.debug(schedule.get_jobs())
@@ -70,18 +70,30 @@ daemon.start()
 @app.get("/api/format/")
 async def getFormats():
     logger.info('"/format/"')
-    return {'formats': list(plt.gcf().canvas.get_supported_filetypes().keys())}
+    # To test error handling
+    # formats = ['a','b']
+    # formats += 1
+    # return {'formats': formats}
+    try:
+        formats = list(plt.gcf().canvas.get_supported_filetypes().keys())
+        return {'formats': formats}
+    except Exception as e:
+        logger.error(e)
+        f = open('../log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': True}
 
 
 @app.post("/api/submit/")
 async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
     logger.info('"/submit/"')
-    logger.info(os.listdir('./'))
-    logger.info(os.listdir('../'))
+    logger.debug(os.listdir('./'))
+    logger.debug(os.listdir('../'))
     # return  'e9e59156-5ce1-4b90-85ac-03aa8f60ecf7' #for home
     #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
-    #To do: shall we allow user input annotation files?
     try:
+        # return {'id': '111'} # to test error handling
         start_time = datetime.now()
         logger.info(f'{start_time} Analysis starts...')
         user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
@@ -90,64 +102,92 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
 
         end_time = datetime.now()
         logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
-        return unique_id
-    except:
+        return {'id': unique_id} #
+    except Exception as e:
+        logger.error(e)
         f = open('../log.txt','a')
         traceback.print_exc(file=f)
         f.close()
-        return 'Analysis Error'
+        return {'error': True}
 
 
 @app.get("/api/plotslist/{unique_id}")
 def getPlotsList(unique_id:str):
     logger.info(f'"/plotslist/{unique_id}"')
-    logger.info(os.listdir('./'))
-    logger.info(os.listdir('../'))
-    response = {}
-    path = os.path.join('../results/', unique_id)
+    logger.debug(os.listdir('./'))
+    logger.debug(os.listdir('../'))
+    try:
+        response = {}
+        path = os.path.join('../results/', unique_id)
 
-    # get list of paths of plots
-    plots = os.listdir(path+'/web_plots') #TODO
-    ratio_plots = []
-    roc_plots = []
-    for plot in plots:
-        if plot[:3] == 'ROC':
-            roc_plots.append(plot)
-        else:
-            ratio_plots.append(plot)
-    response['ratioPlots'] = ratio_plots
-    response['rocPlots'] = roc_plots
-    return response
+        # get list of paths of plots
+        plots = os.listdir(path+'/web_plots') #TODO
+        ratio_plots = []
+        roc_plots = []
+        for plot in plots:
+            if plot[:3] == 'ROC':
+                roc_plots.append(plot)
+            else:
+                ratio_plots.append(plot)
+        response['ratioPlots'] = ratio_plots
+        response['rocPlots'] = roc_plots
+        return response
+    except Exception as e:
+        logger.error(e)
+        f = open('../log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': True}
 
 
 @app.get("/api/plot/{unique_id}/{plot_name}")
 def getRatioPlot(unique_id:str, plot_name: str):
     logger.info(f'"/plot/{unique_id}/{plot_name}"')
-    logger.info(os.listdir('./'))
-    logger.info(os.listdir('../'))
-    path = f'../results/{unique_id}/web_plots/{plot_name}'
-    return FileResponse(path, media_type='image/png')
+    logger.debug(os.listdir('./'))
+    logger.debug(os.listdir('../'))
+    try:
+        path = f'../results/{unique_id}/web_plots/{plot_name}'
+        return FileResponse(path, media_type='image/png')
+    except Exception as e:
+        logger.error(e)
+        f = open('../log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': True}
+
 
 
 @app.get("/api/proteins/{unique_id}")
 def getProteins(unique_id:str):
     logger.info(f'"/proteins/{unique_id}"')
-    path = os.path.join('../results/', unique_id)
+    try:
+        path = os.path.join('../results/', unique_id)
 
-    # construc protein list from tsv
-    protein_df = pd.read_table(path+'/results/surface_proteins.tsv', header=0) #TODO
-    protein_list = list(protein_df.iloc[:, 0])
-    #TODO is this format convenient for downstream analysis?
-    return {'protein_list': protein_list}
+        # construc protein list from tsv
+        protein_df = pd.read_table(path+'/results/surface_proteins.tsv', header=0) #TODO
+        protein_list = list(protein_df.iloc[:, 0])
+        return {'protein_list': protein_list}
+    except Exception as e:
+        logger.error(e)
+        f = open('../log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': True}
 
 
 @app.get("/api/download/{unique_id}")
 def sendResultsTar(unique_id:str):
     logger.info('"/download/"')
-    path = '../results/'+unique_id+'/results.zip'
-    return FileResponse(path)
+    try:
+        path = '../results/'+unique_id+'/results.zip'
+        return FileResponse(path)
+    except Exception as e:
+        logger.error(e)
+        f = open('../log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': True}
 
 
-async def main():
-    # uvicorn.run(app, host="0.0.0.0", port=8000)
-    await uniprot_communicator.update_data()
+def main():
+    uvicorn.run(app, host="0.0.0.0", port=8000)
