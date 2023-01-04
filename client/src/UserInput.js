@@ -36,43 +36,56 @@ export default class UserInput extends React.Component {
             if (res.ok) {
                 return res.json(); 
             } else {
-                console.log(res.statusText);
+                this.props.setError(res.statusText);
             }
-        }, err => {
-            console.log(err); //TODO: remove
-        }).then(formats => {
-            this.setState({
-                plotFormatList: formats['formats']})
+        }).then(res => {
+            //console.log('then')
+            if (res['error']) {
+                this.props.setError(res['error']);
+            } else {
+                this.setState({
+                    plotFormatList: res['formats']})
+            }
         })
     }
 
 
-    submit(e) { //TODO: async?
+    submit(e) { 
         e.preventDefault();
         this.props.submitIndicator(true);
         this.props.setResultsId(null);
-        this.props.setServerError(null);
+        this.props.setFailedIdMapping(null);
+        this.props.setError(null);
         fetch("/api/submit/", {
             method: 'POST',
             body: new FormData(e.target),
         }).then(res => {
+            //console.log(res);
             if (res.ok) {
-                return res.text(); //TODO: await?
+                return res.json();
             } else {
-                this.props.setServerError(res.statusText);
+                this.props.setError(res.statusText);
                 this.props.setResultsId(null);
+                this.props.setFailedIdMapping(null);
                 this.props.submitIndicator(false);
             }
-        }, err => {
-            console.log(err);
-        }).then((resultsId)=>{
-            if (resultsId) {
-                resultsId = resultsId.replaceAll('"', '');
+        }).then((res)=>{
+            if (res['error']) {
+                this.props.setError(res['error']);
+                this.props.setResultsId(null);
+                this.props.setFailedIdMapping(null);
+                this.props.submitIndicator(false);
+            } else {
+                let resultsId = res['resultsId'];
+                if (resultsId) {
+                    resultsId = resultsId.replaceAll('"', '');
+                }
+                this.props.setResultsId(resultsId);
+                this.props.setFailedIdMapping(res['failedIdMapping']);
+                this.props.submitIndicator(false);
+                this.props.setError(null);
+                // this.props.navigate(`/${resultsId}`);
             }
-            this.props.setResultsId(resultsId);
-            this.props.submitIndicator(false);
-            this.props.setServerError(null);
-            // this.props.navigate(`/${resultsId}`);
         })
     }
 

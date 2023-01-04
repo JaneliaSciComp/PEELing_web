@@ -98,11 +98,11 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         logger.info(f'{start_time} Analysis starts...')
         user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
         processor = WebProcessor(user_input_reader, uniprot_communicator)
-        unique_id = await processor.start()
+        unique_id, failed_id_mapping = await processor.start()
 
         end_time = datetime.now()
         logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
-        return {'id': unique_id} #
+        return {'resultsId': unique_id, 'failedIdMapping': failed_id_mapping} #failed_id_mapping
     except Exception as e:
         logger.error(e)
         f = open('../log.txt','a')

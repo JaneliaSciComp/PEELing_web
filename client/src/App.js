@@ -18,13 +18,19 @@ export default class App extends React.Component {
 
     this.state = {
         resultsId: null,
+        failedIdMapping: null,
     }
 
     this.setResultsId = this.setResultsId.bind(this);
+    this.setFailedIdMapping = this.setFailedIdMapping.bind(this);
   }
 
   setResultsId(id) {
     this.setState({resultsId: id})
+  }
+
+  setFailedIdMapping(num) {
+    this.setState({failedIdMapping: num})
   }
   
   render() {
@@ -36,6 +42,8 @@ export default class App extends React.Component {
                     element={<Analysis 
                     setResultsId={this.setResultsId} 
                     resultsId={this.state.resultsId}
+                    setFailedIdMapping={this.setFailedIdMapping} 
+                    failedIdMapping={this.state.failedIdMapping}
                     />} />
                   {/* <Route path='/:id'
                     element={<Analysis setResultsId={this.setResultsId} />}/> */}

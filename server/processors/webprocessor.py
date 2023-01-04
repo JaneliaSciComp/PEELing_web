@@ -18,7 +18,6 @@ class WebProcessor(Processor):
     # implement abstract method
     async def _get_id_mapping_data(self, mass_data):
         old_ids = list(mass_data.iloc[:, 0])
-        logger.debug('get_latest_id')
         new_ids_df = await self._get_uniprot_communicator().get_latest_id(old_ids)
         return new_ids_df.copy()
 
@@ -54,19 +53,25 @@ class WebProcessor(Processor):
         except OSError as error: 
             logger.error(error)
         return results_path
+    
+
+    # overriding method of super class
+    def _write_args(self, path):
+        super()._write_args(path)
+        with open(os.path.join(path, 'user_input.txt'), 'a') as f:
+            f.write('Failed id mapping: ' + str(self._get_uniprot_communicator().get_failed_id_mapping()) + '\n')
 
     
     # implement abstract method
     async def start(self):
         data = await self._get_user_input_reader().get_mass_data()
         results_path = self._construct_path()
-        logger.debug('_analyze')
         await self._analyze(data, results_path)
         self._write_args(results_path)
         logger.info(f'Results saved at {self.__uuid}')
         shutil.make_archive(f'../results/{self.__uuid}/results', 'zip', root_dir=f'../results/{self.__uuid}/results')
         #shutil.rmtree(f'../results/{self.__uuid}/results')
-        return  self.__uuid
+        return  self.__uuid, self._get_uniprot_communicator().get_failed_id_mapping()
 
 
     

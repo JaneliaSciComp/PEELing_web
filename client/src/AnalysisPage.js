@@ -13,12 +13,12 @@ export default class Analysis extends React.Component{
         this.state = {
             userInputSubmitted: false,
             // resultsId: this.props.router.params.id, //'99f82c04-dcf8-4b9d-9ab7-d5fba67b290e',
-            serverError: null, //'error'
+            error: null, //'error'
         }
 
         this.submitIndicator = this.submitIndicator.bind(this);
         // this.setResultsId = this.setResultsId.bind(this);
-        this.setServerError = this.setServerError.bind(this);
+        this.setError = this.setError.bind(this);
     }
 
 
@@ -33,8 +33,8 @@ export default class Analysis extends React.Component{
     //     this.setState({resultsId: id})
     // }
 
-    setServerError(error) {
-        this.setState({serverError: error})
+    setError(error) {
+        this.setState({error: error})
     }
 
 
@@ -45,14 +45,16 @@ export default class Analysis extends React.Component{
                 <UserInput 
                 submitIndicator={this.submitIndicator} 
                 setResultsId={this.props.setResultsId} 
-                setServerError={this.setServerError} 
+                setFailedIdMapping={this.props.setFailedIdMapping} 
+                setError={this.setError} 
                 />
-                {(this.state.userInputSubmitted || this.props.resultsId || this.state.serverError) ?
+                {(this.state.userInputSubmitted || this.props.resultsId || this.state.error) ?
                 <Results 
                   userInputSubmitted={this.state.userInputSubmitted} 
                   resultsId={this.props.resultsId} 
-                  serverError={this.state.serverError}
-                  setServerError={this.setServerError} />
+                  failedIdMapping={this.props.failedIdMapping} 
+                  error={this.state.error}
+                  setError={this.setError} />
                 : null}
             </div>
         )

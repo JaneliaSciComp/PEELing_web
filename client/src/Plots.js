@@ -17,6 +17,7 @@ export default class Plots extends React.Component {
             rocPlots:[],
             plotNames: [],
             active: 0,
+            error: null,
         }
 
         this.switchPlot = this.switchPlot.bind(this);
@@ -31,17 +32,19 @@ export default class Plots extends React.Component {
             if (res.ok) {
                 return res.json(); //TODO: await?
             } else {
-                this.props.setServerError(res.statusText);
+                this.setState({error: res.statusText});
             }
-        }, err => {
-            console.log(err); //TODO: remove
-        }).then(plotslist => {
-            //console.log(plotslist);
-            this.setState({
-                ratioPlots: plotslist['ratioPlots'],
-                rocPlots: plotslist['rocPlots'],
-                plotNames: plotslist['rocPlots'].map(this.extractName)}
+        }).then(res => {
+            if (res['error']) {
+                this.setState({error: res['error']});
+            } else {
+                this.setState({
+                    ratioPlots: res['ratioPlots'],
+                    rocPlots: res['rocPlots'],
+                    plotNames: res['rocPlots'].map(this.extractName)}
                 )
+            }
+            
         })
     }
 
@@ -62,8 +65,13 @@ export default class Plots extends React.Component {
         return (
             <div className='plots subsection'>
                 <h4 className='subsection-title my-5 px-4'>Plots</h4>
-           
-                <Row className='plots-container mx-3 my-4'>
+
+                {this.state.error ?
+                <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
+                    <p>Oops! Plots went wrong!</p>
+                </div>
+                :
+                <Row className='plots-container mx-3'>
                     <Col className='px-0' md={2}>
                         {this.state.plotNames[0] ?
                         <div className='btn-group-container my-3'>
@@ -99,6 +107,7 @@ export default class Plots extends React.Component {
                         }
                     </Col>
                 </Row>
+                }
             </div>
         );
     }

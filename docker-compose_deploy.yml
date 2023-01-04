@@ -2,18 +2,17 @@ version: '3'
 
 services:
   api:
-    image: peeling_web:0.0.1
+    image: registry.int.janelia.org/peeling/api:0.0.1
     build: ./
     ports:
       - "8000:8000"
     volumes:
       - ./data:/retrieved_data
       - ./server:/app
-      - ./results:/results
     networks:
       - peeling-net
   client:
-    image: peeling_client:0.0.1
+    image: registry.int.janelia.org/peeling/client:0.0.1
     build: ./client
     depends_on:
       - api

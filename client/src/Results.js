@@ -23,25 +23,30 @@ export default class Results extends React.Component {
             <div className='section-main' id='results-container'>
                 {this.props.resultsId ?
                 <div className='mx-3'>
-                    <Plots resultsId={this.props.resultsId} setServerError={this.props.setServerError} />
+                    {this.props.failedIdMapping ? 
+                    <p className='info mx-4 mt-4'>(Note: {this.props.failedIdMapping} proteins failed for id mapping using Uniprot API, which may affect the results.)</p>
+                    :
+                    null
+                    }
+                    
+                    <Plots resultsId={this.props.resultsId} setError={this.props.setError} />
                     <hr className='my-5 mx-4'></hr>
-                    <Proteins resultsId={this.props.resultsId} setServerError={this.props.setServerError} />
+                    <Proteins resultsId={this.props.resultsId} setError={this.props.setError} />
                     <br></br>
                     <Row className='my-4 px-3 flex-row-reverse'>
                         <Button className='btn-download' type='submit'>
                             <DownloadIcon />
-                            {/* TODO: change url */}
                             <a className='anchor-download' href={'/api/download/'+this.props.resultsId}>Download</a>
                         </Button>
                     </Row>
                 </div>
                 :
                 <div>
-                    {this.props.serverError ? 
+                    {this.props.error ? 
                     <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
                         {/* TODO: add a cry picture? */}
                         <p>Oops! Something went wrong!</p>
-                        <p>Please check the user input and submit again.</p>
+                        <p>Please check the user input and try again.</p>
                     </div>
                     :
                     <div className='info mx-2 my-4 d-flex flex-row justify-content-center'>

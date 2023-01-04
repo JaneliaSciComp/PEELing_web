@@ -183,7 +183,6 @@ class Processor(ABC):
         id_col = data.columns[0]
         data.rename(columns={id_col: 'From'}, inplace=True)
         
-        logger.debug('_get_id_mapping_data')
         id_mapping_data = await self._get_id_mapping_data(data)
         data = self._merge_id(data, id_mapping_data)
         #id_mapping_data = self._get_id_mapping_data_annotation()

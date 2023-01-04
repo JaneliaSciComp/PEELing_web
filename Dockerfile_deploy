@@ -1,4 +1,4 @@
-FROM python:3.10-bullseye
+FROM python:3.10-slim
 
 LABEL maintainer="Xi Peng <pengx@janelia.hhmi.org>"
 
