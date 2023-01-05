@@ -20,7 +20,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/log.txt
+/server/log.txt
 /retrieved_data
 /results
 __pycache__/
