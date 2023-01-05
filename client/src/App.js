@@ -7,7 +7,7 @@ import React from 'react';
 import './App.css';
 import Analysis from './AnalysisPage';
 // import Tutorial from './TutorialPage';
-import Tutorial2 from './TutorialPage2';
+import Tutorial from './TutorialPage';
 import Blog from './Blog';
 import Footer from "./Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -48,7 +48,7 @@ export default class App extends React.Component {
                   {/* <Route path='/:id'
                     element={<Analysis setResultsId={this.setResultsId} />}/> */}
                   <Route path='/tutorial'
-                    element={<Tutorial2 />}/>
+                    element={<Tutorial />}/>
                   <Route path='/blog'
                     element={<Blog />}/>
               </Routes>

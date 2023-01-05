@@ -13,12 +13,16 @@ class WebProcessor(Processor):
         super().__init__(user_input_reader, uniprot_communicator)
         self.__uuid = None
         self.__web_plots_path = None
+        self.__failed_id_mapping = 0
 
 
     # implement abstract method
     async def _get_id_mapping_data(self, mass_data):
         old_ids = list(mass_data.iloc[:, 0])
-        new_ids_df = await self._get_uniprot_communicator().get_latest_id(old_ids)
+        meta={}
+        new_ids_df = await self._get_uniprot_communicator().get_latest_id(old_ids, meta)
+        if 'failed_id_mapping' in meta.keys(): # false if no id needs mapping
+            self.__failed_id_mapping = meta['failed_id_mapping']
         return new_ids_df.copy()
 
 
@@ -47,7 +51,6 @@ class WebProcessor(Processor):
         results_path = os.path.join(parent_path, 'results')
         web_plots_path = os.path.join(parent_path, "web_plots")
         self.__web_plots_path = web_plots_path
-        print(results_path, web_plots_path)
         try: 
             os.makedirs(web_plots_path, exist_ok=True) 
         except OSError as error: 
@@ -58,8 +61,8 @@ class WebProcessor(Processor):
     # overriding method of super class
     def _write_args(self, path):
         super()._write_args(path)
-        with open(os.path.join(path, 'user_input.txt'), 'a') as f:
-            f.write('Failed id mapping: ' + str(self._get_uniprot_communicator().get_failed_id_mapping()) + '\n')
+        with open(os.path.join(path, 'log.txt'), 'a') as f:
+            f.write('Failed id mapping: ' + str(self.__failed_id_mapping) + '\n')
 
     
     # implement abstract method
@@ -71,7 +74,7 @@ class WebProcessor(Processor):
         logger.info(f'Results saved at {self.__uuid}')
         shutil.make_archive(f'../results/{self.__uuid}/results', 'zip', root_dir=f'../results/{self.__uuid}/results')
         #shutil.rmtree(f'../results/{self.__uuid}/results')
-        return  self.__uuid, self._get_uniprot_communicator().get_failed_id_mapping()
+        return  self.__uuid, self.__failed_id_mapping
 
 
     

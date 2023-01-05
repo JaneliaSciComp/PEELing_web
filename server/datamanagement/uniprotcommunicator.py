@@ -35,7 +35,6 @@ class UniProtCommunicator(ABC):
         self.__client = None
         self.__annotation_surface = None
         self.__annotation_cyto = None
-        self.__failed_id_mapping = None
     
 
     def __create_client(self):
@@ -154,7 +153,7 @@ class UniProtCommunicator(ABC):
         return pd.DataFrame(list(reader))
     
 
-    async def _retrieve_latest_id(self, old_ids):
+    async def _retrieve_latest_id(self, old_ids, meta):
         start_time = datetime.now()
 
         if self.__client is None:
@@ -165,7 +164,7 @@ class UniProtCommunicator(ABC):
         residual = len(old_ids) % CHUNK_SIZE
         num_chunks += 1 if residual>0 else 0
         chunks = [old_ids[CHUNK_SIZE*i:CHUNK_SIZE*(i+1)] if i<(num_chunks-1) else old_ids[CHUNK_SIZE*i:] for i in range(num_chunks)]
-        logger.info(f'Ids are divided into {num_chunks} chunks with size {CHUNK_SIZE}')
+        logger.info(f'{len(old_ids)} ids are divided into {num_chunks} chunks with size {CHUNK_SIZE}')
         logger.info('Communicating with UniProt for id mapping...')
 
         results_list = await asyncio.gather(*map(self.__retrieve_latest_id_chunk, chunks)) 
@@ -173,17 +172,22 @@ class UniProtCommunicator(ABC):
         self.__client = None
 
         failed_ids = 0
+        no_mapping_ids_set = set()
         retrieved_ids = 0
         results_list_filtered = []
-        for item in results_list: #item may be list df or integer (len(chunk)) if mapping failed
+        for i, item in enumerate(results_list): #item may be list df or integer (len(chunk)) if mapping failed
             if isinstance(item, int):
                 failed_ids += item
             else:
                 retrieved_ids += len(item)
                 results_list_filtered.append(item)
-        self.__failed_id_mapping = failed_ids
+                if len(chunks[i]) > len(item): # there are ids that didn't find mapping data
+                    no_mapping_ids_set = no_mapping_ids_set.union(set(chunks[i]).difference(set(item.iloc[:, 0])))
+                    logger.debug(no_mapping_ids_set)
 
-        logger.info(f'Retrieved {retrieved_ids} ids, {max(len(old_ids) - retrieved_ids, 0)} ids didn\'t find id mapping data, {failed_ids} ids failed for id mapping')
+        meta['failed_id_mapping'] = failed_ids
+        meta['no_id_mapping'] = no_mapping_ids_set
+        logger.info(f'Retrieved {retrieved_ids} ids, {len(no_mapping_ids_set)} ids didn\'t find id mapping data, {failed_ids} ids failed for id mapping')
         logger.info(f'{datetime.now()-start_time} for id mapping')
         
         return pd.concat(results_list_filtered)
@@ -210,7 +214,7 @@ class UniProtCommunicator(ABC):
 
 
     @abstractmethod
-    def get_latest_id(self, old_ids):
+    def get_latest_id():
         raise NotImplemented()
 
     
@@ -248,10 +252,10 @@ class UniProtCommunicator(ABC):
 
     async def _retrieve_annotation(self):
         # for dev stage
-        self.__annotation_surface = pd.read_table('../retrieved_data/annotation_surface.tsv', sep='\t')
-        self.__annotation_cyto = pd.read_table('../retrieved_data/annotation_cyto.tsv', sep='\t')
-        logger.debug(f'\n{self.__annotation_surface.head()}')
-        return
+        # self.__annotation_surface = pd.read_table('../retrieved_data/annotation_surface.tsv', sep='\t')
+        # self.__annotation_cyto = pd.read_table('../retrieved_data/annotation_cyto.tsv', sep='\t')
+        # logger.debug(f'\n{self.__annotation_surface.head()}')
+        # return
 
         start_time = datetime.now()
 
@@ -278,6 +282,3 @@ class UniProtCommunicator(ABC):
         self.__annotation_surface = self.__annotation_surface[['Entry']]
         self.__annotation_cyto = self.__annotation_cyto[['Entry']]
     
-
-    def get_failed_id_mapping(self):
-        return self.__failed_id_mapping

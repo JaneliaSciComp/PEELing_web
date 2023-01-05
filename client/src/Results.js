@@ -1,5 +1,5 @@
 import React from 'react';
-import {Spinner, Row, Button} from 'react-bootstrap';
+import {Spinner, Row, Col, Button} from 'react-bootstrap';
 //import Button from '@mui/material/Button';
 import DownloadIcon from '@mui/icons-material/Download';
 import './Results.css';
@@ -47,6 +47,7 @@ export default class Results extends React.Component {
                         {/* TODO: add a cry picture? */}
                         <p>Oops! Something went wrong!</p>
                         <p>Please check the user input and try again.</p>
+                        <p>{this.props.error}</p>
                     </div>
                     :
                     <div className='info mx-2 my-4 d-flex flex-row justify-content-center'>

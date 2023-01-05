@@ -18,8 +18,8 @@ import asyncio
 logger = logging.getLogger('peeling')
 #TODO: set level based on verbose option
 logger.setLevel(logging.INFO)
-#log_handler = logging.FileHandler('../log.txt')
-log_handler = logging.StreamHandler()
+log_handler = logging.FileHandler('../log.txt')
+#log_handler = logging.StreamHandler()
 log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s'))
 logger.addHandler(log_handler)
 logger.info(f'\n{datetime.now()} Server starts')
@@ -53,7 +53,8 @@ def backgroud_update():
     update_task()
     #TODO
     #schedule.every().monday.at("01:00").do(uniprot_communicator.update_data)
-    schedule.every(300).minutes.do(update_task)
+    #schedule.every(300).minutes.do(update_task)
+    schedule.every(1).days.do(update_task)
     while True:
         #logger.info(f'{datetime.now()} Background update...')
         logger.debug(schedule.get_jobs())
@@ -70,7 +71,7 @@ daemon.start()
 @app.get("/api/format/")
 async def getFormats():
     logger.info('"/format/"')
-    # To test error handling
+    #To test error handling
     # formats = ['a','b']
     # formats += 1
     # return {'formats': formats}
@@ -82,18 +83,26 @@ async def getFormats():
         f = open('../log.txt','a')
         traceback.print_exc(file=f)
         f.close()
-        return {'error': True}
+        return {'error': ', '.join(list(e.args))}
 
 
 @app.post("/api/submit/")
 async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
     logger.info('"/submit/"')
-    logger.debug(os.listdir('./'))
-    logger.debug(os.listdir('../'))
-    # return  'e9e59156-5ce1-4b90-85ac-03aa8f60ecf7' #for home
+    # return  '3cb1ce3f-6d8b-4a8c-b3d2-ab27ef5997ca', 0 #for home
     #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
+    #To test error handling
+    # start_time = datetime.now()
+    # logger.info(f'{start_time} Analysis starts...')
+    # user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
+    # processor = WebProcessor(user_input_reader, uniprot_communicator)
+    # unique_id, failed_id_mapping = await processor.start()
+
+    # end_time = datetime.now()
+    # logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
+    # return {'resultsId': unique_id, 'failedIdMapping': failed_id_mapping} #failed_id_mapping
     try:
-        # return {'id': '111'} # to test error handling
+        # return {'resultsId': '111', 'failedIdMapping':0} # to test error handling
         start_time = datetime.now()
         logger.info(f'{start_time} Analysis starts...')
         user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
@@ -108,14 +117,12 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         f = open('../log.txt','a')
         traceback.print_exc(file=f)
         f.close()
-        return {'error': True}
+        return {'error': ', '.join(list(e.args))}
 
 
 @app.get("/api/plotslist/{unique_id}")
 def getPlotsList(unique_id:str):
     logger.info(f'"/plotslist/{unique_id}"')
-    logger.debug(os.listdir('./'))
-    logger.debug(os.listdir('../'))
     try:
         response = {}
         path = os.path.join('../results/', unique_id)
@@ -137,14 +144,12 @@ def getPlotsList(unique_id:str):
         f = open('../log.txt','a')
         traceback.print_exc(file=f)
         f.close()
-        return {'error': True}
+        return {'error': ', '.join(list(e.args))}
 
 
 @app.get("/api/plot/{unique_id}/{plot_name}")
 def getRatioPlot(unique_id:str, plot_name: str):
     logger.info(f'"/plot/{unique_id}/{plot_name}"')
-    logger.debug(os.listdir('./'))
-    logger.debug(os.listdir('../'))
     try:
         path = f'../results/{unique_id}/web_plots/{plot_name}'
         return FileResponse(path, media_type='image/png')
@@ -153,7 +158,7 @@ def getRatioPlot(unique_id:str, plot_name: str):
         f = open('../log.txt','a')
         traceback.print_exc(file=f)
         f.close()
-        return {'error': True}
+        return {'error': ', '.join(list(e.args))}
 
 
 
@@ -172,7 +177,7 @@ def getProteins(unique_id:str):
         f = open('../log.txt','a')
         traceback.print_exc(file=f)
         f.close()
-        return {'error': True}
+        return {'error': ', '.join(list(e.args))}
 
 
 @app.get("/api/download/{unique_id}")
@@ -186,7 +191,7 @@ def sendResultsTar(unique_id:str):
         f = open('../log.txt','a')
         traceback.print_exc(file=f)
         f.close()
-        return {'error': True}
+        return {'error': ', '.join(list(e.args))}
 
 
 def main():
