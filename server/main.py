@@ -18,7 +18,7 @@ import asyncio
 logger = logging.getLogger('peeling')
 #TODO: set level based on verbose option
 logger.setLevel(logging.INFO)
-log_handler = logging.FileHandler('./log.txt')
+log_handler = logging.FileHandler('./log/log.txt')
 #log_handler = logging.StreamHandler()
 log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s'))
 logger.addHandler(log_handler)
@@ -80,7 +80,7 @@ async def getFormats():
         return {'formats': formats}
     except Exception as e:
         logger.error(e)
-        f = open('./log.txt','a')
+        f = open('./log/log.txt','a')
         traceback.print_exc(file=f)
         f.close()
         return {'error': ', '.join(list(e.args))}
@@ -114,7 +114,7 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         return {'resultsId': unique_id, 'failedIdMapping': failed_id_mapping} #failed_id_mapping
     except Exception as e:
         logger.error(e)
-        f = open('./log.txt','a')
+        f = open('./log/log.txt','a')
         traceback.print_exc(file=f)
         f.close()
         return {'error': ', '.join(list(e.args))}
@@ -141,7 +141,7 @@ def getPlotsList(unique_id:str):
         return response
     except Exception as e:
         logger.error(e)
-        f = open('./log.txt','a')
+        f = open('./log/log.txt','a')
         traceback.print_exc(file=f)
         f.close()
         return {'error': ', '.join(list(e.args))}
@@ -155,7 +155,7 @@ def getRatioPlot(unique_id:str, plot_name: str):
         return FileResponse(path, media_type='image/png')
     except Exception as e:
         logger.error(e)
-        f = open('./log.txt','a')
+        f = open('./log/log.txt','a')
         traceback.print_exc(file=f)
         f.close()
         return {'error': ', '.join(list(e.args))}
@@ -174,7 +174,7 @@ def getProteins(unique_id:str):
         return {'protein_list': protein_list}
     except Exception as e:
         logger.error(e)
-        f = open('./log.txt','a')
+        f = open('./log/log.txt','a')
         traceback.print_exc(file=f)
         f.close()
         return {'error': ', '.join(list(e.args))}
@@ -188,7 +188,7 @@ def sendResultsTar(unique_id:str):
         return FileResponse(path)
     except Exception as e:
         logger.error(e)
-        f = open('./log.txt','a')
+        f = open('./log/log.txt','a')
         traceback.print_exc(file=f)
         f.close()
         return {'error': ', '.join(list(e.args))}
