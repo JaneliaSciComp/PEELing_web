@@ -10,6 +10,7 @@ services:
       - ./data:/retrieved_data
       - ./server:/app
       - ./results:/results
+      - ./log:/log
     networks:
       - peeling-net
   client:

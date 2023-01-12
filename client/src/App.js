@@ -6,7 +6,6 @@ import {
 import React from 'react';
 import './App.css';
 import Analysis from './AnalysisPage';
-// import Tutorial from './TutorialPage';
 import Tutorial from './TutorialPage';
 import Blog from './Blog';
 import Footer from "./Footer";
