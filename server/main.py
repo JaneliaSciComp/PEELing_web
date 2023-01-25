@@ -53,8 +53,8 @@ def backgroud_update():
     update_task()
     #TODO
     #schedule.every().monday.at("01:00").do(uniprot_communicator.update_data)
-    schedule.every(1).minutes.do(update_task)
-    #schedule.every(1).days.do(update_task)
+    #schedule.every(1).minutes.do(update_task)
+    schedule.every(1).days.do(update_task)
     while True:
         #logger.info(f'{datetime.now()} Background update...')
         logger.debug(schedule.get_jobs())
@@ -161,17 +161,14 @@ def getRatioPlot(unique_id:str, plot_name: str):
         return {'error': ', '.join(list(e.args))}
 
 
-
 @app.get("/api/proteins/{unique_id}")
 def getProteins(unique_id:str):
     logger.info(f'"/proteins/{unique_id}"')
     try:
-        path = os.path.join('../results/', unique_id)
-
-        # construc protein list from tsv
-        protein_df = pd.read_table(path+'/results/surface_proteins.tsv', header=0) #TODO
-        protein_list = list(protein_df.iloc[:, 0])
-        return {'protein_list': protein_list}
+        with open(f'../results/{unique_id}/results/post-cutoff-proteome.txt', 'r') as f:
+                proteins = f.readline()
+        proteins = proteins.split(',')
+        return {'protein_list': proteins}
     except Exception as e:
         logger.error(e)
         f = open('../log/log.txt','a')
