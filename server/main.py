@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from datamanagement.webuniprotcommunicator import WebUniProtCommunicator
 from datamanagement.webuserinputreader import WebUserInputReader
 from processors.webprocessor import WebProcessor
+from processors.webpantherprocessor import WebPantherProcessor
 import asyncio
 
 logger = logging.getLogger('peeling')
@@ -128,7 +129,7 @@ def getPlotsList(unique_id:str):
         path = os.path.join('../results/', unique_id)
 
         # get list of paths of plots
-        plots = os.listdir(path+'/web_plots') #TODO
+        plots = os.listdir(path+'/web_plots') 
         ratio_plots = []
         roc_plots = []
         for plot in plots:
@@ -183,6 +184,41 @@ def sendResultsTar(unique_id:str):
     try:
         path = '../results/'+unique_id+'/results.zip'
         return FileResponse(path)
+    except Exception as e:
+        logger.error(e)
+        f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': ', '.join(list(e.args))}
+
+
+@app.get("/api/organism/")
+async def getOrganism():
+    logger.info('"/organism/"')
+    try:
+        panther_processor = WebPantherProcessor(None, None)
+        organism_dict = await panther_processor.retrieve_organisms()
+        return organism_dict
+    except Exception as e:
+        logger.error(e)
+        f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': ', '.join(list(e.args))}
+
+
+@app.get("/api/panther/{unique_id}")
+async def runPantherEnrich(unique_id:str, organism_id:str):
+    logger.info(f'"/panther/{organism_id}"')
+    #print(unique_id, organism_id)
+    if unique_id is None or organism_id is None:
+        logger.error('Unique_id or organism_id is missing')
+        return {'error': 'Unique_id or organism_id is missing'}
+    
+    try:
+        panther_processor = WebPantherProcessor(organism_id, unique_id)
+        results_dict = await panther_processor.start()
+        return results_dict
     except Exception as e:
         logger.error(e)
         f = open('../log/log.txt','a')

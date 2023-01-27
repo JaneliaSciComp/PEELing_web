@@ -7,7 +7,7 @@ import React from 'react';
 import './App.css';
 import Analysis from './AnalysisPage';
 import Tutorial from './TutorialPage';
-import Blog from './Blog';
+import Blog from './BlogPage';
 import Footer from "./Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
