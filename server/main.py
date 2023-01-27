@@ -121,8 +121,23 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         return {'error': ', '.join(list(e.args))}
 
 
+@app.get("/api/scatter/{unique_id}")
+async def getScatterPlot(unique_id:str, x: str, y: str):
+    logger.info(f'"/scatter/{unique_id}?x={x},y={y}"')
+    try:
+        processor = WebProcessor(unique_id, x, y)
+        plot_path = processor.plot_scatter()
+        return FileResponse(plot_path)
+    except Exception as e:
+        logger.error(e)
+        f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': ', '.join(list(e.args))}
+
+
 @app.get("/api/plotslist/{unique_id}")
-def getPlotsList(unique_id:str):
+async def getPlotsList(unique_id:str):
     logger.info(f'"/plotslist/{unique_id}"')
     try:
         response = {}
@@ -149,7 +164,7 @@ def getPlotsList(unique_id:str):
 
 
 @app.get("/api/plot/{unique_id}/{plot_name}")
-def getRatioPlot(unique_id:str, plot_name: str):
+async def getRatioPlot(unique_id:str, plot_name: str):
     logger.info(f'"/plot/{unique_id}/{plot_name}"')
     try:
         path = f'../results/{unique_id}/web_plots/{plot_name}'
@@ -163,7 +178,7 @@ def getRatioPlot(unique_id:str, plot_name: str):
 
 
 @app.get("/api/proteins/{unique_id}")
-def getProteins(unique_id:str):
+async def getProteins(unique_id:str):
     logger.info(f'"/proteins/{unique_id}"')
     try:
         with open(f'../results/{unique_id}/results/post-cutoff-proteome.txt', 'r') as f:
@@ -179,7 +194,7 @@ def getProteins(unique_id:str):
 
 
 @app.get("/api/download/{unique_id}")
-def sendResultsTar(unique_id:str):
+async def sendResultsTar(unique_id:str):
     logger.info('"/download/"')
     try:
         path = '../results/'+unique_id+'/results.zip'
