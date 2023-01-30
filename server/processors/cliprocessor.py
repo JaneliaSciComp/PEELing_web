@@ -4,6 +4,8 @@ from datetime import datetime
 import pandas as pd
 import logging
 import asyncio
+import matplotlib.pyplot as plt
+
 
 logger = logging.getLogger('peeling')
 
@@ -86,7 +88,7 @@ class CliProcessor(Processor):
 
 
     # implement abstract method
-    def _plot_supplemental(self, plt, fig_name):
+    def _plot_supplemental(self, fig_name):
         plt.close()
 
 
@@ -126,6 +128,7 @@ class CliProcessor(Processor):
     def start(self):
         data = self._get_user_input_reader().get_mass_data()
         parent_path = self._construct_path()
+        data = self._mass_data_clean(data)
         asyncio.run(self._analyze(data, parent_path))
         if self._get_user_input_reader().get_save():
             self.__ids.to_csv(self.__path+'/latest_ids.tsv', sep='\t', index=False)

@@ -150,7 +150,7 @@ async def getPlotsList(unique_id:str):
         for plot in plots:
             if plot[:3] == 'ROC':
                 roc_plots.append(plot)
-            else:
+            elif plot[:7] == 'TPR_FPR':
                 ratio_plots.append(plot)
         response['ratioPlots'] = ratio_plots
         response['rocPlots'] = roc_plots
