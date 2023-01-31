@@ -26,6 +26,8 @@ logger.addHandler(log_handler)
 logger.info(f'\n{datetime.now()} Server starts')
 
 
+uniprot_communicator = WebUniProtCommunicator()
+
 app = FastAPI()
 
 # for CORS, backend server allow these origins to send request and access the response
@@ -39,8 +41,6 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-
-uniprot_communicator = WebUniProtCommunicator()
 
 coroutine_loop = asyncio.get_running_loop()
 

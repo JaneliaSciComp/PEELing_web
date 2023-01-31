@@ -211,6 +211,7 @@ class UniProtCommunicator(ABC):
             link = await self.__check_id_mapping_results_ready(job_id)
             results = await self.__get_id_mapping_results_search(link)
             results_df = self.__get_data_frame_from_tsv_results(results)
+            results_df.drop(['Entry Name', 'Reviewed'], axis=1, inplace=True)
             logger.info(f'retrieved: {len(results_df)}')
             # if not self.__save and len(results_df)>0:
             #     results_df = results_df[['From', 'Entry']]
@@ -257,10 +258,10 @@ class UniProtCommunicator(ABC):
 
     async def _retrieve_annotation(self):
         # for dev stage
-        self.__annotation_surface = pd.read_table('../retrieved_data/annotation_surface.tsv', sep='\t')
-        self.__annotation_cyto = pd.read_table('../retrieved_data/annotation_cyto.tsv', sep='\t')
-        logger.debug(f'\n{self.__annotation_surface.head()}')
-        return
+        # self.__annotation_surface = pd.read_table('../retrieved_data/annotation_surface.tsv', sep='\t')
+#         self.__annotation_cyto = pd.read_table('../retrieved_data/annotation_cyto.tsv', sep='\t')
+#         logger.debug(f'\n{self.__annotation_surface.head()}')
+#         return
 
         start_time = datetime.now()
 
@@ -268,6 +269,8 @@ class UniProtCommunicator(ABC):
             self.__create_client()
         try:
             await asyncio.gather(self.__retrieve_annotation_surface(), self.__retrieve_annotation_cyto()) 
+            if not self.__save:
+                self.__shorten_annotation()
             logger.info(f'{datetime.now()-start_time} for retrieving annotations')
         except Exception:
             raise
@@ -285,7 +288,13 @@ class UniProtCommunicator(ABC):
             return self.__annotation_cyto
     
 
-    def _shorten_annotation(self):
+    def __shorten_annotation(self):
         self.__annotation_surface = self.__annotation_surface[['Entry']]
         self.__annotation_cyto = self.__annotation_cyto[['Entry']]
     
+
+    def _set_annotation(self, data, type):
+        if type=='surface':
+            self.__annotation_surface = data
+        elif type=='cyto':
+            self.__annotation_cyto = data
