@@ -30,7 +30,21 @@ export default class Blog extends React.Component {
         //     console.log(res)
         // })
 
-        fetch("/api/scatter/"+"c988b3b9-2ad9-4eb4-a53d-6f507dc373e2?x=1&y=2", {
+        // fetch("/api/scatter/"+"c988b3b9-2ad9-4eb4-a53d-6f507dc373e2?x=1&y=2", {
+        //     method: 'GET',
+        // }).then(res => {
+        //     //console.log(res);
+        //     if (res.ok) {
+        //         return res; 
+        //     } else {
+        //         this.props.setError(res.statusText);
+        //     }
+        // }).then(res => {
+        //     //console.log(res)
+        //     // this.
+        // })
+
+        fetch("/api/exportcached/", {
             method: 'GET',
         }).then(res => {
             //console.log(res);

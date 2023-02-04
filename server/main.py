@@ -193,6 +193,39 @@ async def getProteins(unique_id:str):
         return {'error': ', '.join(list(e.args))}
 
 
+@app.get("/api/proteintable/{unique_id}")
+async def getProteinTable(unique_id:str):
+    logger.info(f'"/proteintable/{unique_id}"')
+    try:
+        path = f'../results/{unique_id}/results/post-cutoff-proteome.tsv'
+        results = pd.read_table(path, sep='\t', header=0)
+        results.set_index('Entry', inplace=True)
+        results = results.to_dict(orient='index')
+        return results
+    except Exception as e:
+        logger.error(e)
+        f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': ', '.join(list(e.args))}
+
+
+@app.get("/api/proteinsorted/{unique_id}")
+async def getProteinSorted(unique_id:str, column:str):
+    logger.info(f'"/proteintable/{unique_id}?column={column}"')
+    try:
+        path = f'../results/{unique_id}/post-cutoff-proteome_with_raw_data.tsv'
+        results = pd.read_table(path, sep='\t', header=0)
+        results.sort_values(by=[column], ascending=False, inplace=True)
+        return {'protein_sorted': list(results['Entry'])}
+    except Exception as e:
+        logger.error(e)
+        f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': ', '.join(list(e.args))}
+
+
 @app.get("/api/download/{unique_id}")
 async def sendResultsTar(unique_id:str):
     logger.info('"/download/"')
@@ -241,6 +274,20 @@ async def runPantherEnrich(unique_id:str, organism_id:str):
         f.close()
         return {'error': ', '.join(list(e.args))}
 
+
+@app.get("/api/exportcached/")
+async def exportCached():
+    logger.info('"/exportcached/"')
+    try:
+        ids = uniprot_communicator.get_ids()
+        ids.to_csv('../retrieved_data/latest_ids.tsv', sep='\t', index=False)
+    except Exception as e:
+        logger.error(e)
+        f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': ', '.join(list(e.args))}
+        
 
 def main():
     uvicorn.run(app, host="0.0.0.0", port=8000)
