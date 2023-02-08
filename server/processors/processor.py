@@ -38,8 +38,9 @@ class Processor(ABC):
         ax = sns.heatmap(corr, linewidth=0.5, annot=True, cmap="coolwarm", vmin=-1, vmax=1, square=True) 
         ax.tick_params(left=False, bottom=False)
         ax.tick_params(axis='x', rotation=50)
-        fig_name = 'Pairwise Pearson Correlation Coefficient'
-        plt.title(fig_name)
+        title = 'Pairwise Pearson Correlation Coefficient'
+        plt.title(title)
+        fig_name = title.replace(' ', '_')
         plt.savefig(f'{plot_path}/{fig_name}.{self.__user_input_reader.get_plot_format()}', bbox_inches='tight', dpi=130)
         data.reset_index(inplace=True)
         return fig_name

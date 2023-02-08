@@ -3,6 +3,7 @@ import {Spinner, Row, Col, Button} from 'react-bootstrap';
 //import Button from '@mui/material/Button';
 import DownloadIcon from '@mui/icons-material/Download';
 import './Results.css';
+import QualityControl from './QualityControl';
 import Plots from './Plots';
 import Proteins from './Proteins';
 
@@ -10,8 +11,39 @@ import Proteins from './Proteins';
 export default class Results extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            colNames: [],
+        }
     }
 
+    
+    // setColNames(names) {
+    //     this.setState({colNames: names});
+    // }
+
+    componentDidMount() {
+        fetch('/api/colnames/'+this.props.resultsId, {
+            method: 'GET'
+        }).then(res => {
+            //console.log(res);
+            if (res.ok) {
+                return res.json(); //TODO: await?
+            } else {
+                this.props.setError(res.statusText);
+            }
+        }).then(res => {
+            if (res['error']) {
+                this.props.setError(res['error']);
+            } else {
+                this.setState({
+                    colNames: res['colNames']}
+                    // plotNames: res['rocPlots'].map(this.extractName)}
+                )
+            }
+            
+        })
+    }
 
 
     render() {
@@ -29,7 +61,9 @@ export default class Results extends React.Component {
                     null
                     }
                     
-                    <Plots resultsId={this.props.resultsId} setError={this.props.setError} />
+                    <QualityControl resultsId={this.props.resultsId} colNames={this.state.colNames} setError={this.props.setError} />
+                    <hr className='my-5 mx-4'></hr>
+                    <Plots resultsId={this.props.resultsId} colNames={this.state.colNames} setError={this.props.setError} />
                     <hr className='my-5 mx-4'></hr>
                     <Proteins resultsId={this.props.resultsId} setError={this.props.setError} />
                     <br></br>

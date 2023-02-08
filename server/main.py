@@ -121,6 +121,43 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         return {'error': ', '.join(list(e.args))}
 
 
+@app.get("/api/colnames/{unique_id}")
+async def getColNames(unique_id:str):
+    logger.info(f'"/colnames/{unique_id}"')
+    try:
+        response = {}
+        path = os.path.join('../results/', unique_id)
+
+        # get list of paths of plots
+        plots = os.listdir(path+'/web_plots') 
+        col_names = []
+        for plot in plots:
+            if plot[:3] == 'ROC':
+                col_names.append(plot[4: -4])
+        response['colNames'] = col_names
+        return response
+    except Exception as e:
+        logger.error(e)
+        f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': ', '.join(list(e.args))}
+
+
+@app.get("/api/heatmap/{unique_id}")
+async def getHeatMap(unique_id:str):
+    logger.info(f'"/heatmap/{unique_id}"')
+    try:
+        path = f'../results/{unique_id}/web_plots/Pairwise_Pearson_Correlation_Coefficient.png'
+        return FileResponse(path, media_type='image/png')
+    except Exception as e:
+        logger.error(e)
+        f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+        return {'error': ', '.join(list(e.args))}
+
+
 @app.get("/api/scatter/{unique_id}")
 async def getScatterPlot(unique_id:str, x: str, y: str):
     logger.info(f'"/scatter/{unique_id}?x={x},y={y}"')
@@ -136,31 +173,31 @@ async def getScatterPlot(unique_id:str, x: str, y: str):
         return {'error': ', '.join(list(e.args))}
 
 
-@app.get("/api/plotslist/{unique_id}")
-async def getPlotsList(unique_id:str):
-    logger.info(f'"/plotslist/{unique_id}"')
-    try:
-        response = {}
-        path = os.path.join('../results/', unique_id)
+# @app.get("/api/plotslist/{unique_id}")
+# async def getPlotsList(unique_id:str):
+#     logger.info(f'"/plotslist/{unique_id}"')
+#     try:
+#         response = {}
+#         path = os.path.join('../results/', unique_id)
 
-        # get list of paths of plots
-        plots = os.listdir(path+'/web_plots') 
-        ratio_plots = []
-        roc_plots = []
-        for plot in plots:
-            if plot[:3] == 'ROC':
-                roc_plots.append(plot)
-            elif plot[:7] == 'TPR_FPR':
-                ratio_plots.append(plot)
-        response['ratioPlots'] = ratio_plots
-        response['rocPlots'] = roc_plots
-        return response
-    except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+#         # get list of paths of plots
+#         plots = os.listdir(path+'/web_plots') 
+#         ratio_plots = []
+#         roc_plots = []
+#         for plot in plots:
+#             if plot[:3] == 'ROC':
+#                 roc_plots.append(plot)
+#             elif plot[:7] == 'TPR_FPR':
+#                 ratio_plots.append(plot)
+#         response['ratioPlots'] = ratio_plots
+#         response['rocPlots'] = roc_plots
+#         return response
+#     except Exception as e:
+#         logger.error(e)
+#         f = open('../log/log.txt','a')
+#         traceback.print_exc(file=f)
+#         f.close()
+#         return {'error': ', '.join(list(e.args))}
 
 
 @app.get("/api/plot/{unique_id}/{plot_name}")

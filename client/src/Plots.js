@@ -1,21 +1,17 @@
 import React from 'react';
 import {ToggleButtonGroup, ToggleButton, Image, Row, Col} from 'react-bootstrap';
 import './Plots.css';
-// import ratioPlot_128C_127C from './TPR_FPR_Ratio_128C_127C.png';
-// import ratioPlot_128C_129N from './TPR_FPR_Ratio_128C_129N.png';
-// import rocPlot_128C_127C from './ROC_Ratio_128C_127C.png';
-// import rocPlot_128C_129N from './ROC_Ratio_128C_129N.png';
 
 
 
 export default class Plots extends React.Component {
     constructor(props) {
-        super(props); // resultsId
+        super(props); 
         
         this.state = {
-            ratioPlots:[],
-            rocPlots:[],
-            plotNames: [],
+            ratioPlots: [], 
+            rocPlots: [], 
+            plotNames: props.colNames, //[], 
             active: 0,
             error: null,
         }
@@ -23,36 +19,55 @@ export default class Plots extends React.Component {
         this.switchPlot = this.switchPlot.bind(this);
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let newRatioPlots = nextProps.colNames.map(col => {return 'TPR_FPR_'+col+'.png'});  
+        let newRocPlots = nextProps.colNames.map(col => {return 'ROC_'+col+'.png'});
+        let newPlotNames = nextProps.colNames;
+        if (prevState.plotName !== newPlotNames) {
+          return { ratioPlots: newRatioPlots,
+                   rocPlots: newRocPlots,
+                   plotNames: newPlotNames };
+        }
     
-    componentDidMount() {
-        fetch('/api/plotslist/'+this.props.resultsId, {
-            method: 'GET'
-        }).then(res => {
-            //console.log(res);
-            if (res.ok) {
-                return res.json(); //TODO: await?
-            } else {
-                this.setState({error: res.statusText});
-            }
-        }).then(res => {
-            if (res['error']) {
-                this.setState({error: res['error']});
-            } else {
-                this.setState({
-                    ratioPlots: res['ratioPlots'],
-                    rocPlots: res['rocPlots'],
-                    plotNames: res['rocPlots'].map(this.extractName)}
-                )
-            }
-            
-        })
+        return null;
     }
 
-    extractName(url) {
-        var name = url.substr(url.lastIndexOf('/')+1);
-        name = name.substring(name.indexOf('_')+1, name.lastIndexOf('.')); //TODO
-        return name;
-    }
+    
+    // componentDidMount() {
+    //     this.setState({
+    //         ratioPlots: this.props.colNames.map(col => {return 'TPR_FPR_'+col+'.png'}),  //[],
+    //         rocPlots: this.props.colNames.map(col => {return 'ROC_'+col+'.png'}), //[],
+    //         plotNames: this.props.colNames,
+    //     })
+    // }
+    //     fetch('/api/plotslist/'+this.props.resultsId, {
+    //         method: 'GET'
+    //     }).then(res => {
+    //         //console.log(res);
+    //         if (res.ok) {
+    //             return res.json(); //TODO: await?
+    //         } else {
+    //             this.setState({error: res.statusText});
+    //         }
+    //     }).then(res => {
+    //         if (res['error']) {
+    //             this.setState({error: res['error']});
+    //         } else {
+    //             this.setState({
+    //                 ratioPlots: res['ratioPlots'],
+    //                 rocPlots: res['rocPlots'],
+    //                 plotNames: res['rocPlots'].map(this.extractName)}
+    //             )
+    //         }
+            
+    //     })
+    // }
+
+    // extractName(url) {
+    //     var name = url.substr(url.lastIndexOf('/')+1);
+    //     name = name.substring(name.indexOf('_')+1, name.lastIndexOf('.')); //TODO
+    //     return name;
+    // }
 
     switchPlot(value) { //value is the value property of the toggleButton
         this.setState({active: value});
