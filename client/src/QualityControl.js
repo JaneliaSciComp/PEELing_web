@@ -21,24 +21,28 @@ export default class QualityControl extends React.Component {
         this.changeY = this.changeY.bind(this);
     }
 
-    
-    componentDidMount() {
-        console.log(this.props.colNames.length);
-        if (this.props.colNames.length >= 2) {
-            this.setState({
-                x: this.props.colNames[0],
-                y: this.props.colNames[1],
-                scatterQuery: 'x='+this.props.colNames[0]+'&y='+this.props.colNames[1],
-            })
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.colNames.length >= 2) {
+            return {
+                x: nextProps.colNames[0],
+                y: nextProps.colNames[1],
+                scatterQuery: 'x='+nextProps.colNames[0]+'&y='+nextProps.colNames[1],
+                scatterError: null,
+                colSelectionError: null,
+            }
         } else {
-            this.setState({
-                scatterError: 'Too few columns to make scatter plot'
-            })
+            return {
+                x: null,
+                y: null,
+                scatterQuery: null,
+                scatterError: 'Too few columns to make scatter plot',
+                colSelectionError: null,
+            }
         }
     }
 
 
-    makeScatter(e) { //value is the value property of the toggleButton
+    makeScatter(e) {
         e.preventDefault();
 
         // check if x and y are the same
@@ -57,9 +61,12 @@ export default class QualityControl extends React.Component {
     }
 
     changeX(e) {
+        console.log('x '+e.target.value);
         this.setState({
             x: e.target.value
-        })
+        }
+        , ()=>{console.log(this.state.x)}
+        )
     }
 
     changeY(e) {
@@ -81,27 +88,7 @@ export default class QualityControl extends React.Component {
                 </div>
                 :
                 <Row className='qc-container mx-3'>
-                    {/* <Col className='px-0' md={2}>
-                        {this.state.plotNames[0] ?
-                        <div className='btn-group-container my-3'>
-                            <ToggleButtonGroup className='btn-group flex-column justify-content-start' 
-                            vertical type='radio' name='ratios' 
-                            value={this.state.active}
-                            onChange={this.switchPlot}> 
-                                {this.state.plotNames.map((plotName, i) => 
-                                    <ToggleButton className='btn-toggle' variant="light"
-                                    key={i} id={plotName} name={plotName} value={i}>
-                                        {plotName}
-                                    </ToggleButton>
-                                    )
-                                }
-                            </ToggleButtonGroup>
-                        </div> 
-                        : null
-                        }
-                        
-                    </Col> */}
-                    <Col md={6}>
+                    <Col md={6} className='heatmap-container'>
                         <Image className='my-3' src={'/api/heatmap/'+this.props.resultsId} alt='logo' fluid='true'></Image>
                     </Col>
                     <Col md={6}>
@@ -111,30 +98,34 @@ export default class QualityControl extends React.Component {
                         </div>
                         :
                         <div>
-                            <Form className='mx-3' onSubmit={this.makeScatter}>
-                                <Form.Group as={Col} sm={5} className='mt-4 px-3' controlId='x_axis'>
-                                    <Form.Label column sm={3}>X :</Form.Label>
-                                    <Col sm={9}>
-                                        <Form.Select name='x' value={this.state.x} onChange={this.changeX}>
-                                        {this.props.colNames.map((col, i) =>
-                                        <option key={i} value={col} >{col}</option> 
-                                        )}
-                                        </Form.Select>
-                                    </Col>
-                                </Form.Group>
-
-                                <Form.Group as={Col} sm={5} className='mt-4 px-3' controlId='y_axis'>
-                                    <Form.Label column sm={3}>Y :</Form.Label>
-                                    <Col sm={9}>
-                                        <Form.Select name='y' value={this.state.y} onChange={this.changeY}>
-                                        {this.props.colNames.map((col, i) =>
-                                        <option key={i} value={col} >{col}</option> 
-                                        )}
-                                        </Form.Select>
-                                    </Col>
-                                </Form.Group>
-
-                                <Button as={Col} sm={2} type='submit' className='btn-submit' onSubmit={this.makeScatter}>Submit</Button>
+                            <Form as={Row} size='sm' className='px-3' onSubmit={this.makeScatter}>
+                                <Col sm={5}>
+                                    <Form.Group as={Row} controlId='x_axis'>
+                                        <Form.Label column sm={3}>X:</Form.Label>
+                                        <Col sm={9}>
+                                            <Form.Select size='sm' name='x' value={this.state.x} onChange={this.changeX}>
+                                            {this.props.colNames.map((col, i) =>
+                                            <option key={i} value={col} >{col}</option> 
+                                            )}
+                                            </Form.Select>
+                                        </Col>
+                                    </Form.Group>
+                                </Col>
+                                <Col sm={5}>
+                                    <Form.Group as={Row} controlId='y_axis'>
+                                        <Form.Label column sm={3}>Y:</Form.Label>
+                                        <Col sm={9}>
+                                            <Form.Select size='sm' name='y' value={this.state.y} onChange={this.changeY}>
+                                            {this.props.colNames.map((col, i) =>
+                                            <option key={i} value={col} >{col}</option> 
+                                            )}
+                                            </Form.Select>
+                                        </Col>
+                                    </Form.Group>
+                                </Col>
+                                <Col sm={2}>
+                                    <Button size='sm' type='submit' className='btn-submit' onSubmit={this.makeScatter}>Submit</Button>
+                                </Col>
                             </Form>
 
                             {this.state.colSelectionError ?
@@ -142,7 +133,7 @@ export default class QualityControl extends React.Component {
                                 <p>{this.state.colSelectionError}</p>
                             </div>
                             :
-                            <Image className='my-3' src={"/api/scatter/"+this.props.resultsId +"/"+this.state.scatterQuery} alt='logo' fluid='true'></Image>
+                            <Image className='my-3' src={"/api/scatter/"+this.props.resultsId +"?"+this.state.scatterQuery} alt='logo' fluid='true'></Image>
                             }
                             
                         </div>

@@ -160,7 +160,9 @@ export default class UserInput extends React.Component {
     formatChangeHandler(e) {
         this.setState({
             plotFormat: e.target.value
-        })
+        }
+        , ()=>{console.log(this.state.plotFormat)}
+        )
     }
 
 

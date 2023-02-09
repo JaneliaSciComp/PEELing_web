@@ -11,7 +11,7 @@ export default class Plots extends React.Component {
         this.state = {
             ratioPlots: [], 
             rocPlots: [], 
-            plotNames: props.colNames, //[], 
+            plotNames: [], 
             active: 0,
             error: null,
         }
@@ -26,10 +26,11 @@ export default class Plots extends React.Component {
         if (prevState.plotName !== newPlotNames) {
           return { ratioPlots: newRatioPlots,
                    rocPlots: newRocPlots,
-                   plotNames: newPlotNames };
+                   plotNames: newPlotNames,
+                   active: 0,
+                   error: null, 
+                };
         }
-    
-        return null;
     }
 
     
