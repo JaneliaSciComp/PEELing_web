@@ -15,6 +15,8 @@ export default class Results extends React.Component {
         this.state = {
             colNames: [],
         }
+        // console.log('Results constructor');
+        // console.log(this.state);
     }
 
     
@@ -23,10 +25,12 @@ export default class Results extends React.Component {
     // }
 
     componentDidMount() {
+        // console.log('Resutls componentDidMount')
+
         fetch('/api/colnames/'+this.props.resultsId, {
             method: 'GET'
         }).then(res => {
-            //console.log(res);
+            // console.log(res);
             if (res.ok) {
                 return res.json(); //TODO: await?
             } else {
@@ -39,14 +43,42 @@ export default class Results extends React.Component {
                 this.setState({
                     colNames: res['colNames']}
                     // plotNames: res['rocPlots'].map(this.extractName)}
-                )
+                // , ()=>{console.log(this.state)}
+                    )
             }
             
         })
     }
 
 
+    // static getDerivedStateFromProps(props, state) {
+    //     console.log('Resutls derived')
+
+    //     fetch('/api/colnames/'+props.resultsId, {
+    //         method: 'GET'
+    //     }).then(res => {
+    //         console.log(res);
+    //         if (res.ok) {
+    //             return res.json(); //TODO: await?
+    //         } else {
+    //             props.setError(res.statusText);
+    //         }
+    //     }).then(res => {
+    //         if (res['error']) {
+    //             props.setError(res['error']);
+    //         } else {
+    //             return {
+    //                 colNames: res['colNames']
+    //             }                
+    //         }
+    //     })
+    //     return null;
+    // }
+
+
     render() {
+        // console.log('Results render');
+        // console.log(this.state);
         return (
           <div className='section'>  
             
@@ -61,7 +93,7 @@ export default class Results extends React.Component {
                     null
                     }
                     
-                    <QualityControl resultsId={this.props.resultsId} colNames={this.state.colNames} setError={this.props.setError} />
+                    <QualityControl resultsId={this.props.resultsId} colNames={this.state.colNames} scatterError={this.state.colNames.length>1 ? null : "At least two columns are needed to make scatter plot"} setError={this.props.setError} />
                     <hr className='my-5 mx-4'></hr>
                     <Plots resultsId={this.props.resultsId} colNames={this.state.colNames} setError={this.props.setError} />
                     <hr className='my-5 mx-4'></hr>

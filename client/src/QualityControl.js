@@ -9,75 +9,78 @@ export default class QualityControl extends React.Component {
         super(props); // resultsId
         
         this.state = {
-            x: null,
-            y: null,
-            scatterQuery: null,
-            scatterError: null,
+            xIndex: 0,
+            yIndex: 1,
+            scatterQuery: null,//
             colSelectionError: null,
         }
-
+        // console.log('constructor ');
+        // console.log(this.props);
+        // console.log(this.state);
         this.makeScatter = this.makeScatter.bind(this);
         this.changeX = this.changeX.bind(this);
         this.changeY = this.changeY.bind(this);
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.colNames.length >= 2) {
+    static getDerivedStateFromProps(props, state) {
+        //console.log('derived')
+        if (!props.scatterError && !state.colSelectionError) {
             return {
-                x: nextProps.colNames[0],
-                y: nextProps.colNames[1],
-                scatterQuery: 'x='+nextProps.colNames[0]+'&y='+nextProps.colNames[1],
-                scatterError: null,
-                colSelectionError: null,
+                scatterQuery: 'x='+props.colNames[state.xIndex]+'&y='+props.colNames[state.yIndex],
             }
         } else {
-            return {
-                x: null,
-                y: null,
-                scatterQuery: null,
-                scatterError: 'Too few columns to make scatter plot',
-                colSelectionError: null,
-            }
-        }
+            return null
+        } 
     }
+
+    // componentDidMount(){
+    //     console.log('componentDidMount');
+    //     console.log(this.props);
+    //     this.setState({
+    //         scatterQuery: 'x='+this.props.colNames[this.state.xIndex]+'&y='+this.props.colNames[this.state.yIndex],
+    //     }
+    //     , ()=>{console.log(this.state)}
+    //     )
+        
+    // }
 
 
     makeScatter(e) {
         e.preventDefault();
-
+        console.log(this.state.xIndex, this.state.yIndex, this.state.xIndex == this.state.yIndex, this.state.xIndex === this.state.yIndex);
         // check if x and y are the same
-        if (this.state.x === this.state.y) {
+        if (this.state.xIndex === this.state.yIndex) {
             this.setState({
                 colSelectionError: true
             })
         } else {
-            let query = 'x='+this.state.x+'&y='+this.state.y;
+            let query = 'x='+this.props.colNames[this.state.xIndex]+'&y='+this.props.colNames[this.state.yIndex];
             this.setState({
                 scatterQuery: query
             })
-            return;
         }
         
     }
 
     changeX(e) {
-        console.log('x '+e.target.value);
+        console.log(e.target.selectedIndex);
         this.setState({
-            x: e.target.value
+            xIndex: e.target.selectedIndex
         }
-        , ()=>{console.log(this.state.x)}
+        , ()=>{console.log(this.state.xIndex)}
         )
     }
 
     changeY(e) {
         this.setState({
-            y: e.target.value
+            yIndex: e.target.key
         })
     }
 
 
 
     render() {
+        // console.log('render');
         return (
             <div className='qc subsection'>
                 <h4 className='subsection-title my-5 px-4'>Quality Control</h4>
@@ -92,9 +95,9 @@ export default class QualityControl extends React.Component {
                         <Image className='my-3' src={'/api/heatmap/'+this.props.resultsId} alt='logo' fluid='true'></Image>
                     </Col>
                     <Col md={6}>
-                        {this.state.scatterError ?
+                        {this.props.scatterError ?
                         <div className='info-error'>
-                            <p>{this.state.scatterError}</p>
+                            <p>{this.props.scatterError}</p>
                         </div>
                         :
                         <div>
@@ -103,7 +106,7 @@ export default class QualityControl extends React.Component {
                                     <Form.Group as={Row} controlId='x_axis'>
                                         <Form.Label column sm={3}>X:</Form.Label>
                                         <Col sm={9}>
-                                            <Form.Select size='sm' name='x' value={this.state.x} onChange={this.changeX}>
+                                            <Form.Select size='sm' name='x' value={this.props.colNames[this.state.xIndex]} onChange={this.changeX}>
                                             {this.props.colNames.map((col, i) =>
                                             <option key={i} value={col} >{col}</option> 
                                             )}
@@ -115,7 +118,7 @@ export default class QualityControl extends React.Component {
                                     <Form.Group as={Row} controlId='y_axis'>
                                         <Form.Label column sm={3}>Y:</Form.Label>
                                         <Col sm={9}>
-                                            <Form.Select size='sm' name='y' value={this.state.y} onChange={this.changeY}>
+                                            <Form.Select size='sm' name='y' value={this.props.colNames[this.state.yIndex]} onChange={this.changeY}>
                                             {this.props.colNames.map((col, i) =>
                                             <option key={i} value={col} >{col}</option> 
                                             )}
