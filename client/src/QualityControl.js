@@ -1,16 +1,18 @@
 import React from 'react';
-import {Form, Button, Image, Row, Col} from 'react-bootstrap';
+import {Form, Button, Image, Row, Col, ThemeProvider} from 'react-bootstrap';
 import './QualityControl.css';
 
 
 
 export default class QualityControl extends React.Component {
     constructor(props) {
-        super(props); // resultsId
+        super(props); 
         
         this.state = {
             xIndex: 0,
             yIndex: 1,
+            xTemp: 0,
+            yTemp: 1,
             scatterQuery: null,//
             colSelectionError: null,
         }
@@ -33,47 +35,36 @@ export default class QualityControl extends React.Component {
         } 
     }
 
-    // componentDidMount(){
-    //     console.log('componentDidMount');
-    //     console.log(this.props);
-    //     this.setState({
-    //         scatterQuery: 'x='+this.props.colNames[this.state.xIndex]+'&y='+this.props.colNames[this.state.yIndex],
-    //     }
-    //     , ()=>{console.log(this.state)}
-    //     )
-        
-    // }
-
 
     makeScatter(e) {
         e.preventDefault();
-        console.log(this.state.xIndex, this.state.yIndex, this.state.xIndex == this.state.yIndex, this.state.xIndex === this.state.yIndex);
+        let x = this.state.xTemp;
+        let y = this.state.yTemp;
         // check if x and y are the same
-        if (this.state.xIndex === this.state.yIndex) {
+        if (x === y) {
             this.setState({
-                colSelectionError: true
+                colSelectionError: 'X and Y cannot be the same'
             })
         } else {
-            let query = 'x='+this.props.colNames[this.state.xIndex]+'&y='+this.props.colNames[this.state.yIndex];
             this.setState({
-                scatterQuery: query
+                xIndex: x,
+                yIndex: y,
             })
         }
         
     }
 
     changeX(e) {
-        console.log(e.target.selectedIndex);
         this.setState({
-            xIndex: e.target.selectedIndex
+            xTemp: e.target.selectedIndex
         }
-        , ()=>{console.log(this.state.xIndex)}
+        // , ()=>{console.log(this.state.xIndex)}
         )
     }
 
     changeY(e) {
         this.setState({
-            yIndex: e.target.key
+            yTemp: e.target.selectedIndex
         })
     }
 
@@ -94,19 +85,19 @@ export default class QualityControl extends React.Component {
                     <Col md={6} className='heatmap-container'>
                         <Image className='my-3' src={'/api/heatmap/'+this.props.resultsId} alt='logo' fluid='true'></Image>
                     </Col>
-                    <Col md={6}>
+                    <Col md={6} className='scatterplot-container'>
                         {this.props.scatterError ?
                         <div className='info-error'>
                             <p>{this.props.scatterError}</p>
                         </div>
                         :
                         <div>
-                            <Form as={Row} size='sm' className='px-3' onSubmit={this.makeScatter}>
-                                <Col sm={5}>
+                            <Form size='sm' className='px-3 d-flex justify-content-around' onSubmit={this.makeScatter}>
+                                <Col className='scatter-select' sm={5}>
                                     <Form.Group as={Row} controlId='x_axis'>
                                         <Form.Label column sm={3}>X:</Form.Label>
                                         <Col sm={9}>
-                                            <Form.Select size='sm' name='x' value={this.props.colNames[this.state.xIndex]} onChange={this.changeX}>
+                                            <Form.Select size='sm' name='x' value={this.props.colNames[this.state.xTemp]} onChange={this.changeX}>
                                             {this.props.colNames.map((col, i) =>
                                             <option key={i} value={col} >{col}</option> 
                                             )}
@@ -114,11 +105,11 @@ export default class QualityControl extends React.Component {
                                         </Col>
                                     </Form.Group>
                                 </Col>
-                                <Col sm={5}>
+                                <Col className='scatter-select' sm={5}>
                                     <Form.Group as={Row} controlId='y_axis'>
                                         <Form.Label column sm={3}>Y:</Form.Label>
                                         <Col sm={9}>
-                                            <Form.Select size='sm' name='y' value={this.props.colNames[this.state.yIndex]} onChange={this.changeY}>
+                                            <Form.Select size='sm' name='y' value={this.props.colNames[this.state.yTemp]} onChange={this.changeY}>
                                             {this.props.colNames.map((col, i) =>
                                             <option key={i} value={col} >{col}</option> 
                                             )}

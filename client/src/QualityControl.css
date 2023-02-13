@@ -1,3 +1,12 @@
+.scatter-select {
+    display: flex;
+    /* justify-content: space-around; */
+}
+
+.scatter-btn {
+    display: flex;
+}
+
 .btn-group {
     /* height: 1.5em; */
     width: 100%;

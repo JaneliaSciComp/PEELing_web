@@ -26,12 +26,6 @@ export default class Analysis extends React.Component{
         this.setState({userInputSubmitted: status});
     }
 
-    // setResultsId(id) {
-    //     if (id) {
-    //         id = id.replaceAll('"', '');
-    //     }
-    //     this.setState({resultsId: id})
-    // }
 
     setError(error) {
         this.setState({error: error})

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Spinner, Row, Col, Button} from 'react-bootstrap';
+import {Spinner, Row, Button} from 'react-bootstrap';
 //import Button from '@mui/material/Button';
 import DownloadIcon from '@mui/icons-material/Download';
 import './Results.css';
