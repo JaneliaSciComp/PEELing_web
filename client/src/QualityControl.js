@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Button, Image, Row, Col, ThemeProvider} from 'react-bootstrap';
+import {Form, Button, Image, Row, Col} from 'react-bootstrap';
 import './QualityControl.css';
 
 
@@ -81,7 +81,7 @@ export default class QualityControl extends React.Component {
                     <p>Oops! Quality Control went wrong!</p>
                 </div>
                 :
-                <Row className='qc-container mx-3'>
+                <Row className='qc-container mx-3 align-items-end'>
                     <Col md={6} className='heatmap-container'>
                         <Image className='my-3' src={'/api/heatmap/'+this.props.resultsId} alt='logo' fluid='true'></Image>
                     </Col>
@@ -93,19 +93,19 @@ export default class QualityControl extends React.Component {
                         :
                         <div>
                             <Form size='sm' className='px-3 d-flex justify-content-around' onSubmit={this.makeScatter}>
-                                <Col className='scatter-select' sm={5}>
+                                <Col className='mx-2' sm={5}>
                                     <Form.Group as={Row} controlId='x_axis'>
                                         <Form.Label column sm={3}>X:</Form.Label>
                                         <Col sm={9}>
                                             <Form.Select size='sm' name='x' value={this.props.colNames[this.state.xTemp]} onChange={this.changeX}>
                                             {this.props.colNames.map((col, i) =>
-                                            <option key={i} value={col} >{col}</option> 
+                                            <option className='scatter-option' key={i} value={col} >{col}</option> 
                                             )}
                                             </Form.Select>
                                         </Col>
                                     </Form.Group>
                                 </Col>
-                                <Col className='scatter-select' sm={5}>
+                                <Col className='mx-2' sm={5}>
                                     <Form.Group as={Row} controlId='y_axis'>
                                         <Form.Label column sm={3}>Y:</Form.Label>
                                         <Col sm={9}>
@@ -117,7 +117,7 @@ export default class QualityControl extends React.Component {
                                         </Col>
                                     </Form.Group>
                                 </Col>
-                                <Col sm={2}>
+                                <Col className='mx-2' sm={2}>
                                     <Button size='sm' type='submit' className='btn-submit' onSubmit={this.makeScatter}>Submit</Button>
                                 </Col>
                             </Form>

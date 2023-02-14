@@ -11,26 +11,19 @@ export default class Plots extends React.Component {
         this.state = {
             ratioPlots: [], 
             rocPlots: [], 
-            plotNames: [], 
             active: 0,
-            error: null,
+            // error: null,
         }
 
         this.switchPlot = this.switchPlot.bind(this);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        let newRatioPlots = nextProps.colNames.map(col => {return 'TPR_FPR_'+col+'.png'});  
-        let newRocPlots = nextProps.colNames.map(col => {return 'ROC_'+col+'.png'});
-        let newPlotNames = nextProps.colNames;
-        if (prevState.plotName !== newPlotNames) {
-          return { ratioPlots: newRatioPlots,
-                   rocPlots: newRocPlots,
-                   plotNames: newPlotNames,
-                   active: 0,
-                   error: null, 
-                };
-        }
+        return { 
+            ratioPlots: nextProps.colNames.map(col => {return 'TPR_FPR_'+col+'.png'}),
+            rocPlots: nextProps.colNames.map(col => {return 'ROC_'+col+'.png'}),
+            // error: null, 
+        };
     }
 
     
@@ -82,20 +75,20 @@ export default class Plots extends React.Component {
             <div className='plots subsection'>
                 <h4 className='subsection-title my-5 px-4'>Plots</h4>
 
-                {this.state.error ?
+                {/* {this.state.error ?
                 <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
                     <p>Oops! Plots went wrong!</p>
                 </div>
-                :
+                : */}
                 <Row className='plots-container mx-3'>
                     <Col className='px-0' md={2}>
-                        {this.state.plotNames[0] ?
+                        {this.props.colNames[0] ?
                         <div className='btn-group-container my-3'>
                             <ToggleButtonGroup className='btn-group flex-column justify-content-start' 
                             vertical type='radio' name='ratios' 
                             value={this.state.active}
                             onChange={this.switchPlot}> 
-                                {this.state.plotNames.map((plotName, i) => 
+                                {this.props.colNames.map((plotName, i) => 
                                     <ToggleButton className='btn-toggle' variant="light"
                                     key={i} id={plotName} name={plotName} value={i}>
                                         {plotName}
@@ -109,21 +102,19 @@ export default class Plots extends React.Component {
                         
                     </Col>
                     <Col md={5}>
-                        {/* TODO:change url */}
                         {this.state.ratioPlots[0] ?
                         <Image className='my-3' src={'/api/plot/'+this.props.resultsId+'/'+this.state.ratioPlots[this.state.active]} alt='logo' fluid='true'></Image>
                         : null
                         }
                     </Col>
                     <Col md={5}>
-                        {/* TODO:change url */}
                         {this.state.rocPlots[0] ? 
                         <Image className='my-3' src={'/api/plot/'+this.props.resultsId+'/'+this.state.rocPlots[this.state.active]} alt='logo' fluid='true'></Image>
                         : null
                         }
                     </Col>
                 </Row>
-                }
+                {/* } */}
             </div>
         );
     }

@@ -95,7 +95,7 @@ export default class Results extends React.Component {
                     
                     <QualityControl resultsId={this.props.resultsId} colNames={this.state.colNames} scatterError={this.state.colNames.length>1 ? null : "At least two columns are needed to make scatter plot"} setError={this.props.setError} />
                     <hr className='my-5 mx-4'></hr>
-                    <Plots resultsId={this.props.resultsId} colNames={this.state.colNames} setError={this.props.setError} />
+                    <Plots resultsId={this.props.resultsId} colNames={this.state.colNames}/>
                     <hr className='my-5 mx-4'></hr>
                     <Proteins resultsId={this.props.resultsId} setError={this.props.setError} />
                     <br></br>

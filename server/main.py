@@ -162,9 +162,14 @@ async def getHeatMap(unique_id:str):
 async def getScatterPlot(unique_id:str, x: str, y: str):
     logger.info(f'"/scatter/{unique_id}?x={x},y={y}"')
     try:
-        processor = WebProcessor(unique_id, x, y)
-        plot_path = processor.plot_scatter()
-        return FileResponse(plot_path)
+        # check if the plot has already been made
+        plotTitle = f'Correlation {x} vs {y}'
+        plotTitle = plotTitle.replace(" ", "_")
+        path = f'../results/{unique_id}/web_plots/{plotTitle}.png'
+        if not os.path.exists(path):
+            processor = WebProcessor(unique_id, x, y)
+            path = processor.plot_scatter()
+        return FileResponse(path)
     except Exception as e:
         logger.error(e)
         f = open('../log/log.txt','a')

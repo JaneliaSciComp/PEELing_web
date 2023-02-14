@@ -1,50 +1,11 @@
-.scatter-select {
+/* .scatter-select {
     display: flex;
-    /* justify-content: space-around; */
-}
+} */
 
-.scatter-btn {
+/* .scatter-btn {
     display: flex;
-}
-
-.btn-group {
-    /* height: 1.5em; */
-    width: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    /* padding: auto,0; */
-    /* border: 1px solid #555; */
-    border-radius: 0 !important;
-}
-
-.btn-group-container {
-    height: 100%;
-    /* border: 1px solid #555; */
-}
-
-.btn-toggle {
-    height: 2.5em;
-    font-size: small !important;
-    text-align: center !important;
-    border: none;
-    background-color: #eee;
-    overflow-x: auto !important;
-    overflow: hidden;
-    /* text-overflow: ellipsis; */
-}
-
-/* .plots-container {
-    border: 1px solid #555;
-    border-radius: 5px;
 } */
 
-
-
-/* .btn-toggle:hover {
-    background-color: #ccc;
-} */
-
-
-/* .btn-toggle:checked {
-    background-color: blue;
-} */
+.scatter-option {
+    overflow-x: auto;
+}

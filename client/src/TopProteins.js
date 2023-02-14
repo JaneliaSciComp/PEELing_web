@@ -1,10 +1,9 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
-import './Proteins.css';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+// import './Proteins.css';
 
 
-export default class Proteins extends React.Component {
+export default class TopProteins extends React.Component {
     constructor(props) {
         super(props); //resultsId
 
@@ -18,12 +17,13 @@ export default class Proteins extends React.Component {
 
 
     componentDidMount() {
+        //TODO: change url
         fetch('/api/proteins/'+this.props.resultsId, {
             method: 'GET'
         }).then(res => {
             //console.log(res);
             if (res.ok) {
-                return res.json(); 
+                return res.json(); //TODO: await?
             } else {
                 this.setState({error: res.statusText}); 
             }
@@ -40,7 +40,7 @@ export default class Proteins extends React.Component {
     render() {
         return (
             <div className='proteins subsection'>
-                <h4 className='subsection-title my-5 px-4'>Surface Proteins</h4>
+                <h4 className='subsection-title my-5 px-4'>Top Proteins</h4>
 
                 {this.state.error ?
                 <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
