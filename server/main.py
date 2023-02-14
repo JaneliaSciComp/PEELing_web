@@ -168,7 +168,7 @@ async def getScatterPlot(unique_id:str, x: str, y: str):
         path = f'../results/{unique_id}/web_plots/{plotTitle}.png'
         if not os.path.exists(path):
             processor = WebProcessor(unique_id, x, y)
-            path = processor.plot_scatter()
+            processor.plot_scatter()
         return FileResponse(path)
     except Exception as e:
         logger.error(e)
@@ -235,21 +235,21 @@ async def getProteins(unique_id:str):
         return {'error': ', '.join(list(e.args))}
 
 
-@app.get("/api/proteintable/{unique_id}")
-async def getProteinTable(unique_id:str):
-    logger.info(f'"/proteintable/{unique_id}"')
-    try:
-        path = f'../results/{unique_id}/results/post-cutoff-proteome.tsv'
-        results = pd.read_table(path, sep='\t', header=0)
-        results.set_index('Entry', inplace=True)
-        results = results.to_dict(orient='index')
-        return results
-    except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+# @app.get("/api/proteintable/{unique_id}")
+# async def getProteinTable(unique_id:str):
+#     logger.info(f'"/proteintable/{unique_id}"')
+#     try:
+#         path = f'../results/{unique_id}/results/post-cutoff-proteome.tsv'
+#         results = pd.read_table(path, sep='\t', header=0)
+#         results.set_index('Entry', inplace=True)
+#         results = results.to_dict(orient='index')
+#         return results
+#     except Exception as e:
+#         logger.error(e)
+#         f = open('../log/log.txt','a')
+#         traceback.print_exc(file=f)
+#         f.close()
+#         return {'error': ', '.join(list(e.args))}
 
 
 @app.get("/api/proteinsorted/{unique_id}")
@@ -258,8 +258,13 @@ async def getProteinSorted(unique_id:str, column:str):
     try:
         path = f'../results/{unique_id}/post-cutoff-proteome_with_raw_data.tsv'
         results = pd.read_table(path, sep='\t', header=0)
+        kept_columns = results.columns[0] + [column] + ['Gene Names', 'Protein names', 'Organism', 'Length']
+        print(kept_columns)
+        results = results[kept_columns]
         results.sort_values(by=[column], ascending=False, inplace=True)
-        return {'protein_sorted': list(results['Entry'])}
+        results = results.iloc[:100, :]
+        results = results.to_dict(orient='index')
+        return results
     except Exception as e:
         logger.error(e)
         f = open('../log/log.txt','a')
