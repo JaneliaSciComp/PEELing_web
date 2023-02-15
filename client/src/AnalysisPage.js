@@ -41,12 +41,14 @@ export default class Analysis extends React.Component{
                 setResultsId={this.props.setResultsId} 
                 setFailedIdMapping={this.props.setFailedIdMapping} 
                 setError={this.setError} 
+                setColNames={this.props.setColNames}
                 />
                 {(this.state.userInputSubmitted || this.props.resultsId || this.state.error) ?
                 <Results 
                   userInputSubmitted={this.state.userInputSubmitted} 
                   resultsId={this.props.resultsId} 
-                  failedIdMapping={this.props.failedIdMapping} 
+                  failedIdMapping={this.props.failedIdMapping}
+                  colNames={this.props.colNames} 
                   error={this.state.error}
                   setError={this.setError} />
                 : null}

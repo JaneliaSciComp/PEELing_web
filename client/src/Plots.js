@@ -12,7 +12,6 @@ export default class Plots extends React.Component {
             ratioPlots: [], 
             rocPlots: [], 
             active: 0,
-            // error: null,
         }
 
         this.switchPlot = this.switchPlot.bind(this);

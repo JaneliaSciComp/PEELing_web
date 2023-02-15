@@ -6,15 +6,16 @@ import './Results.css';
 import QualityControl from './QualityControl';
 import Plots from './Plots';
 import Proteins from './Proteins';
+import TopProteins from './TopProteins';
 
 
 export default class Results extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            colNames: [],
-        }
+        // this.state = {
+        //     colNames: [],
+        // }
         // console.log('Results constructor');
         // console.log(this.state);
     }
@@ -24,31 +25,31 @@ export default class Results extends React.Component {
     //     this.setState({colNames: names});
     // }
 
-    componentDidMount() {
-        // console.log('Resutls componentDidMount')
+    // componentDidMount() {
+    //     // console.log('Resutls componentDidMount')
 
-        fetch('/api/colnames/'+this.props.resultsId, {
-            method: 'GET'
-        }).then(res => {
-            // console.log(res);
-            if (res.ok) {
-                return res.json(); //TODO: await?
-            } else {
-                this.props.setError(res.statusText);
-            }
-        }).then(res => {
-            if (res['error']) {
-                this.props.setError(res['error']);
-            } else {
-                this.setState({
-                    colNames: res['colNames']}
-                    // plotNames: res['rocPlots'].map(this.extractName)}
-                // , ()=>{console.log(this.state)}
-                    )
-            }
+    //     fetch('/api/colnames/'+this.props.resultsId, {
+    //         method: 'GET'
+    //     }).then(res => {
+    //         // console.log(res);
+    //         if (res.ok) {
+    //             return res.json(); //TODO: await?
+    //         } else {
+    //             this.props.setError(res.statusText);
+    //         }
+    //     }).then(res => {
+    //         if (res['error']) {
+    //             this.props.setError(res['error']);
+    //         } else {
+    //             this.setState({
+    //                 colNames: res['colNames']}
+    //                 // plotNames: res['rocPlots'].map(this.extractName)}
+    //             // , ()=>{console.log(this.state)}
+    //                 )
+    //         }
             
-        })
-    }
+    //     })
+    // }
 
 
     // static getDerivedStateFromProps(props, state) {
@@ -78,7 +79,7 @@ export default class Results extends React.Component {
 
     render() {
         // console.log('Results render');
-        // console.log(this.state);
+        // console.log(this.props);
         return (
           <div className='section'>  
             
@@ -93,11 +94,13 @@ export default class Results extends React.Component {
                     null
                     }
                     
-                    <QualityControl resultsId={this.props.resultsId} colNames={this.state.colNames} scatterError={this.state.colNames.length>1 ? null : "At least two columns are needed to make scatter plot"} setError={this.props.setError} />
+                    <QualityControl resultsId={this.props.resultsId} colNames={this.props.colNames} scatterError={this.props.colNames.length>1 ? null : "At least two columns are needed to make scatter plot"}/>
                     <hr className='my-5 mx-4'></hr>
-                    <Plots resultsId={this.props.resultsId} colNames={this.state.colNames}/>
+                    <Plots resultsId={this.props.resultsId} colNames={this.props.colNames}/>
                     <hr className='my-5 mx-4'></hr>
-                    <Proteins resultsId={this.props.resultsId} setError={this.props.setError} />
+                    <Proteins resultsId={this.props.resultsId} />
+                    <br></br>
+                    <TopProteins resultsId={this.props.resultsId} colNames={this.props.colNames} />
                     <br></br>
                     <Row className='my-4 px-3 flex-row-reverse'>
                         <Button className='btn-download' type='submit'>

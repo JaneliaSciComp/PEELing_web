@@ -108,11 +108,11 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         logger.info(f'{start_time} Analysis starts...')
         user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
         processor = WebProcessor(user_input_reader, uniprot_communicator)
-        unique_id, failed_id_mapping = await processor.start()
-
+        unique_id, failed_id_mapping, columns = await processor.start()
+        print(columns)
         end_time = datetime.now()
         logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
-        return {'resultsId': unique_id, 'failedIdMapping': failed_id_mapping} #failed_id_mapping
+        return {'resultsId': unique_id, 'failedIdMapping': failed_id_mapping, 'colNames': columns} 
     except Exception as e:
         logger.error(e)
         f = open('../log/log.txt','a')
@@ -121,27 +121,27 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         return {'error': ', '.join(list(e.args))}
 
 
-@app.get("/api/colnames/{unique_id}")
-async def getColNames(unique_id:str):
-    logger.info(f'"/colnames/{unique_id}"')
-    try:
-        response = {}
-        path = os.path.join('../results/', unique_id)
+# @app.get("/api/colnames/{unique_id}")
+# async def getColNames(unique_id:str):
+#     logger.info(f'"/colnames/{unique_id}"')
+#     try:
+#         response = {}
+#         path = os.path.join('../results/', unique_id)
 
-        # get list of paths of plots
-        plots = os.listdir(path+'/web_plots') 
-        col_names = []
-        for plot in plots:
-            if plot[:3] == 'ROC':
-                col_names.append(plot[4: -4])
-        response['colNames'] = col_names
-        return response
-    except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+#         # get list of paths of plots
+#         plots = os.listdir(path+'/web_plots') 
+#         col_names = []
+#         for plot in plots:
+#             if plot[:3] == 'ROC':
+#                 col_names.append(plot[4: -4])
+#         response['colNames'] = col_names
+#         return response
+#     except Exception as e:
+#         logger.error(e)
+#         f = open('../log/log.txt','a')
+#         traceback.print_exc(file=f)
+#         f.close()
+#         return {'error': ', '.join(list(e.args))}
 
 
 @app.get("/api/heatmap/{unique_id}")
@@ -252,18 +252,22 @@ async def getProteins(unique_id:str):
 #         return {'error': ', '.join(list(e.args))}
 
 
-@app.get("/api/proteinsorted/{unique_id}")
+@app.get("/api/proteinssorted/{unique_id}/{column}")
 async def getProteinSorted(unique_id:str, column:str):
-    logger.info(f'"/proteintable/{unique_id}?column={column}"')
+    logger.info(f'"/proteinssorted/{unique_id}/{column}"')
     try:
         path = f'../results/{unique_id}/post-cutoff-proteome_with_raw_data.tsv'
         results = pd.read_table(path, sep='\t', header=0)
-        kept_columns = results.columns[0] + [column] + ['Gene Names', 'Protein names', 'Organism', 'Length']
-        print(kept_columns)
+        kept_columns = [results.columns[0]] + [column] + ['Gene Names', 'Protein names', 'Organism', 'Length']
+        # print(kept_columns)
         results = results[kept_columns]
         results.sort_values(by=[column], ascending=False, inplace=True)
         results = results.iloc[:100, :]
-        results = results.to_dict(orient='index')
+        # print(results.head())
+        results = results.fillna('')
+        # results = results.to_dict(orient='index')
+        results = results.values.tolist()
+        # print(results[2])
         return results
     except Exception as e:
         logger.error(e)

@@ -55,6 +55,7 @@ export default class UserInput extends React.Component {
         this.props.submitIndicator(true);
         this.props.setResultsId(null);
         this.props.setFailedIdMapping(null);
+        this.props.setColNames(null);
         this.props.setError(null);
         fetch("/api/submit/", {
             method: 'POST',
@@ -67,6 +68,7 @@ export default class UserInput extends React.Component {
                 this.props.setError(res.statusText);
                 this.props.setResultsId(null);
                 this.props.setFailedIdMapping(null);
+                this.props.setColNames(null);
                 this.props.submitIndicator(false);
             }
         }).then((res)=>{
@@ -74,6 +76,7 @@ export default class UserInput extends React.Component {
                 this.props.setError(res['error']);
                 this.props.setResultsId(null);
                 this.props.setFailedIdMapping(null);
+                this.props.setColNames(null);
                 this.props.submitIndicator(false);
             } else {
                 let resultsId = res['resultsId'];
@@ -82,6 +85,7 @@ export default class UserInput extends React.Component {
                 }
                 this.props.setResultsId(resultsId);
                 this.props.setFailedIdMapping(res['failedIdMapping']);
+                this.props.setColNames(res['colNames']);
                 this.props.submitIndicator(false);
                 this.props.setError(null);
                 // this.props.navigate(`/${resultsId}`);

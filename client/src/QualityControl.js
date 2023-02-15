@@ -13,7 +13,7 @@ export default class QualityControl extends React.Component {
             yIndex: 1,
             xTemp: 0,
             yTemp: 1,
-            scatterQuery: null,//
+            scatterQuery: null,
             colSelectionError: null,
         }
         // console.log('constructor ');
@@ -35,6 +35,12 @@ export default class QualityControl extends React.Component {
         } 
     }
 
+    // componentDidMount() {
+    //     this.setState({
+    //         scatterQuery: 'x='+this.props.colNames[this.state.xIndex]+'&y='+this.props.colNames[this.state.yIndex]
+    //     })
+    // }
+
 
     makeScatter(e) {
         e.preventDefault();
@@ -43,31 +49,44 @@ export default class QualityControl extends React.Component {
         // check if x and y are the same
         if (x === y) {
             this.setState({
-                colSelectionError: 'X and Y cannot be the same'
-            })
+                xIndex: x,
+                yIndex: y,
+                colSelectionError: 'X and Y cannot be the same',
+                // scatterQuery: null
+            }
+            // , ()=>{console.log(this.state)}
+            )
         } else {
             this.setState({
                 xIndex: x,
                 yIndex: y,
-            })
+                colSelectionError: null,
+                // scatterQuery: 'x='+this.props.colNames[x]+'&y='+this.props.colNames[y]
+            }
+            // , ()=>{console.log(this.state)}
+            )
         }
         
     }
 
     changeX(e) {
         this.setState({
-            xTemp: e.target.selectedIndex
+            xTemp: e.target.selectedIndex,
+            // colSelectionError: null,
+            // scatterQuery: null
         }
-        // , ()=>{console.log(this.state.xIndex)}
+        // , ()=>{console.log(this.state)}
         )
     }
 
     changeY(e) {
         this.setState({
-            yTemp: e.target.selectedIndex
-        })
+            yTemp: e.target.selectedIndex,
+            // colSelectionError: null
+        }
+        // , ()=>{console.log(this.state)}
+        )
     }
-
 
 
     render() {
@@ -81,9 +100,9 @@ export default class QualityControl extends React.Component {
                     <p>Oops! Quality Control went wrong!</p>
                 </div>
                 :
-                <Row className='qc-container mx-3 align-items-end'>
-                    <Col md={6} className='heatmap-container'>
-                        <Image className='my-3' src={'/api/heatmap/'+this.props.resultsId} alt='logo' fluid='true'></Image>
+                <Row className='qc-container mx-3 align-items-stretch'>
+                    <Col md={6} className='heatmap-container align-items-end'>
+                        <Image src={'/api/heatmap/'+this.props.resultsId} alt='logo' fluid='true'></Image>
                     </Col>
                     <Col md={6} className='scatterplot-container'>
                         {this.props.scatterError ?
@@ -91,7 +110,7 @@ export default class QualityControl extends React.Component {
                             <p>{this.props.scatterError}</p>
                         </div>
                         :
-                        <div>
+                        <div className='align-items-start'>
                             <Form size='sm' className='px-3 d-flex justify-content-around' onSubmit={this.makeScatter}>
                                 <Col className='mx-2' sm={5}>
                                     <Form.Group as={Row} controlId='x_axis'>
