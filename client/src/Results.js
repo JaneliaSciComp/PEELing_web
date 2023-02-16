@@ -99,7 +99,7 @@ export default class Results extends React.Component {
                     <Plots resultsId={this.props.resultsId} colNames={this.props.colNames}/>
                     <hr className='my-5 mx-4'></hr>
                     <Proteins resultsId={this.props.resultsId} />
-                    <br></br>
+                    <hr className='my-5 mx-4'></hr>
                     <TopProteins resultsId={this.props.resultsId} colNames={this.props.colNames} />
                     <br></br>
                     <Row className='my-4 px-3 flex-row-reverse'>

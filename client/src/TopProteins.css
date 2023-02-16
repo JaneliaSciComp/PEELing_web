@@ -1,0 +1,45 @@
+.table-container {
+    height: 20em;
+    overflow-y: auto;
+    border-radius: 5px;
+}
+
+.table-tab {
+    overflow-x: auto;
+}
+
+.protein-table {
+    font-size: small;
+}
+
+.protein-table-head {
+    color: white;
+    background-color: rgb(13, 110, 253);
+    /* text-align: center; */
+    /* position: sticky; */
+}
+
+/* .protein-table-body {
+    height: 100%;
+} */
+
+/* .protein-table-head-cell {
+
+} */
+
+.long-content-cell-head {
+    max-width: 4em;
+    white-space: nowrap; 
+    overflow-x: auto; 
+}
+
+.protein-table-cell {
+    max-width: 6em;
+}
+
+.long-content-cell-data {
+    white-space: nowrap; 
+    /* text-overflow: ellipsis;  */
+    overflow-x: auto; 
+    max-width: 8em;
+}

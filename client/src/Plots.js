@@ -64,7 +64,6 @@ export default class Plots extends React.Component {
 
     switchPlot(value) { //value is the value property of the toggleButton
         this.setState({active: value});
-        ;
     }
 
     

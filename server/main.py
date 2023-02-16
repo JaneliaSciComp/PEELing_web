@@ -264,7 +264,7 @@ async def getProteinSorted(unique_id:str, column:str):
         results.sort_values(by=[column], ascending=False, inplace=True)
         results = results.iloc[:100, :]
         # print(results.head())
-        results = results.fillna('')
+        results = results.fillna('No data')
         # results = results.to_dict(orient='index')
         results = results.values.tolist()
         # print(results[2])

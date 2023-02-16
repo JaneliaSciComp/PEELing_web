@@ -31,9 +31,9 @@
 
 
 
-/* .btn-toggle:hover {
-    background-color: #ccc;
-} */
+.btn-toggle:hover {
+    background-color: #ddd !important;
+}
 
 
 /* .btn-toggle:checked {
