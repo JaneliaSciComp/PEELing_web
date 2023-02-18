@@ -329,9 +329,24 @@ async def getPantherEnrich(unique_id:str, organism_id:str):
         logger.error('Unique_id or organism_id is missing')
         return {'error': 'Unique_id or organism_id is missing'}
     try:
-        panther_processor = WebPantherProcessor(organism_id, unique_id)
-        results_dict = await panther_processor.start()
-        return results_dict
+        results = {}
+        #check if the analysis is already done
+        done = True
+        for param in ['Panther_GO_Slim_Cellular_Componet', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
+            path = f'../results/{unique_id}/results/post-cutoff-proteome_{param}.tsv'
+            if os.path.exists(path):
+                #TODO
+                results[param] = 'test'
+            else:
+                done = False
+                break
+        
+        # not done yet
+        if not done:
+            panther_processor = WebPantherProcessor(organism_id, unique_id)
+            results = await panther_processor.start()
+        
+        return results
     except Exception as e:
         logger.error(e)
         # f = open('../log/log.txt','a')
