@@ -7,6 +7,7 @@ import QualityControl from './QualityControl';
 import Plots from './Plots';
 import Proteins from './Proteins';
 import TopProteins from './TopProteins';
+import Panther from './Panther';
 
 
 export default class Results extends React.Component {
@@ -101,6 +102,8 @@ export default class Results extends React.Component {
                     <Proteins resultsId={this.props.resultsId} />
                     <hr className='my-5 mx-4'></hr>
                     <TopProteins resultsId={this.props.resultsId} colNames={this.props.colNames} />
+                    <hr className='my-5 mx-4'></hr>
+                    <Panther resultsId={this.props.resultsId}/>
                     <br></br>
                     <Row className='my-4 px-3 flex-row-reverse'>
                         <Button className='btn-download' type='submit'>

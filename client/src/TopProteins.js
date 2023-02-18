@@ -42,9 +42,9 @@ export default class TopProteins extends React.Component {
             } else {
                 this.setState({
                     proteinObj: res,
-                    heads: ['Rank', 'Entry', this.props.colNames[colIndex], 'Gene Names', 'Protein names', 'Organism', 'Length']
+                    heads: ['Rank', 'ID', this.props.colNames[colIndex], 'Gene Name', 'Protein name', 'Organism', 'Length']
                 }
-                , ()=>{console.log(this.state.heads)}
+                // , ()=>{console.log(this.state.heads)}
                 ); 
             }
         })
@@ -62,10 +62,10 @@ export default class TopProteins extends React.Component {
                 </div>
                 :
                 <div className='mx-3'>
-                    <Tabs className="mb-1" id="controlled-tab-example" activeKey={this.state.selectedCol} onSelect={this.switchCol}>
+                    <Tabs className="table-tabs mx-0 mb-1" id="controlled-tab-example" activeKey={this.state.selectedCol} onSelect={this.switchCol}>
                         {this.props.colNames[0] ?
                         this.props.colNames.map((col, i) =>
-                        <Tab className='table-tab' eventKey={i} title={col}></Tab>
+                        <Tab key={i} eventKey={i} title={col}></Tab>
                         )
                         :null}
                     </Tabs>
@@ -77,8 +77,7 @@ export default class TopProteins extends React.Component {
                                 {this.state.heads ?
                                 this.state.heads.map((head, i) => {
                                     
-                                    if (i==2) { //third head is name of the col on which the data is sorted, it could be long
-                                        console.log(i);
+                                    if (i===2) { //third head is name of the col on which the data is sorted, it could be long
                                         return <th className='protein-table-head-cell long-content-cell-head' key={i}>{head}</th>
                                     } else {
                                         return <th className='protein-table-head-cell' key={i}>{head}</th>
@@ -90,18 +89,18 @@ export default class TopProteins extends React.Component {
                         <tbody className='table-body'>
                             {this.state.proteinObj ?
                             this.state.proteinObj.map((obj, i) => 
-                            <tr className='protein-table-row'>
-                                <td className='protein-table-cell px-3'>{i+1}</td>
+                            <tr className='protein-table-row' key={i}>
+                                <td className='protein-table-cell px-3' key={0}>{i+1}</td>
                                 {obj.map((entry, j) => {
-                                    if (j==0) {
-                                        return <td className='protein-table-cell'>
-                                            <a key={i} className='link protein-link' href={'https://www.uniprot.org/uniprotkb/'+entry}  target="_blank" rel="noreferrer">{entry}</a>
+                                    if (j===0) {
+                                        return <td className='protein-table-cell' key={j+1}>
+                                            <a className='link protein-link' href={'https://www.uniprot.org/uniprotkb/'+entry}  target="_blank" rel="noreferrer">{entry}</a>
                                         </td>
                                     }
                                     if (j>=2 && j<=4){ //the gene name, pro name, organism columns, content could be long
-                                        return <td className='protein-table-cell long-content-cell-data'>{entry}</td>
+                                        return <td className='protein-table-cell long-content-cell-data' key={j+1}>{entry}</td>
                                     } else {
-                                        return <td className='protein-table-cell'>{entry}</td>
+                                        return <td className='protein-table-cell' key={j+1}>{entry}</td>
                                     }
                                 })} 
                             </tr>)
@@ -110,20 +109,6 @@ export default class TopProteins extends React.Component {
                         
                     </Table>
                     </div>
-                    {/* <div className='mx-4 mb-2 d-flex justify-content-between align-items-end'>
-                        <span className='info'>({this.state.proteins.length} surface proteins found)</span>
-                        <CopyToClipboard text={this.state.proteins.join(',')}
-                          onCopy={() => this.setState({copied: true})}>
-                            <Button className='btn' variant="outline-primary" size='sm'>{this.state.copied ? 'Copied' : 'Copy List'}</Button>
-                        </CopyToClipboard>
-                    </div>
-                    <div className='box box-protein mx-3'>
-                    {this.state.proteins.map((protein, i) => 
-                        <a key={i} className='link protein-link' href={'https://www.uniprot.org/uniprotkb/'+protein}  target="_blank" rel="noreferrer">
-                            {i<this.state.proteins.length-1 ? protein+', ' : protein}
-                        </a>
-                    )}
-                    </div> */}
                 </div>
                 
                 }

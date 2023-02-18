@@ -51,6 +51,10 @@
   border: none
 }
 
+.invalid {
+  color: red;
+}
+
 .link {
   color: #555;
   padding: 0 0 0.3em 0;

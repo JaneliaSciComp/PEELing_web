@@ -4,9 +4,10 @@
     border-radius: 5px;
 }
 
-.table-tab {
-    overflow-x: auto;
-}
+/* .table-tabs {
+    max-width: 100%;
+    overflow-x: scroll;
+} */
 
 .protein-table {
     font-size: small;

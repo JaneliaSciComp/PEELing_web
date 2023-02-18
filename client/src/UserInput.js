@@ -165,7 +165,7 @@ export default class UserInput extends React.Component {
         this.setState({
             plotFormat: e.target.value
         }
-        , ()=>{console.log(this.state.plotFormat)}
+        // , ()=>{console.log(this.state.plotFormat)}
         )
     }
 

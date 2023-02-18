@@ -111,12 +111,12 @@ export default class QualityControl extends React.Component {
                         </div>
                         :
                         <div className='align-items-start'>
-                            <Form size='sm' className='px-3 d-flex justify-content-around' onSubmit={this.makeScatter}>
+                            <Form className='px-3 d-flex justify-content-around align-items-end' onSubmit={this.makeScatter}>
                                 <Col className='mx-2' sm={5}>
                                     <Form.Group as={Row} controlId='x_axis'>
                                         <Form.Label column sm={3}>X:</Form.Label>
-                                        <Col sm={9}>
-                                            <Form.Select size='sm' name='x' value={this.props.colNames[this.state.xTemp]} onChange={this.changeX}>
+                                        <Col className='ps-0' sm={9}>
+                                            <Form.Select name='x' value={this.props.colNames[this.state.xTemp]} onChange={this.changeX}>
                                             {this.props.colNames.map((col, i) =>
                                             <option className='scatter-option' key={i} value={col} >{col}</option> 
                                             )}
@@ -127,8 +127,8 @@ export default class QualityControl extends React.Component {
                                 <Col className='mx-2' sm={5}>
                                     <Form.Group as={Row} controlId='y_axis'>
                                         <Form.Label column sm={3}>Y:</Form.Label>
-                                        <Col sm={9}>
-                                            <Form.Select size='sm' name='y' value={this.props.colNames[this.state.yTemp]} onChange={this.changeY}>
+                                        <Col className='ps-0' sm={9}>
+                                            <Form.Select name='y' value={this.props.colNames[this.state.yTemp]} onChange={this.changeY}>
                                             {this.props.colNames.map((col, i) =>
                                             <option key={i} value={col} >{col}</option> 
                                             )}
@@ -137,7 +137,7 @@ export default class QualityControl extends React.Component {
                                     </Form.Group>
                                 </Col>
                                 <Col className='mx-2' sm={2}>
-                                    <Button size='sm' type='submit' className='btn-submit' onSubmit={this.makeScatter}>Submit</Button>
+                                    <Button  type='submit' className='btn-submit' onSubmit={this.makeScatter}>Submit</Button>
                                 </Col>
                             </Form>
 

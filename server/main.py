@@ -147,6 +147,9 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
 @app.get("/api/heatmap/{unique_id}")
 async def getHeatMap(unique_id:str):
     logger.info(f'"/heatmap/{unique_id}"')
+    if unique_id is None:
+        logger.error('Unique_id is missing')
+        return {'error': 'Unique_id is missing'}
     try:
         path = f'../results/{unique_id}/web_plots/Pairwise_Pearson_Correlation_Coefficient.png'
         return FileResponse(path, media_type='image/png')
@@ -161,6 +164,9 @@ async def getHeatMap(unique_id:str):
 @app.get("/api/scatter/{unique_id}")
 async def getScatterPlot(unique_id:str, x: str, y: str):
     logger.info(f'"/scatter/{unique_id}?x={x},y={y}"')
+    if unique_id is None or x is None or y is None:
+        logger.error('Unique_id or axis is missing')
+        return {'error': 'Unique_id or axis is missing'}
     try:
         # check if the plot has already been made
         plotTitle = f'Correlation {x} vs {y}'
@@ -208,6 +214,9 @@ async def getScatterPlot(unique_id:str, x: str, y: str):
 @app.get("/api/plot/{unique_id}/{plot_name}")
 async def getRatioPlot(unique_id:str, plot_name: str):
     logger.info(f'"/plot/{unique_id}/{plot_name}"')
+    if unique_id is None or plot_name is None:
+        logger.error('Unique_id or plot_name is missing')
+        return {'error': 'Unique_id or plot_name is missing'}
     try:
         path = f'../results/{unique_id}/web_plots/{plot_name}'
         return FileResponse(path, media_type='image/png')
@@ -222,6 +231,9 @@ async def getRatioPlot(unique_id:str, plot_name: str):
 @app.get("/api/proteins/{unique_id}")
 async def getProteins(unique_id:str):
     logger.info(f'"/proteins/{unique_id}"')
+    if unique_id is None:
+        logger.error('Unique_id is missing')
+        return {'error': 'Unique_id is missing'}
     try:
         with open(f'../results/{unique_id}/results/post-cutoff-proteome.txt', 'r') as f:
                 proteins = f.readline()
@@ -255,19 +267,19 @@ async def getProteins(unique_id:str):
 @app.get("/api/proteinssorted/{unique_id}/{column}")
 async def getProteinSorted(unique_id:str, column:str):
     logger.info(f'"/proteinssorted/{unique_id}/{column}"')
+    if unique_id is None or column is None:
+        logger.error('Unique_id or column is missing')
+        return {'error': 'Unique_id or column is missing'}
     try:
         path = f'../results/{unique_id}/post-cutoff-proteome_with_raw_data.tsv'
         results = pd.read_table(path, sep='\t', header=0)
         kept_columns = [results.columns[0]] + [column] + ['Gene Names', 'Protein names', 'Organism', 'Length']
-        # print(kept_columns)
         results = results[kept_columns]
         results.sort_values(by=[column], ascending=False, inplace=True)
         results = results.iloc[:100, :]
-        # print(results.head())
         results = results.fillna('No data')
         # results = results.to_dict(orient='index')
         results = results.values.tolist()
-        # print(results[2])
         return results
     except Exception as e:
         logger.error(e)
@@ -280,6 +292,9 @@ async def getProteinSorted(unique_id:str, column:str):
 @app.get("/api/download/{unique_id}")
 async def sendResultsTar(unique_id:str):
     logger.info('"/download/"')
+    if unique_id is None:
+        logger.error('Unique_id is missing')
+        return {'error': 'Unique_id is missing'}
     try:
         path = '../results/'+unique_id+'/results.zip'
         return FileResponse(path)
@@ -307,17 +322,40 @@ async def getOrganism():
 
 
 @app.get("/api/panther/{unique_id}")
-async def runPantherEnrich(unique_id:str, organism_id:str):
+async def getPantherEnrich(unique_id:str, organism_id:str):
     logger.info(f'"/panther/{organism_id}"')
     #print(unique_id, organism_id)
     if unique_id is None or organism_id is None:
         logger.error('Unique_id or organism_id is missing')
         return {'error': 'Unique_id or organism_id is missing'}
-    
     try:
         panther_processor = WebPantherProcessor(organism_id, unique_id)
         results_dict = await panther_processor.start()
         return results_dict
+    except Exception as e:
+        logger.error(e)
+        # f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        # f.close()
+        return {'error': ', '.join(list(e.args))}
+
+
+@app.get("/api/cachedpanther/{unique_id}")
+async def getCachedPanther(unique_id:str):
+    logger.info(f'"/cachedpanther/"')
+    if unique_id is None:
+        logger.error('Unique_id is missing')
+        return {'error': 'Unique_id is missing'}
+    try:
+        results = {}
+        for param in ['Panther_GO_Slim_Cellular_Componet', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
+            path = f'../results/{unique_id}/results/post-cutoff-proteome_{param}.tsv'
+            if os.path.exists(path):
+                #TODO
+                results[param] = 'test'
+            else:
+                return {'noResults': True}
+        return results
     except Exception as e:
         logger.error(e)
         f = open('../log/log.txt','a')
