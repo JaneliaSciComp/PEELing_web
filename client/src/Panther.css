@@ -1,3 +1,41 @@
-.link {
+.panther-link {
     text-decoration: underline;
-  }
+}
+
+.panther-container {
+    margin-bottom: 3em;
+}
+
+.panther-table {
+    font-size: small;
+    /*  */
+}
+
+.panther-table-cell{
+    max-width: 6em;
+}
+
+.panther-table-container {
+    margin: 4em auto !important;
+}
+
+/* .panther-table-head {
+    text-align: center;
+} */
+
+
+
+.table-title {
+    font-size: 0.9em;
+    margin-bottom: 0.5em;
+    text-align: center;
+    font-weight: bold;
+    white-space: nowrap; 
+    overflow-x: auto; 
+}
+
+.term-cell-data {
+    max-width: 9em;
+    /* white-space: nowrap; 
+    overflow-x: auto;  */
+}

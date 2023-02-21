@@ -105,10 +105,10 @@ export default class Results extends React.Component {
                     <hr className='my-5 mx-4'></hr>
                     <Panther resultsId={this.props.resultsId}/>
                     <br></br>
-                    <Row className='my-4 px-3 flex-row-reverse'>
+                    <Row className='px-3 d-flex justify-content-center'>
                         <Button className='btn-download' type='submit'>
                             <DownloadIcon />
-                            <a className='anchor-download' href={'/api/download/'+this.props.resultsId}>Download</a>
+                            <a className='anchor-download' href={'/api/download/'+this.props.resultsId}>Download Results</a>
                         </Button>
                     </Row>
                 </div>

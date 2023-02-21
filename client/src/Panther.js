@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table, Form, Row, Col, Button} from 'react-bootstrap';
+import {Table, Form, Row, Col, Button, Spinner} from 'react-bootstrap';
 import './Panther.css';
 
 
@@ -11,7 +11,6 @@ export default class Panther extends React.Component {
             // selectedCol: 0,
             organisms: null,
             selectedOrganism: 'blank',
-            heads: [],
             pantherResults: null,
             error: null,
             organismError: false,
@@ -126,9 +125,10 @@ export default class Panther extends React.Component {
             <div className='panther subsection'>
                 <h4 className='subsection-title my-5 px-4'>Enrichment Analysis (<a className='link panther-link' href={'http://www.pantherdb.org/'}  target="_blank" rel="noreferrer">Panther</a>)</h4>
                 
+                <div className='subsection-content panther-container'>
                 <Form size='sm' className='mx-3 d-flex align-items-end' onSubmit={this.runPanther}>
-                    <Col sm={5}>
-                        <Form.Group as={Row} className='px-3 d-flex' controlId='organism'>
+                    <Col md={5}>
+                        <Form.Group as={Row} className='px-2 d-flex justify-content-start' controlId='organism'>
                             <Form.Label column sm={4}>Organism</Form.Label>
                             <Col className='ps-0' sm={8}>
                                 <Form.Select name='organism' onChange={this.switchOrganism}>
@@ -142,10 +142,10 @@ export default class Panther extends React.Component {
                             </Col>
                         </Form.Group>
                     </Col>
-                    <Col className='text-center' sm={2}>
-                        <Button type='submit' className='btn-submit me-0' onSubmit={this.runPanther}>Run</Button>
+                    <Col className='text-center' md={2}>
+                        <Button type='submit' className='btn-send me-0' onSubmit={this.runPanther}>Send</Button>
                     </Col>
-                    <Col sm={5}>
+                    <Col md={5}>
                         {this.state.organismError ?
                         <p className='invalid my-auto' >Please choose organism</p>
                         :
@@ -153,57 +153,61 @@ export default class Panther extends React.Component {
                     </Col>
                 </Form>
                     
-                    {/* <div className='table-container'> 
-                    <Table striped responsive size='sm' className='protein-table'>
-                        <thead className='protein-table-head'>
-                            <tr className='protein-table-row'>
-                                {this.state.heads ?
-                                this.state.heads.map((head, i) => {
-                                    
-                                    if (i==2) { //third head is name of the col on which the data is sorted, it could be long
-                                        console.log(i);
-                                        return <th className='protein-table-head-cell long-content-cell-head' key={i}>{head}</th>
-                                    } else {
-                                        return <th className='protein-table-head-cell' key={i}>{head}</th>
-                                    }
-                                })
-                                : null}
-                            </tr>
-                        </thead>
-                        <tbody className='table-body'>
-                            {this.state.proteinObj ?
-                            this.state.proteinObj.map((obj, i) => 
-                            <tr className='protein-table-row'>
-                                <td className='protein-table-cell px-3'>{i+1}</td>
-                                {obj.map((entry, j) => {
-                                    if (j==0) {
-                                        return <td className='protein-table-cell'>
-                                            <a key={i} className='link protein-link' href={'https://www.uniprot.org/uniprotkb/'+entry}  target="_blank" rel="noreferrer">{entry}</a>
-                                        </td>
-                                    }
-                                    if (j>=2 && j<=4){ //the gene name, pro name, organism columns, content could be long
-                                        return <td className='protein-table-cell long-content-cell-data'>{entry}</td>
-                                    } else {
-                                        return <td className='protein-table-cell'>{entry}</td>
-                                    }
-                                })} 
-                            </tr>)
-                            : null}
-                        </tbody>
-                        
-                    </Table>
-                    </div> */}
                 
-                {/* {this.state.submitted ?
-                <div>Show results</div>
+                {this.state.pantherResults ?
+                <Row className='panther-table-container mx-1'>
+                    {Object.keys(this.state.pantherResults).map((category, i) => 
+                    <Col className='py-3' lg={4} key={i}>
+                        <p className='table-title'>{category.replaceAll('_', ' ')}</p>
+                        <div className='table-container' > 
+                        <Table striped responsive size='sm' className='panther-table'>
+                            <thead className='table-head panther-table-head'>
+                                <tr className='panther-table-row'>
+                                    <th className='table-head-cell' key={0}>Rank</th>
+                                    <th className='table-head-cell term-cell-head' key={1}>Term</th>
+                                    <th className='table-head-cell' key={2}>FDR</th>
+                                </tr>
+                            </thead>
+                            <tbody className='table-body'>
+                                {this.state.pantherResults[category].map((arr, j) => 
+                                <tr className='panther-table-row' key={j}>
+                                    <td className='panther-table-cell px-3' key={0}>{j+1}</td>
+                                    <td className='panther-table-cell term-cell-data' key={1}>{arr[0]}</td>
+                                    <td className='panther-table-cell' key={2}>{arr[1].toExponential(3)}</td>
+                                </tr>)}
+                            </tbody>
+                        </Table>
+                        </div>
+                    </Col>    
+                    )}
+                    
+                    
+                </Row>
                 :
-                <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
-                    <p>Oops! Panther enrichment went wrong!</p>
+                <div>
+                    {this.state.error ?
+                    <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
+                        <p>Oops! Panther enrichment went wrong!</p>
+                        <p>{this.state.error}</p>
+                    </div>
+                    :
+                    <div>
+                        {this.state.submitted ?
+                        <div className='info mx-2 my-5 d-flex flex-row justify-content-center align-items-center'>
+                            <Spinner className='spinner mx-3' animation='border' role='status'>
+                                <span className='visually-hidden'>Loading</span>
+                            </Spinner>
+                            <p className='mx-2 my-4'>Communicating with Panther</p>
+                        </div>
+                        :
+                        null
+                        }
+                    </div>
+                    }
                 </div>
-                :
-                <div className='mx-3'>    
+                }
+
                 </div>
-                } */}
             </div>
         )
     }

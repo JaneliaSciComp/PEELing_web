@@ -61,7 +61,8 @@ export default class TopProteins extends React.Component {
                     <p>Oops! Sorting Proteins went wrong!</p>
                 </div>
                 :
-                <div className='mx-3'>
+                <div className='subsection-content mx-3'>
+                    <div className='tabs-container'>
                     <Tabs className="table-tabs mx-0 mb-1" id="controlled-tab-example" activeKey={this.state.selectedCol} onSelect={this.switchCol}>
                         {this.props.colNames[0] ?
                         this.props.colNames.map((col, i) =>
@@ -69,18 +70,18 @@ export default class TopProteins extends React.Component {
                         )
                         :null}
                     </Tabs>
-                    
+                    </div>
                     <div className='table-container'> 
                     <Table striped responsive size='sm' className='protein-table'>
-                        <thead className='protein-table-head'>
+                        <thead className='table-head protein-table-head'>
                             <tr className='protein-table-row'>
                                 {this.state.heads ?
                                 this.state.heads.map((head, i) => {
                                     
                                     if (i===2) { //third head is name of the col on which the data is sorted, it could be long
-                                        return <th className='protein-table-head-cell long-content-cell-head' key={i}>{head}</th>
+                                        return <th className='table-head-cell long-content-cell-head' key={i}>{head}</th>
                                     } else {
-                                        return <th className='protein-table-head-cell' key={i}>{head}</th>
+                                        return <th className='table-head-cell' key={i}>{head}</th>
                                     }
                                 })
                                 : null}

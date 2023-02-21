@@ -16,16 +16,13 @@ export default class QualityControl extends React.Component {
             scatterQuery: null,
             colSelectionError: null,
         }
-        // console.log('constructor ');
-        // console.log(this.props);
-        // console.log(this.state);
+       
         this.makeScatter = this.makeScatter.bind(this);
         this.changeX = this.changeX.bind(this);
         this.changeY = this.changeY.bind(this);
     }
 
     static getDerivedStateFromProps(props, state) {
-        //console.log('derived')
         if (!props.scatterError && !state.colSelectionError) {
             return {
                 scatterQuery: 'x='+props.colNames[state.xIndex]+'&y='+props.colNames[state.yIndex],
@@ -100,7 +97,7 @@ export default class QualityControl extends React.Component {
                     <p>Oops! Quality Control went wrong!</p>
                 </div>
                 :
-                <Row className='qc-container mx-3 align-items-stretch'>
+                <Row className='subsection-content qc-container mx-3 align-items-stretch'>
                     <Col md={6} className='heatmap-container align-items-end'>
                         <Image src={'/api/heatmap/'+this.props.resultsId} alt='logo' fluid='true'></Image>
                     </Col>
@@ -137,7 +134,7 @@ export default class QualityControl extends React.Component {
                                     </Form.Group>
                                 </Col>
                                 <Col className='mx-2' sm={2}>
-                                    <Button  type='submit' className='btn-submit' onSubmit={this.makeScatter}>Submit</Button>
+                                    <Button type='submit' className='btn-make' onSubmit={this.makeScatter}>Make</Button>
                                 </Col>
                             </Form>
 

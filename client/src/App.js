@@ -16,9 +16,10 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-        resultsId: 'bcee7f9c-c3f2-4754-b373-7a219a152d5b', //home 'bcee7f9c-c3f2-4754-b373-7a219a152d5b', //work 'e88b066a-7c04-42e2-b994-bda8829ee0a8',  //null,
+        resultsId: 'b102d7ff-8872-4ac3-b1cc-4f28bb6814df', //home 'bcee7f9c-c3f2-4754-b373-7a219a152d5b', //work 'e88b066a-7c04-42e2-b994-bda8829ee0a8',  //null,
         failedIdMapping: null,
-        colNames: ['1', '2', '3', '4', '5', '6'],
+        colNames: ["20180907_TMT8_SCX_SingleShot__126_127N", "20180907_TMT8_SCX_SingleShot__129C_127N", "20180907_TMT8_SCX_SingleShot__126_128C", "20180907_TMT8_SCX_SingleShot__129C_128C"]
+        //['2', '3', '4', '5', '6'],
     }
 
     this.setResultsId = this.setResultsId.bind(this);

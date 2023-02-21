@@ -47,7 +47,7 @@ export default class Proteins extends React.Component {
                     <p>Oops! Proteins went wrong!</p>
                 </div>
                 :
-                <div>
+                <div className='subsection-content'>
                     <div className='mx-4 mb-2 d-flex justify-content-between align-items-end'>
                         <span className='info'>({this.state.proteins.length} surface proteins found)</span>
                         <CopyToClipboard text={this.state.proteins.join(',')}

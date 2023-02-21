@@ -78,7 +78,7 @@ export default class Plots extends React.Component {
                     <p>Oops! Plots went wrong!</p>
                 </div>
                 : */}
-                <Row className='plots-container mx-3'>
+                <Row className='subsection-content plots-container mx-3'>
                     <Col className='px-0' md={2}>
                         {this.props.colNames[0] ?
                         <div className='btn-group-container my-3'>
