@@ -12,12 +12,10 @@ export default class Analysis extends React.Component{
     
         this.state = {
             userInputSubmitted: false,
-            // resultsId: this.props.router.params.id, //'99f82c04-dcf8-4b9d-9ab7-d5fba67b290e',
             error: null, //'error'
         }
 
         this.submitIndicator = this.submitIndicator.bind(this);
-        // this.setResultsId = this.setResultsId.bind(this);
         this.setError = this.setError.bind(this);
     }
 

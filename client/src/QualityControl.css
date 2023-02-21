@@ -2,9 +2,9 @@
     font-size: small;
 }
 
-/* .scatter-btn {
-    display: flex;
-} */
+.scatter-error {
+    margin-top: 2em !important;
+}
 
 .scatter-option {
     overflow-x: auto;

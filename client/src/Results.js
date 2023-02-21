@@ -11,16 +11,7 @@ import Panther from './Panther';
 
 
 export default class Results extends React.Component {
-    constructor(props) {
-        super(props);
-
-        // this.state = {
-        //     colNames: [],
-        // }
-        // console.log('Results constructor');
-        // console.log(this.state);
-    }
-
+    
     
     // setColNames(names) {
     //     this.setState({colNames: names});
@@ -53,31 +44,7 @@ export default class Results extends React.Component {
     // }
 
 
-    // static getDerivedStateFromProps(props, state) {
-    //     console.log('Resutls derived')
-
-    //     fetch('/api/colnames/'+props.resultsId, {
-    //         method: 'GET'
-    //     }).then(res => {
-    //         console.log(res);
-    //         if (res.ok) {
-    //             return res.json(); //TODO: await?
-    //         } else {
-    //             props.setError(res.statusText);
-    //         }
-    //     }).then(res => {
-    //         if (res['error']) {
-    //             props.setError(res['error']);
-    //         } else {
-    //             return {
-    //                 colNames: res['colNames']
-    //             }                
-    //         }
-    //     })
-    //     return null;
-    // }
-
-
+   
     render() {
         // console.log('Results render');
         // console.log(this.props);
@@ -108,7 +75,7 @@ export default class Results extends React.Component {
                     <Row className='px-3 d-flex justify-content-center'>
                         <Button className='btn-download' type='submit'>
                             <DownloadIcon />
-                            <a className='anchor-download' href={'/api/download/'+this.props.resultsId}>Download Results</a>
+                            <a className='anchor-download' href={'http://localhost:3000/api/download/'+this.props.resultsId}>Download Results</a>
                         </Button>
                     </Row>
                 </div>

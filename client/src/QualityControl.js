@@ -103,8 +103,8 @@ export default class QualityControl extends React.Component {
                     </Col>
                     <Col md={6} className='scatterplot-container'>
                         {this.props.scatterError ?
-                        <div className='info-error'>
-                            <p>{this.props.scatterError}</p>
+                        <div className='info-error scatter-error'>
+                            <p className='scatter-error my-4'>{this.props.scatterError}</p>
                         </div>
                         :
                         <div className='align-items-start'>

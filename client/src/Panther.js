@@ -23,7 +23,7 @@ export default class Panther extends React.Component {
 
 
     componentDidMount() {
-        fetch("/api/organism/", { 
+        fetch("/api/organism", { 
             method: 'GET'
         }).then(res => {
             //console.log(res);

@@ -29,7 +29,7 @@ export default class UserInput extends React.Component {
 
 
     componentDidMount() {
-        fetch("/api/format/", { 
+        fetch("/api/format", { 
             method: 'GET'
         }).then(res => {
             //console.log(res);
@@ -57,7 +57,7 @@ export default class UserInput extends React.Component {
         this.props.setFailedIdMapping(null);
         this.props.setColNames(null);
         this.props.setError(null);
-        fetch("/api/submit/", {
+        fetch("/api/submit", {
             method: 'POST',
             body: new FormData(e.target),
         }).then(res => {

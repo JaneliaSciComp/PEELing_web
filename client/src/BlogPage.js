@@ -32,7 +32,7 @@ export default class Blog extends React.Component {
         //     // this.
         // })
 
-        fetch("/api/exportcached/", {
+        fetch("/api/exportcached", {
             method: 'GET',
         }).then(res => {
             //console.log(res);

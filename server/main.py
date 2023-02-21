@@ -69,9 +69,9 @@ daemon.start()
 
 ######## Main Thread ########
 
-@app.get("/api/format/")
+@app.get("/api/format")
 async def getFormats():
-    logger.info('"/format/"')
+    logger.info('"/format"')
     #To test error handling
     # formats = ['a','b']
     # formats += 1
@@ -87,9 +87,9 @@ async def getFormats():
         return {'error': ', '.join(list(e.args))}
 
 
-@app.post("/api/submit/")
+@app.post("/api/submit")
 async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
-    logger.info('"/submit/"')
+    logger.info('"/submit"')
     # return  '3cb1ce3f-6d8b-4a8c-b3d2-ab27ef5997ca', 0 #for home
     #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
     #To test error handling
@@ -182,33 +182,6 @@ async def getScatterPlot(unique_id:str, x: str, y: str):
         traceback.print_exc(file=f)
         f.close()
         return {'error': ', '.join(list(e.args))}
-
-
-# @app.get("/api/plotslist/{unique_id}")
-# async def getPlotsList(unique_id:str):
-#     logger.info(f'"/plotslist/{unique_id}"')
-#     try:
-#         response = {}
-#         path = os.path.join('../results/', unique_id)
-
-#         # get list of paths of plots
-#         plots = os.listdir(path+'/web_plots') 
-#         ratio_plots = []
-#         roc_plots = []
-#         for plot in plots:
-#             if plot[:3] == 'ROC':
-#                 roc_plots.append(plot)
-#             elif plot[:7] == 'TPR_FPR':
-#                 ratio_plots.append(plot)
-#         response['ratioPlots'] = ratio_plots
-#         response['rocPlots'] = roc_plots
-#         return response
-#     except Exception as e:
-#         logger.error(e)
-#         f = open('../log/log.txt','a')
-#         traceback.print_exc(file=f)
-#         f.close()
-#         return {'error': ', '.join(list(e.args))}
 
 
 @app.get("/api/plot/{unique_id}/{plot_name}")
@@ -306,7 +279,7 @@ async def sendResultsTar(unique_id:str):
         return {'error': ', '.join(list(e.args))}
 
 
-@app.get("/api/organism/")
+@app.get("/api/organism")
 async def getOrganism():
     logger.info('"/organism/"')
     try:
@@ -341,7 +314,7 @@ async def getPantherEnrich(unique_id:str, organism_id:str):
                 done = False
                 break
         
-        # not done yet
+        # if not done, reach out to Panther
         if not done:
             panther_processor = WebPantherProcessor(organism_id, unique_id)
             results = await panther_processor.start()
@@ -363,7 +336,7 @@ async def getCachedPanther(unique_id:str):
         return {'error': 'Unique_id is missing'}
     try:
         results = {}
-        for param in ['Panther_GO_Slim_Cellular_Componet', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
+        for param in ['Panther_GO_Slim_Cellular_Component', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
             path = f'../results/{unique_id}/results/post-cutoff-proteome_{param}.tsv'
             if os.path.exists(path):
                 df = pd.read_table(path, sep='\t', header=0)
@@ -379,9 +352,9 @@ async def getCachedPanther(unique_id:str):
         return {'error': ', '.join(list(e.args))}
 
 
-@app.get("/api/exportcached/")
+@app.get("/api/exportcached")
 async def exportCached():
-    logger.info('"/exportcached/"')
+    logger.info('"/exportcached"')
     try:
         ids = uniprot_communicator.get_ids()
         ids.to_csv('../retrieved_data/latest_ids.tsv', sep='\t', index=False)
@@ -393,5 +366,5 @@ async def exportCached():
         return {'error': ', '.join(list(e.args))}
         
 
-def main():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# def main():
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
