@@ -70,12 +70,12 @@ export default class Results extends React.Component {
                     <hr className='my-5 mx-4'></hr>
                     <TopProteins resultsId={this.props.resultsId} colNames={this.props.colNames} />
                     <hr className='my-5 mx-4'></hr>
-                    <Panther resultsId={this.props.resultsId}/>
+                    <Panther resultsId={this.props.resultsId} setOrganism={this.props.setOrganism} organismId={this.props.organismId}/>
                     <br></br>
                     <Row className='px-3 d-flex justify-content-center'>
                         <Button className='btn-download' type='submit'>
                             <DownloadIcon />
-                            <a className='anchor-download' href={'http://localhost:3000/api/download/'+this.props.resultsId}>Download Results</a>
+                            <a className='anchor-download' href={'http://localhost:8000/api/download/'+this.props.resultsId}>Download Results</a>
                         </Button>
                     </Row>
                 </div>

@@ -305,8 +305,8 @@ async def getPantherEnrich(unique_id:str, organism_id:str):
         results = {}
         #check if the analysis is already done
         done = True
-        for param in ['Panther_GO_Slim_Cellular_Componet', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
-            path = f'../results/{unique_id}/results/post-cutoff-proteome_{param}.tsv'
+        for param in ['Panther_GO_Slim_Cellular_Component', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
+            path = f'../results/{unique_id}/results/post-cutoff-proteome_{organism_id}_{param}.tsv'
             if os.path.exists(path):
                 df = pd.read_table(path, sep='\t', header=0)
                 results[param] = df.values.tolist()
@@ -322,14 +322,14 @@ async def getPantherEnrich(unique_id:str, organism_id:str):
         return results
     except Exception as e:
         logger.error(e)
-        # f = open('../log/log.txt','a')
+        f = open('../log/log.txt','a')
         traceback.print_exc(file=f)
-        # f.close()
+        f.close()
         return {'error': ', '.join(list(e.args))}
 
 
 @app.get("/api/cachedpanther/{unique_id}")
-async def getCachedPanther(unique_id:str):
+async def getCachedPanther(unique_id:str, organism_id:str):
     logger.info(f'"/cachedpanther/"')
     if unique_id is None:
         logger.error('Unique_id is missing')
@@ -337,7 +337,7 @@ async def getCachedPanther(unique_id:str):
     try:
         results = {}
         for param in ['Panther_GO_Slim_Cellular_Component', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
-            path = f'../results/{unique_id}/results/post-cutoff-proteome_{param}.tsv'
+            path = f'../results/{unique_id}/results/post-cutoff-proteome_{organism_id}_{param}.tsv'
             if os.path.exists(path):
                 df = pd.read_table(path, sep='\t', header=0)
                 results[param] = df.values.tolist()

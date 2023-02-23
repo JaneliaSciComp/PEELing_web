@@ -20,11 +20,13 @@ export default class App extends React.Component {
         failedIdMapping: null,
         colNames: null, //["20180907_TMT8_SCX_SingleShot__126_127N", "20180907_TMT8_SCX_SingleShot__129C_127N", "20180907_TMT8_SCX_SingleShot__126_128C", "20180907_TMT8_SCX_SingleShot__129C_128C"]
         //['1', '2', '3', '4', '5', '6'],
+        organismId: null,
     }
 
     this.setResultsId = this.setResultsId.bind(this);
     this.setFailedIdMapping = this.setFailedIdMapping.bind(this);
     this.setColNames = this.setColNames.bind(this);
+    this.setOrganism = this.setOrganism.bind(this);
   }
 
   setResultsId(id) {
@@ -37,6 +39,10 @@ export default class App extends React.Component {
 
   setColNames(names) {
     this.setState({colNames: names})
+  }
+
+  setOrganism(organism) {
+    this.setState({organismId: organism})
   }
   
   render() {
@@ -52,6 +58,8 @@ export default class App extends React.Component {
                     failedIdMapping={this.state.failedIdMapping}
                     setColNames={this.setColNames}
                     colNames={this.state.colNames}
+                    setOrganism={this.setOrganism}
+                    organismId={this.state.organismId}
                     />} />
                   {/* <Route path='/:id'
                     element={<Analysis setResultsId={this.setResultsId} />}/> */}

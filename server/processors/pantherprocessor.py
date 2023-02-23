@@ -144,7 +144,7 @@ class PantherProcessor(ABC):
             url = self.__make_url_enrich(annot_dataset)
             response = await self.__submit(url)
             results_df = self.__format_enrich(response)
-            results_df.to_csv(f'{self.__path}/post-cutoff-proteome_{ENRICH_CATEGORIES[annot_dataset]}.tsv', sep='\t', index=False)
+            results_df.to_csv(f'{self.__path}/post-cutoff-proteome_{self.__organism_id}_{ENRICH_CATEGORIES[annot_dataset]}.tsv', sep='\t', index=False)
             logger.info(f'{annot_dataset} is done. Time: {datetime.now()-start_time}')
             return (ENRICH_CATEGORIES[annot_dataset], results_df)
         except Exception as e:

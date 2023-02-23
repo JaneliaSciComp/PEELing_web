@@ -48,7 +48,9 @@ export default class Analysis extends React.Component{
                   failedIdMapping={this.props.failedIdMapping}
                   colNames={this.props.colNames} 
                   error={this.state.error}
-                  setError={this.setError} />
+                  setError={this.setError}
+                  setOrganism={this.props.setOrganism}
+                  organismId={this.props.organismId}/>
                 : null}
             </div>
         )

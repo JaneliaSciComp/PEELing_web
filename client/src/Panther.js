@@ -43,25 +43,28 @@ export default class Panther extends React.Component {
         })
 
         // fetch panther results if it's alraady done
-        fetch('/api/cachedpanther/'+this.props.resultsId, {
-            method: 'GET'
-        }).then(res => {
-            if (res.ok) {
-                return res.json(); 
-            } else {
-                this.setState({error: res.statusText}); 
-            }
-        }).then(res => {
-            if (res['error']) {
-                this.setState({error: res['error']});
-            } else if (!res['noResults']) {
-                this.setState({
-                    pantherResults: res,
+        if (this.props.resultsId && this.props.organismId) {
+            fetch('/api/cachedpanther/'+this.props.resultsId+'?organism_id='+this.props.organismId, {
+                method: 'GET'
+            }).then(res => {
+                if (res.ok) {
+                    return res.json(); 
+                } else {
+                    this.setState({error: res.statusText}); 
                 }
-                , ()=>{console.log(this.state.pantherResults)}
-                ); 
-            }
-        })
+            }).then(res => {
+                if (res['error']) {
+                    this.setState({error: res['error']});
+                } else if (!res['noResults']) {
+                    this.setState({
+                        pantherResults: res,
+                    }
+                    // , ()=>{console.log(this.state.pantherResults)}
+                    ); 
+                }
+            })
+        }
+        
     }
 
     switchOrganism(e) { 
@@ -107,8 +110,9 @@ export default class Panther extends React.Component {
                         organismError: false,
                         submitted: false,
                     }
-                    , ()=>{console.log(this.state.pantherResults)}
+                    // , ()=>{console.log(this.state.pantherResults)}
                     ); 
+                    this.props.setOrganism(orgId);
                 }
             })
         } else {
@@ -188,7 +192,7 @@ export default class Panther extends React.Component {
                     {this.state.error ?
                     <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
                         <p>Oops! Panther enrichment went wrong!</p>
-                        <p>{this.state.error}</p>
+                        <p>Please check the organism and try again.</p>
                     </div>
                     :
                     <div>

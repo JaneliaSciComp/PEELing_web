@@ -4,13 +4,23 @@
 
 /* .table-tabs {
     max-width: 100%;
+    flex-wrap: nowrap;
     overflow-x: scroll;
-}
+
+} */
 
 .table-tab {
     max-width: 5em;
     overflow-x: scroll;
+}
+/* .nav {
+    
+    overflow-x: auto;
 } */
+
+/* .nav-item {
+    margin-left: 0 !important;
+  } */
 
 .protein-table {
     font-size: small;
