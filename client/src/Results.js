@@ -75,7 +75,8 @@ export default class Results extends React.Component {
                     <Row className='px-3 d-flex justify-content-center'>
                         <Button className='btn-download' type='submit'>
                             <DownloadIcon />
-                            <a className='anchor-download' href={'http://localhost:8000/api/download/'+this.props.resultsId}>Download Results</a>
+                            <a className='anchor-download' href={'/api/download/'+this.props.resultsId}>Download Results</a>
+                            {/* http://localhost:8000 */}
                         </Button>
                     </Row>
                 </div>

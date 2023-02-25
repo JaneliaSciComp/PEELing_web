@@ -3,11 +3,11 @@ from fastapi import FastAPI, Form, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Union
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import sleep
 import schedule
 from threading import Thread
-import logging, sys, os, traceback
+import logging, os, traceback, shutil
 import pandas as pd
 import matplotlib.pyplot as plt
 from datamanagement.webuniprotcommunicator import WebUniProtCommunicator
@@ -49,20 +49,49 @@ def update_task():
     coro = uniprot_communicator.update_data()
     future = asyncio.run_coroutine_threadsafe(coro, coroutine_loop)
     future.result()
+
+
+def delete_user_results():
+    try:
+        files = os.listdir('../results')
+        logger.info(f'{len(files)} files exist')
+        count=0
+        for f in files:
+            path = f'../results/{f}'
+            modify_time = os.path.getmtime(path)
+            modify_time = datetime.fromtimestamp(modify_time)
+            exist_time = datetime.now() - modify_time
+            logger.debug(path)
+            logger.debug(exist_time > timedelta(days=1)) 
+            if exist_time > timedelta(days=1):
+                shutil.rmtree(path, ignore_errors=True)
+                count += 1
+        logger.info(f'{count} files deleted')
+    except Exception as e:
+        logger.error(e)
+        f = open('../log/log.txt','a')
+        traceback.print_exc(file=f)
+        f.close()
+
+
     
-def backgroud_update():
+def backgroud_tasks():
     update_task()
     #TODO
     #schedule.every().monday.at("01:00").do(uniprot_communicator.update_data)
-    #schedule.every(1).minutes.do(update_task)
+    #schedule.every(2).minutes.do(update_task)
     schedule.every(1).days.do(update_task)
     while True:
-        #logger.info(f'{datetime.now()} Background update...')
+        #logger.debug(f'while')
+        delete_user_results()
         logger.debug(schedule.get_jobs())
         schedule.run_pending()
-        sleep(60)
+        #logger.debug(f'start sleep')
+        sleep(600) #TODO
+        #logger.debug(f'after sleep')
 
-daemon = Thread(target=backgroud_update, daemon=True, name='background_update')
+
+daemon = Thread(target=backgroud_tasks, daemon=True, name='background_update')
 daemon.start()
 
 
@@ -109,7 +138,6 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
         processor = WebProcessor(user_input_reader, uniprot_communicator)
         unique_id, failed_id_mapping, columns = await processor.start()
-        print(columns)
         end_time = datetime.now()
         logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
         return {'resultsId': unique_id, 'failedIdMapping': failed_id_mapping, 'colNames': columns} 
