@@ -21,6 +21,7 @@ yarn-debug.log*
 yarn-error.log*
 
 /log/log.txt
+/log/app_usage.txt
 /retrieved_data
 /results
 __pycache__/

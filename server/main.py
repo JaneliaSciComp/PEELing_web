@@ -16,17 +16,22 @@ from processors.webprocessor import WebProcessor
 from processors.webpantherprocessor import WebPantherProcessor
 import asyncio
 
+REQUESTES = ['format', 'submit', 'heatmap', 'scatter', 'plot', 'proteins', 'proteinssorted', 'download', 'organism', 'panther', 'cachedpanther']
+
+#set up logger
 logger = logging.getLogger('peeling')
 #TODO: set level based on verbose option
 logger.setLevel(logging.INFO)
-#log_handler = logging.FileHandler('../log/log.txt')
-log_handler = logging.StreamHandler()
-log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s'))
+#log_handler = logging.FileHandler('../log/log.txt') # to log to a file
+log_handler = logging.StreamHandler() # to log to console
+log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s')) # to print out source code location: %(pathname)s %(lineno)d: 
 logger.addHandler(log_handler)
 logger.info(f'\n{datetime.now()} Server starts')
 
 
 uniprot_communicator = WebUniProtCommunicator()
+
+app_usage = {}
 
 app = FastAPI()
 
@@ -42,13 +47,15 @@ app.add_middleware(
 )
 
 
-coroutine_loop = asyncio.get_running_loop()
 
 ######## Background Thread ########
-def update_task():
+coroutine_loop = asyncio.get_running_loop()
+
+def update_and_log_usage():
     coro = uniprot_communicator.update_data()
     future = asyncio.run_coroutine_threadsafe(coro, coroutine_loop)
     future.result()
+    log_usage()
 
 
 def delete_user_results():
@@ -74,20 +81,45 @@ def delete_user_results():
         f.close()
 
 
+def log_usage():
+    global app_usage
+    file_path = '../log/app_usage.txt'
+    # write column name
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as f:
+            f.write('time\t')
+            for col in REQUESTES:
+                f.write(col+'\t')
+            f.write('\n')
+
+    # write request count for current period
+    with open(file_path, 'a') as f: 
+        f.write(str(datetime.now())+'\t')
+        for col in REQUESTES:
+            if col in app_usage:
+                f.write(str(app_usage[col])+'\t')
+            else:
+                f.write('0\t')
+        f.write('\n')
+    
+    logger.info('App usage writren')
+    #refresh app_usage
+    app_usage = {}
+
     
 def backgroud_tasks():
-    update_task()
+    update_and_log_usage()
     #TODO
     #schedule.every().monday.at("01:00").do(uniprot_communicator.update_data)
-    #schedule.every(2).minutes.do(update_task)
-    schedule.every(1).days.do(update_task)
+    #schedule.every(2).minutes.do(update_and_log_usage)
+    schedule.every(1).days.do(update_and_log_usage)
     while True:
         #logger.debug(f'while')
         delete_user_results()
         logger.debug(schedule.get_jobs())
         schedule.run_pending()
         #logger.debug(f'start sleep')
-        sleep(600) #TODO
+        sleep(60) #TODO
         #logger.debug(f'after sleep')
 
 
@@ -97,28 +129,37 @@ daemon.start()
 
 
 ######## Main Thread ########
+def log_request(req):
+    if req not in app_usage:
+        app_usage[req] = 1
+    else:
+        app_usage[req] = app_usage[req] + 1
+
+
+def error_handler(err):
+    logger.error(err)
+    f = open('../log/log.txt','a')
+    traceback.print_exc(file=f)
+    f.close()
+    return {'error': ', '.join(list(err.args))}
+
 
 @app.get("/api/format")
 async def getFormats():
     logger.info('"/format"')
-    #To test error handling
-    # formats = ['a','b']
-    # formats += 1
-    # return {'formats': formats}
+    log_request('format')
+
     try:
         formats = list(plt.gcf().canvas.get_supported_filetypes().keys())
         return {'formats': formats}
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 @app.post("/api/submit")
 async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
     logger.info('"/submit"')
+    log_request('submit')
     # return  '3cb1ce3f-6d8b-4a8c-b3d2-ab27ef5997ca', 0 #for home
     #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
     #To test error handling
@@ -142,11 +183,7 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
         return {'resultsId': unique_id, 'failedIdMapping': failed_id_mapping, 'colNames': columns} 
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 # @app.get("/api/colnames/{unique_id}")
@@ -175,6 +212,8 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
 @app.get("/api/heatmap/{unique_id}")
 async def getHeatMap(unique_id:str):
     logger.info(f'"/heatmap/{unique_id}"')
+    log_request('heatmap')
+
     if unique_id is None:
         logger.error('Unique_id is missing')
         return {'error': 'Unique_id is missing'}
@@ -182,16 +221,14 @@ async def getHeatMap(unique_id:str):
         path = f'../results/{unique_id}/web_plots/Pairwise_Pearson_Correlation_Coefficient.png'
         return FileResponse(path, media_type='image/png')
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 @app.get("/api/scatter/{unique_id}")
 async def getScatterPlot(unique_id:str, x: str, y: str):
     logger.info(f'"/scatter/{unique_id}?x={x},y={y}"')
+    log_request('scatter')
+
     if unique_id is None or x is None or y is None:
         logger.error('Unique_id or axis is missing')
         return {'error': 'Unique_id or axis is missing'}
@@ -205,16 +242,14 @@ async def getScatterPlot(unique_id:str, x: str, y: str):
             processor.plot_scatter()
         return FileResponse(path)
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 @app.get("/api/plot/{unique_id}/{plot_name}")
 async def getRatioPlot(unique_id:str, plot_name: str):
     logger.info(f'"/plot/{unique_id}/{plot_name}"')
+    log_request('plot')
+
     if unique_id is None or plot_name is None:
         logger.error('Unique_id or plot_name is missing')
         return {'error': 'Unique_id or plot_name is missing'}
@@ -222,16 +257,14 @@ async def getRatioPlot(unique_id:str, plot_name: str):
         path = f'../results/{unique_id}/web_plots/{plot_name}'
         return FileResponse(path, media_type='image/png')
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 @app.get("/api/proteins/{unique_id}")
 async def getProteins(unique_id:str):
     logger.info(f'"/proteins/{unique_id}"')
+    log_request('proteins')
+
     if unique_id is None:
         logger.error('Unique_id is missing')
         return {'error': 'Unique_id is missing'}
@@ -241,11 +274,7 @@ async def getProteins(unique_id:str):
         proteins = proteins.split(',')
         return {'protein_list': proteins}
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 # @app.get("/api/proteintable/{unique_id}")
@@ -268,6 +297,8 @@ async def getProteins(unique_id:str):
 @app.get("/api/proteinssorted/{unique_id}/{column}")
 async def getProteinSorted(unique_id:str, column:str):
     logger.info(f'"/proteinssorted/{unique_id}/{column}"')
+    log_request('proteinssorted')
+    
     if unique_id is None or column is None:
         logger.error('Unique_id or column is missing')
         return {'error': 'Unique_id or column is missing'}
@@ -283,16 +314,14 @@ async def getProteinSorted(unique_id:str, column:str):
         results = results.values.tolist()
         return results
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 @app.get("/api/download/{unique_id}")
 async def sendResultsTar(unique_id:str):
     logger.info('"/download/"')
+    log_request('download')
+
     if unique_id is None:
         logger.error('Unique_id is missing')
         return {'error': 'Unique_id is missing'}
@@ -300,32 +329,27 @@ async def sendResultsTar(unique_id:str):
         path = '../results/'+unique_id+'/results.zip'
         return FileResponse(path)
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 @app.get("/api/organism")
 async def getOrganism():
     logger.info('"/organism/"')
+    log_request('organism')
+
     try:
         panther_processor = WebPantherProcessor(None, None)
         organism_dict = await panther_processor.retrieve_organisms()
         return organism_dict
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 @app.get("/api/panther/{unique_id}")
 async def getPantherEnrich(unique_id:str, organism_id:str):
     logger.info(f'"/panther/{organism_id}"')
-    #print(unique_id, organism_id)
+    log_request('panther')
+
     if unique_id is None or organism_id is None:
         logger.error('Unique_id or organism_id is missing')
         return {'error': 'Unique_id or organism_id is missing'}
@@ -349,16 +373,14 @@ async def getPantherEnrich(unique_id:str, organism_id:str):
         
         return results
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 @app.get("/api/cachedpanther/{unique_id}")
 async def getCachedPanther(unique_id:str, organism_id:str):
     logger.info(f'"/cachedpanther/"')
+    log_request('cachedpanther')
+
     if unique_id is None:
         logger.error('Unique_id is missing')
         return {'error': 'Unique_id is missing'}
@@ -373,11 +395,7 @@ async def getCachedPanther(unique_id:str, organism_id:str):
                 return {'noResults': True}
         return results
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
 
 
 @app.get("/api/exportcached")
@@ -387,11 +405,7 @@ async def exportCached():
         ids = uniprot_communicator.get_ids()
         ids.to_csv('../retrieved_data/latest_ids.tsv', sep='\t', index=False)
     except Exception as e:
-        logger.error(e)
-        f = open('../log/log.txt','a')
-        traceback.print_exc(file=f)
-        f.close()
-        return {'error': ', '.join(list(e.args))}
+        return error_handler(e)
         
 
 # def main():
