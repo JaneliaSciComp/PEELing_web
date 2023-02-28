@@ -119,7 +119,7 @@ def backgroud_tasks():
         logger.debug(schedule.get_jobs())
         schedule.run_pending()
         #logger.debug(f'start sleep')
-        sleep(60) #TODO
+        sleep(600) #TODO
         #logger.debug(f'after sleep')
 
 
@@ -214,9 +214,6 @@ async def getHeatMap(unique_id:str):
     logger.info(f'"/heatmap/{unique_id}"')
     log_request('heatmap')
 
-    if unique_id is None:
-        logger.error('Unique_id is missing')
-        return {'error': 'Unique_id is missing'}
     try:
         path = f'../results/{unique_id}/web_plots/Pairwise_Pearson_Correlation_Coefficient.png'
         return FileResponse(path, media_type='image/png')
@@ -225,13 +222,10 @@ async def getHeatMap(unique_id:str):
 
 
 @app.get("/api/scatter/{unique_id}")
-async def getScatterPlot(unique_id:str, x: str, y: str):
+async def getScatterPlot(unique_id:str, x: Union[str, None], y: Union[str, None]):
     logger.info(f'"/scatter/{unique_id}?x={x},y={y}"')
     log_request('scatter')
 
-    if unique_id is None or x is None or y is None:
-        logger.error('Unique_id or axis is missing')
-        return {'error': 'Unique_id or axis is missing'}
     try:
         # check if the plot has already been made
         plotTitle = f'Correlation {x} vs {y}'
@@ -250,9 +244,6 @@ async def getRatioPlot(unique_id:str, plot_name: str):
     logger.info(f'"/plot/{unique_id}/{plot_name}"')
     log_request('plot')
 
-    if unique_id is None or plot_name is None:
-        logger.error('Unique_id or plot_name is missing')
-        return {'error': 'Unique_id or plot_name is missing'}
     try:
         path = f'../results/{unique_id}/web_plots/{plot_name}'
         return FileResponse(path, media_type='image/png')
@@ -265,9 +256,6 @@ async def getProteins(unique_id:str):
     logger.info(f'"/proteins/{unique_id}"')
     log_request('proteins')
 
-    if unique_id is None:
-        logger.error('Unique_id is missing')
-        return {'error': 'Unique_id is missing'}
     try:
         with open(f'../results/{unique_id}/results/post-cutoff-proteome.txt', 'r') as f:
                 proteins = f.readline()
@@ -277,31 +265,11 @@ async def getProteins(unique_id:str):
         return error_handler(e)
 
 
-# @app.get("/api/proteintable/{unique_id}")
-# async def getProteinTable(unique_id:str):
-#     logger.info(f'"/proteintable/{unique_id}"')
-#     try:
-#         path = f'../results/{unique_id}/results/post-cutoff-proteome.tsv'
-#         results = pd.read_table(path, sep='\t', header=0)
-#         results.set_index('Entry', inplace=True)
-#         results = results.to_dict(orient='index')
-#         return results
-#     except Exception as e:
-#         logger.error(e)
-#         f = open('../log/log.txt','a')
-#         traceback.print_exc(file=f)
-#         f.close()
-#         return {'error': ', '.join(list(e.args))}
-
-
 @app.get("/api/proteinssorted/{unique_id}/{column}")
 async def getProteinSorted(unique_id:str, column:str):
     logger.info(f'"/proteinssorted/{unique_id}/{column}"')
     log_request('proteinssorted')
     
-    if unique_id is None or column is None:
-        logger.error('Unique_id or column is missing')
-        return {'error': 'Unique_id or column is missing'}
     try:
         path = f'../results/{unique_id}/post-cutoff-proteome_with_raw_data.tsv'
         results = pd.read_table(path, sep='\t', header=0)
@@ -322,9 +290,6 @@ async def sendResultsTar(unique_id:str):
     logger.info('"/download/"')
     log_request('download')
 
-    if unique_id is None:
-        logger.error('Unique_id is missing')
-        return {'error': 'Unique_id is missing'}
     try:
         path = '../results/'+unique_id+'/results.zip'
         return FileResponse(path)
@@ -350,9 +315,6 @@ async def getPantherEnrich(unique_id:str, organism_id:str):
     logger.info(f'"/panther/{organism_id}"')
     log_request('panther')
 
-    if unique_id is None or organism_id is None:
-        logger.error('Unique_id or organism_id is missing')
-        return {'error': 'Unique_id or organism_id is missing'}
     try:
         results = {}
         #check if the analysis is already done
@@ -381,9 +343,6 @@ async def getCachedPanther(unique_id:str, organism_id:str):
     logger.info(f'"/cachedpanther/"')
     log_request('cachedpanther')
 
-    if unique_id is None:
-        logger.error('Unique_id is missing')
-        return {'error': 'Unique_id is missing'}
     try:
         results = {}
         for param in ['Panther_GO_Slim_Cellular_Component', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
