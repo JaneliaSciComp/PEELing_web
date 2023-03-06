@@ -291,8 +291,9 @@ async def sendResultsTar(unique_id:str):
     log_request('download')
 
     try:
-        path = '../results/'+unique_id+'/results.zip'
-        return FileResponse(path)
+        path = '../results/'+unique_id+'/results'
+        shutil.make_archive(path, 'zip', root_dir=path)
+        return FileResponse(path+'.zip')
     except Exception as e:
         return error_handler(e)
 
