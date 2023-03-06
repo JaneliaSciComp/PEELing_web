@@ -38,14 +38,14 @@ export default class Navbar extends React.Component {
         return (
             
             <nav className='navbar'>
-                <ul className='nav-list'>
-                    <li className='nav-item'>
+                <ul className='navbar-list'>
+                    <li className='navbar-item'>
                         <Link to='/' className='link link-nav'>Analysis</Link>
                     </li>
-                    <li className='nav-item'>
+                    <li className='navbar-item'>
                         <Link to='/tutorial' className='link link-nav'>Tutorial</Link>
                     </li>
-                    <li className='nav-item'>
+                    <li className='navbar-item'>
                         <Link to='/blog' className='link link-nav'>Blog</Link>
                     </li>
                 </ul>

@@ -215,8 +215,8 @@ async def getHeatMap(unique_id:str):
     log_request('heatmap')
 
     try:
-        path = f'../results/{unique_id}/web_plots/Pairwise_Pearson_Correlation_Coefficient.png'
-        return FileResponse(path, media_type='image/png')
+        path = f'../results/{unique_id}/web_plots/Pairwise_Pearson_Correlation_Coefficient.jpeg'
+        return FileResponse(path)
     except Exception as e:
         return error_handler(e)
 
@@ -230,7 +230,7 @@ async def getScatterPlot(unique_id:str, x: Union[str, None], y: Union[str, None]
         # check if the plot has already been made
         plotTitle = f'Correlation {x} vs {y}'
         plotTitle = plotTitle.replace(" ", "_")
-        path = f'../results/{unique_id}/web_plots/{plotTitle}.png'
+        path = f'../results/{unique_id}/web_plots/{plotTitle}.jpeg'
         if not os.path.exists(path):
             processor = WebProcessor(unique_id, x, y)
             processor.plot_scatter()
@@ -246,7 +246,7 @@ async def getRatioPlot(unique_id:str, plot_name: str):
 
     try:
         path = f'../results/{unique_id}/web_plots/{plot_name}'
-        return FileResponse(path, media_type='image/png')
+        return FileResponse(path, media_type='image/jpeg')
     except Exception as e:
         return error_handler(e)
 

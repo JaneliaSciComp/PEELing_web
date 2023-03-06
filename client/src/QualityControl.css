@@ -1,11 +1,7 @@
-.scatter-option {
-    font-size: small;
-}
-
 .scatter-error {
     margin-top: 2em !important;
 }
 
-.scatter-option {
-    overflow-x: auto;
+.scatter-select {
+    font-size: small !important;
 }

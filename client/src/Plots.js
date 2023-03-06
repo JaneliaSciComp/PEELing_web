@@ -19,8 +19,8 @@ export default class Plots extends React.Component {
 
     static getDerivedStateFromProps(nextProps, prevState) {
         return { 
-            ratioPlots: nextProps.colNames.map(col => {return 'TPR_FPR_'+col+'.png'}),
-            rocPlots: nextProps.colNames.map(col => {return 'ROC_'+col+'.png'}),
+            ratioPlots: nextProps.colNames.map(col => {return 'TPR_FPR_'+col+'.jpeg'}),
+            rocPlots: nextProps.colNames.map(col => {return 'ROC_'+col+'.jpeg'}),
             // error: null, 
         };
     }

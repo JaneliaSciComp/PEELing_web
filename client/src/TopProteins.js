@@ -63,7 +63,7 @@ export default class TopProteins extends React.Component {
                 :
                 <div className='subsection-content mx-3'>
                     <div className='tabs-container'>
-                    <Tabs className="table-tabs mx-0 mb-1" id="controlled-tab-example" activeKey={this.state.selectedCol} onSelect={this.switchCol}>
+                    <Tabs className="table-tabs mx-0 mb-1" size='sm' id="controlled-tab-example" activeKey={this.state.selectedCol} onSelect={this.switchCol}>
                         {this.props.colNames[0] ?
                         this.props.colNames.map((col, i) =>
                         <Tab key={i} eventKey={i} title={col}></Tab>

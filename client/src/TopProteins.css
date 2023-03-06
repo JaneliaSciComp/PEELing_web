@@ -1,26 +1,20 @@
-/* .tabs-container {
-    width: 100%;
-} */
-
-/* .table-tabs {
+.table-tabs {
     max-width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: scroll;
-
-} */
-
-.table-tab {
-    max-width: 5em;
-    overflow-x: scroll;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    font-size: small;
 }
-/* .nav {
-    
-    overflow-x: auto;
-} */
 
-/* .nav-item {
-    margin-left: 0 !important;
-  } */
+
+.nav-item {
+    overflow-x: scroll;
+    /* padding-right: 2px; */
+    border: solid rgb(222,226,230) 1px;
+    list-style-type: none;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom: solid white;
+  }
 
 .protein-table {
     font-size: small;
