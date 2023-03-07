@@ -31,6 +31,7 @@ export default class Analysis extends React.Component{
 
 
     render() {
+        // console.log('Analysis render')
         return (
             <div className='top'>
                 <Header />
