@@ -22,8 +22,8 @@ REQUESTES = ['format', 'submit', 'heatmap', 'scatter', 'plot', 'proteins', 'prot
 logger = logging.getLogger('peeling')
 #TODO: set level based on verbose option
 logger.setLevel(logging.INFO)
-#log_handler = logging.FileHandler('../log/log.txt') # to log to a file
-log_handler = logging.StreamHandler() # to log to console
+log_handler = logging.FileHandler('../log/log.txt') # to log to a file
+# log_handler = logging.StreamHandler() # to log to console
 log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s')) # to print out source code location: %(pathname)s %(lineno)d: 
 logger.addHandler(log_handler)
 logger.info(f'\n{datetime.now()} Server starts')
