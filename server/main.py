@@ -320,7 +320,7 @@ async def getPantherEnrich(unique_id:str, organism_id:str):
         results = {}
         #check if the analysis is already done
         done = True
-        for param in ['Panther_GO_Slim_Cellular_Component', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
+        for param in ['Panther_GO_Slim_Cellular_Component', 'Panther_GO_Slim_Biological_Process','Reactome_Pathway']:
             path = f'../results/{unique_id}/results/post-cutoff-proteome_{organism_id}_{param}.tsv'
             if os.path.exists(path):
                 df = pd.read_table(path, sep='\t', header=0)
@@ -346,7 +346,7 @@ async def getCachedPanther(unique_id:str, organism_id:str):
 
     try:
         results = {}
-        for param in ['Panther_GO_Slim_Cellular_Component', 'Panther_GO_Slim_Biological_Process','Reactom_Pathway']:
+        for param in ['Panther_GO_Slim_Cellular_Component', 'Panther_GO_Slim_Biological_Process','Reactome_Pathway']:
             path = f'../results/{unique_id}/results/post-cutoff-proteome_{organism_id}_{param}.tsv'
             if os.path.exists(path):
                 df = pd.read_table(path, sep='\t', header=0)

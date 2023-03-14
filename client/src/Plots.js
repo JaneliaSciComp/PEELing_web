@@ -71,7 +71,7 @@ export default class Plots extends React.Component {
     render() {
         return (
             <div className='plots subsection'>
-                <h4 className='subsection-title my-5 px-4'>Plots</h4>
+                <h4 className='subsection-title my-5 px-4'>Quality Check and Cutoff Plots</h4>
 
                 {/* {this.state.error ?
                 <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>

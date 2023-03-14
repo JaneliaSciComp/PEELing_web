@@ -3,7 +3,7 @@
     justify-content: space-between;
     align-items: flex-end;
     margin: 0 auto;
-    /* padding: 0 4em; */
+    /* padding: 0 5%; */
     width: 90%;
     height: 5em;
     border-bottom: solid #eeeeee;
@@ -12,7 +12,14 @@
     top:0;
     z-index: 2;
     background-color: rgba(255, 255, 255, 1);
-
+    /*background-image: url("../public/Icon_Orange_Peel_DALL-E_1_rec.png");
+    background-size: 100% 100% ; */
+    /* color: white; */
   /* background-clip: content-box; 
   box-shadow: inset 0 0 0 10px lightGreen; */
+}
+
+.logo {
+  width: 5em;
+  height: 5em;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from './Header';
 
-export default class Blog extends React.Component {
+export default class Data extends React.Component {
 
     componentDidMount() {
 

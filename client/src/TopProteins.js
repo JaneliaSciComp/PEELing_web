@@ -42,7 +42,7 @@ export default class TopProteins extends React.Component {
             } else {
                 this.setState({
                     proteinObj: res,
-                    heads: ['Rank', 'ID', this.props.colNames[colIndex], 'Gene Name', 'Protein name', 'Organism', 'Length']
+                    heads: ['Rank', 'UniProt ID', this.props.colNames[colIndex], 'Gene Name', 'Protein Name', 'Organism', 'Length (amino acids)']
                 }
                 // , ()=>{console.log(this.state.heads)}
                 ); 
@@ -78,7 +78,7 @@ export default class TopProteins extends React.Component {
                                 {this.state.heads ?
                                 this.state.heads.map((head, i) => {
                                     
-                                    if (i===2) { //third head is name of the col on which the data is sorted, it could be long
+                                    if (i===2 || i===6) { //third and sixth heads are name of the col and length (amino acids)
                                         return <th className='table-head-cell long-content-cell-head' key={i}>{head}</th>
                                     } else {
                                         return <th className='table-head-cell' key={i}>{head}</th>

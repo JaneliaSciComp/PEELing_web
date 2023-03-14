@@ -179,7 +179,7 @@ export default class UserInput extends React.Component {
             <div className='section-main' id='user-input-container'>
                 <Form className='mx-3' onSubmit={this.submit} encType='multipart/form-data'>
                     <Form.Group as={Row} className='mt-4 px-3'>
-                        <Form.Label column sm={5}>Mass Spec File (.tsv)</Form.Label>
+                        <Form.Label column sm={5}>Data File (.tsv)</Form.Label>
                         <Col sm={7}>
                             <Form.Control type='file' name='mass_file' required accept='.tsv' onChange={this.fileSelectHandler}/>
                             {this.state.fileInvalid ? 
@@ -189,7 +189,7 @@ export default class UserInput extends React.Component {
                     </Form.Group>
 
                     <Form.Group as={Row} className='mt-4 px-3' controlId='controls'>
-                        <Form.Label column sm={5}># Non-labelled Controls</Form.Label>
+                        <Form.Label column sm={5}># Non-Labelled Controls</Form.Label>
                         <Col sm={7}>
                             <Form.Control type='number' name='controls' required min='1' onChange={this.numberChangeHandler}/>
                             <Form.Control.Feedback type='invalid'>Please provide a positive integer.</Form.Control.Feedback>

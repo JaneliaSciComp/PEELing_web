@@ -46,7 +46,7 @@ export default class Navbar extends React.Component {
                         <Link to='/tutorial' className='link link-nav'>Tutorial</Link>
                     </li>
                     <li className='navbar-item'>
-                        <Link to='/blog' className='link link-nav'>Blog</Link>
+                        <Link to='/data' className='link link-nav'>Data</Link>
                     </li>
                 </ul>
 
@@ -75,7 +75,7 @@ export default class Navbar extends React.Component {
                         <Link to='/tutorial' className='link link-nav'>Tutorial</Link>
                     </MenuItem>
                     <MenuItem onClick={this.closeHandler}>
-                        <Link to='/blog' className='link link-nav'>Blog</Link>
+                        <Link to='/data' className='link link-nav'>Data</Link>
                     </MenuItem>
                 </Menu>
             </nav>

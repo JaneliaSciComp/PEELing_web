@@ -90,11 +90,11 @@ export default class QualityControl extends React.Component {
         // console.log('render');
         return (
             <div className='qc subsection'>
-                <h4 className='subsection-title my-5 px-4'>Quality Control</h4>
+                <h4 className='subsection-title my-5 px-4'>Correlation Analysis</h4>
 
                 {this.state.error ?
                 <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
-                    <p>Oops! Quality Control went wrong!</p>
+                    <p>Oops! Correlation Analysis went wrong!</p>
                 </div>
                 :
                 <Row className='subsection-content qc-container mx-3 align-items-stretch'>

@@ -7,7 +7,7 @@ import React from 'react';
 import './App.css';
 import Analysis from './AnalysisPage';
 import Tutorial from './TutorialPage';
-import Blog from './BlogPage';
+import Data from './DataPage';
 import Footer from "./Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -65,8 +65,8 @@ export default class App extends React.Component {
                     element={<Analysis setResultsId={this.setResultsId} />}/> */}
                   <Route path='/tutorial'
                     element={<Tutorial />}/>
-                  <Route path='/blog'
-                    element={<Blog />}/>
+                  <Route path='/data'
+                    element={<Data />}/>
               </Routes>
           </Router>
           <Footer/>

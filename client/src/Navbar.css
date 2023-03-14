@@ -25,7 +25,7 @@
 }
 
 @media (max-width: 600px) {
-    .nav-list {
+    .navbar-list {
         display: none;
     }
 

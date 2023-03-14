@@ -39,7 +39,7 @@ export default class Proteins extends React.Component {
     render() {
         return (
             <div className='proteins subsection'>
-                <h4 className='subsection-title my-5 px-4'>Surface Proteins</h4>
+                <h4 className='subsection-title my-5 px-4'>Post-Cutoff Proteome</h4>
 
                 {this.state.error ?
                 <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
@@ -48,7 +48,7 @@ export default class Proteins extends React.Component {
                 :
                 <div className='subsection-content'>
                     <div className='mx-4 mb-2 d-flex justify-content-between align-items-end'>
-                        <span className='info'>({this.state.proteins.length} surface proteins found)</span>
+                        <span className='info proteins-info'>({this.state.proteins.length} proteins passed the cutoff analysis and are included in the final proteome)</span>
                         <CopyToClipboard text={this.state.proteins.join(',')}
                           onCopy={() => this.setState({copied: true})}>
                             <Button className='btn' variant="outline-primary" size='sm'>{this.state.copied ? 'Copied' : 'Copy List'}</Button>

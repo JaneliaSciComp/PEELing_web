@@ -12,6 +12,7 @@ export default class Panther extends React.Component {
             organisms: null,
             selectedOrganism: 'blank',
             pantherResults: null,
+            columnNameMapping: {'Panther GO Slim Cellular Component': 'Location: Panther GO Slim Cellular Component', 'Panther GO Slim Biological Process': 'Function: Panther GO Slim Biological Process', 'Reactome Pathway': 'Pathway: Reactome'},
             error: null,
             organismError: false,
             submitted: false,
@@ -127,7 +128,7 @@ export default class Panther extends React.Component {
     render() {
         return (
             <div className='panther subsection'>
-                <h4 className='subsection-title my-5 px-4'>Enrichment Analysis (<a className='link panther-link' href={'http://www.pantherdb.org/'}  target="_blank" rel="noreferrer">Panther</a>)</h4>
+                <h4 className='subsection-title my-5 px-4'>Protein Location and Function Annotation (<a className='link panther-link' href={'http://www.pantherdb.org/'}  target="_blank" rel="noreferrer">Panther</a>)</h4>
                 
                 <div className='subsection-content panther-container'>
                 <Form size='sm' className='mx-3 d-flex align-items-end' onSubmit={this.runPanther}>
@@ -162,7 +163,7 @@ export default class Panther extends React.Component {
                 <Row className='panther-table-container mx-1'>
                     {Object.keys(this.state.pantherResults).map((category, i) => 
                     <Col className='py-3' lg={4} key={i}>
-                        <p className='table-title'>{category.replaceAll('_', ' ')}</p>
+                        <p className='table-title'>{this.state.columnNameMapping[category.replaceAll('_', ' ')]}</p>
                         <div className='table-container' > 
                         <Table striped responsive size='sm' className='panther-table'>
                             <thead className='table-head panther-table-head'>
