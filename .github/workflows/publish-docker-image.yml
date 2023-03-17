@@ -38,12 +38,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_API }}
 
-      - run: echo ${{ steps.meta_api.outputs.version }}
-      - run: echo ${{ steps.meta_api.outputs.tags }}
-      - run: echo ${{ steps.meta_api.outputs.labels }}
-
       - name: Build and push Docker image - api
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        uses: docker/build-push-action@v4.0.0
         with:
           context: .
           push: true
@@ -56,12 +52,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_CLIENT }}
 
-      - run: echo ${{ steps.meta_client.outputs.version }}
-      - run: echo ${{ steps.meta_client.outputs.tags }}
-      - run: echo ${{ steps.meta_client.outputs.labels }}
-      
       - name: Build and push Docker image - client
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        uses: docker/build-push-action@v4.0.0
         with:
           context: ./client
           push: true
