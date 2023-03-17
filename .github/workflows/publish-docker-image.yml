@@ -31,6 +31,8 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - run: echo ${{ github.actor }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta_api
@@ -59,3 +61,4 @@ jobs:
           push: true
           tags: ${{ steps.meta_client.outputs.tags }}
           labels: ${{ steps.meta_client.outputs.labels }}
+          
