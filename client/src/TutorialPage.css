@@ -1,15 +1,13 @@
-
-
 .content {
     text-align: start;
     /* height: 100%; */
-    width: 75%;
+    width: 80%;
     /* min-width: 350px; */
     max-width: 1000px;
     margin: 0;
     /* background-color: #ffffff; */
     border-left: solid #eeeeee;
-    border-right: solid #eeeeee;
+    /* border-right: solid #eeeeee; */
     display: flex;
     flex-direction: column;
     /* flex-grow: 1; */
@@ -21,34 +19,85 @@
     
 } */
 
-.main {
-    /* height: 100%; */
-    text-align: start;
-    /* border: solid; */
-    display: flex;
-    /* flex-grow: 1; */
-    align-items: flex-start;
-    /* overflow-y: auto; */
-    /* position: -webkit-sticky;
-    position: sticky;
-    top: 5em; */
+.highlight {
+    font-weight: bold;
+    /* font-style: italic; */
 }
 
-/* .sidebar {
-    height: 100%;
-    width: 15%;
-} */
-
-.sidebar-menu {
-    /* border: solid; */
-    /* display: inline-block; */
-    /* height:10em; */
-    position: -webkit-sticky;
-    position: sticky;
-    top: 7em;
-    z-index: 1;
+.main {
+    width: 90%;
+    text-align: start;
+    display: flex;
+    align-items: flex-start;
+    /* height: 100%; */
 }
 
 .placeholder {
     width: 10%;
+}
+
+.sidebar-menu {
+    /* border: solid; */
+    /* display: inline-block; */
+    /* height: 100%; */
+    max-width: 20%;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 6em;
+    z-index: 1;
+    font-size: small;
+    /* white-space: nowrap; */
+    /* overflow-y: auto; */
+}
+
+.tutorial-code {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    white-space: break-spaces;
+    color: black;
+    background-color: #6e768166;
+    border-radius: 6px;
+}
+
+.tutorial-head {
+    margin: 1em auto 2.5em auto !important;
+}
+
+.tutorial-img-lg {
+    max-width: 95% !important;
+}
+
+.tutorial-img-md {
+    max-width: 85% !important;
+}
+
+.tutorial-link {
+    color: #58a6ff;
+    text-decoration: none;
+}
+
+.tutorial-subtitle {
+    margin-top: 2.5em !important;
+    margin-bottom: 1.5em !important;
+}
+
+.tutorial-text {
+    margin: 1em auto !important;
+}
+
+.tutorial-title {
+    margin: 2em auto !important;
+}
+
+@media (max-width: 600px) {
+    .content {
+        width: 100%;
+        border-left: none;
+        border-right: none;        
+    }
+
+    .sidebar-menu {
+        width: 0;
+    }
 }

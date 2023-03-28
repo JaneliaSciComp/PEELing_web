@@ -16,7 +16,7 @@ from processors.webprocessor import WebProcessor
 from processors.webpantherprocessor import WebPantherProcessor
 import asyncio
 
-REQUESTES = ['format', 'submit', 'heatmap', 'scatter', 'plot', 'proteins', 'proteinssorted', 'download', 'organism', 'panther', 'cachedpanther']
+REQUESTES = ['format', 'submit', 'heatmap', 'scatter', 'plot', 'proteins', 'proteinssorted', 'download', 'organism', 'panther', 'cachedpanther', 'exampledata']
 
 #set up logger
 logger = logging.getLogger('peeling')
@@ -186,29 +186,6 @@ async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates
         return error_handler(e)
 
 
-# @app.get("/api/colnames/{unique_id}")
-# async def getColNames(unique_id:str):
-#     logger.info(f'"/colnames/{unique_id}"')
-#     try:
-#         response = {}
-#         path = os.path.join('../results/', unique_id)
-
-#         # get list of paths of plots
-#         plots = os.listdir(path+'/web_plots') 
-#         col_names = []
-#         for plot in plots:
-#             if plot[:3] == 'ROC':
-#                 col_names.append(plot[4: -4])
-#         response['colNames'] = col_names
-#         return response
-#     except Exception as e:
-#         logger.error(e)
-#         f = open('../log/log.txt','a')
-#         traceback.print_exc(file=f)
-#         f.close()
-#         return {'error': ', '.join(list(e.args))}
-
-
 @app.get("/api/heatmap/{unique_id}")
 async def getHeatMap(unique_id:str):
     logger.info(f'"/heatmap/{unique_id}"')
@@ -366,7 +343,17 @@ async def exportCached():
         ids.to_csv('../retrieved_data/latest_ids.tsv', sep='\t', index=False)
     except Exception as e:
         return error_handler(e)
-        
+
+
+@app.get("/api/exampledata")
+async def exportCached():
+    logger.info('"/exampledata"')
+    log_request('exampledata')
+    try:
+        path = '../retrieved_data/Tutorial_PMID36220098_P15-Data_2-Ctrl_2-Rep_Mouse.tsv'
+        return FileResponse(path)
+    except Exception as e:
+        return error_handler(e)
 
 # def main():
 #     uvicorn.run(app, host="0.0.0.0", port=8000)

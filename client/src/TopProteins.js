@@ -22,7 +22,7 @@ export default class TopProteins extends React.Component {
         this.fetchSortedData(this.state.selectedCol);
     }
 
-    switchCol(key) { //value is the value property of the toggleButton
+    switchCol(key) { 
         this.setState({selectedCol: key});
         this.fetchSortedData(key);
     }
@@ -44,7 +44,6 @@ export default class TopProteins extends React.Component {
                     proteinObj: res,
                     heads: ['Rank', 'UniProt ID', this.props.colNames[colIndex], 'Gene Name', 'Protein Name', 'Organism', 'Length (amino acids)']
                 }
-                // , ()=>{console.log(this.state.heads)}
                 ); 
             }
         })
@@ -78,7 +77,7 @@ export default class TopProteins extends React.Component {
                                 {this.state.heads ?
                                 this.state.heads.map((head, i) => {
                                     
-                                    if (i===2 || i===6) { //third and sixth heads are name of the col and length (amino acids)
+                                    if (i===2 || i===6) { 
                                         return <th className='table-head-cell long-content-cell-head' key={i}>{head}</th>
                                     } else {
                                         return <th className='table-head-cell' key={i}>{head}</th>
@@ -98,7 +97,7 @@ export default class TopProteins extends React.Component {
                                             <a className='link protein-link' href={'https://www.uniprot.org/uniprotkb/'+entry}  target="_blank" rel="noreferrer">{entry}</a>
                                         </td>
                                     }
-                                    if (j>=2 && j<=4){ //the gene name, pro name, organism columns, content could be long
+                                    if (j>=2 && j<=4){ 
                                         return <td className='protein-table-cell long-content-cell-data' key={j+1}>{entry}</td>
                                     } else {
                                         return <td className='protein-table-cell' key={j+1}>{entry}</td>

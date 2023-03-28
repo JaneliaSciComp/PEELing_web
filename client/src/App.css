@@ -145,6 +145,10 @@
   /* padding-right: 1em !important; */
 }
 
+/* .top {
+  height: 100%;
+} */
+
 
 @keyframes App-logo-spin {
   from {
@@ -152,5 +156,17 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .section-title {
+    width: 95%;
+  }
+
+  .section-main {
+    width: 95%;
+    border-radius: 0px;
+    box-shadow: none;
   }
 }

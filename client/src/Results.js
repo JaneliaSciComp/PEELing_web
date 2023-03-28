@@ -11,43 +11,8 @@ import Panther from './Panther';
 
 
 export default class Results extends React.Component {
-    
-    
-    // setColNames(names) {
-    //     this.setState({colNames: names});
-    // }
-
-    // componentDidMount() {
-    //     // console.log('Resutls componentDidMount')
-
-    //     fetch('/api/colnames/'+this.props.resultsId, {
-    //         method: 'GET'
-    //     }).then(res => {
-    //         // console.log(res);
-    //         if (res.ok) {
-    //             return res.json(); //TODO: await?
-    //         } else {
-    //             this.props.setError(res.statusText);
-    //         }
-    //     }).then(res => {
-    //         if (res['error']) {
-    //             this.props.setError(res['error']);
-    //         } else {
-    //             this.setState({
-    //                 colNames: res['colNames']}
-    //                 // plotNames: res['rocPlots'].map(this.extractName)}
-    //             // , ()=>{console.log(this.state)}
-    //                 )
-    //         }
-            
-    //     })
-    // }
-
-
-   
+      
     render() {
-        // console.log('Results render');
-        // console.log(this.props);
         return (
           <div className='section'>  
             
@@ -87,14 +52,14 @@ export default class Results extends React.Component {
                         {/* TODO: add a cry picture? */}
                         <p>Oops! Something went wrong!</p>
                         <p>Please check the user input and try again.</p>
-                        <p>{this.props.error}</p>
+                        {/* <p>{this.props.error}</p> */}
                     </div>
                     :
                     <div className='info mx-2 my-4 d-flex flex-row justify-content-center'>
                         <Spinner className='spinner mx-3' animation='border' role='status'>
                             <span className='visually-hidden'>Loading</span>
                         </Spinner>
-                        <p className='mx-2 my-auto'>Waiting for Results</p>
+                        <p className='mx-2 my-auto'>Analyzing ...</p>
                     </div>}
                     
                 </div>
