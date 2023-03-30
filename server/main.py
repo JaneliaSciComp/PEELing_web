@@ -10,10 +10,10 @@ from threading import Thread
 import logging, os, traceback, shutil
 import pandas as pd
 import matplotlib.pyplot as plt
-from datamanagement.webuniprotcommunicator import WebUniProtCommunicator
-from datamanagement.webuserinputreader import WebUserInputReader
-from processors.webprocessor import WebProcessor
-from processors.webpantherprocessor import WebPantherProcessor
+from peeling.webuniprotcommunicator import WebUniProtCommunicator
+from peeling.webuserinputreader import WebUserInputReader
+from peeling.webprocessor import WebProcessor
+from peeling.webpantherprocessor import WebPantherProcessor
 import asyncio
 
 REQUESTES = ['format', 'submit', 'heatmap', 'scatter', 'plot', 'proteins', 'proteinssorted', 'download', 'organism', 'panther', 'cachedpanther', 'exampledata']
@@ -22,8 +22,8 @@ REQUESTES = ['format', 'submit', 'heatmap', 'scatter', 'plot', 'proteins', 'prot
 logger = logging.getLogger('peeling')
 #TODO: set level based on verbose option
 logger.setLevel(logging.INFO)
-log_handler = logging.FileHandler('../log/log.txt') # to log to a file
-# log_handler = logging.StreamHandler() # to log to console
+log_handler = logging.FileHandler('../log/log.txt') 
+# log_handler = logging.StreamHandler() 
 log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s')) # to print out source code location: %(pathname)s %(lineno)d: 
 logger.addHandler(log_handler)
 logger.info(f'\n{datetime.now()} Server starts')
@@ -110,17 +110,13 @@ def log_usage():
 def backgroud_tasks():
     update_and_log_usage()
     #TODO
-    #schedule.every().monday.at("01:00").do(uniprot_communicator.update_data)
-    #schedule.every(2).minutes.do(update_and_log_usage)
-    schedule.every(1).days.do(update_and_log_usage)
+    schedule.every().sunday.at("09:00").do(update_and_log_usage)
+    # schedule.every(2).minutes.do(update_and_log_usage)
     while True:
-        #logger.debug(f'while')
         delete_user_results()
         logger.debug(schedule.get_jobs())
         schedule.run_pending()
-        #logger.debug(f'start sleep')
         sleep(600) #TODO
-        #logger.debug(f'after sleep')
 
 
 daemon = Thread(target=backgroud_tasks, daemon=True, name='background_update')
@@ -160,18 +156,6 @@ async def getFormats():
 async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
     logger.info('"/submit"')
     log_request('submit')
-    # return  '3cb1ce3f-6d8b-4a8c-b3d2-ab27ef5997ca', 0 #for home
-    #return '6a7d5168-8c50-4592-b080-c7f57e5485df' # for work
-    #To test error handling
-    # start_time = datetime.now()
-    # logger.info(f'{start_time} Analysis starts...')
-    # user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
-    # processor = WebProcessor(user_input_reader, uniprot_communicator)
-    # unique_id, failed_id_mapping = await processor.start()
-
-    # end_time = datetime.now()
-    # logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
-    # return {'resultsId': unique_id, 'failedIdMapping': failed_id_mapping} #failed_id_mapping
     try:
         # return {'resultsId': '111', 'failedIdMapping':0} # to test error handling
         start_time = datetime.now()
