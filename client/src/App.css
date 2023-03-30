@@ -145,9 +145,14 @@
   /* padding-right: 1em !important; */
 }
 
-/* .top {
-  height: 100%;
-} */
+.top {
+  min-height: 80%;
+}
+
+.underline-link {
+  text-decoration: underline;
+}
+
 
 
 @keyframes App-logo-spin {

@@ -1,7 +1,6 @@
 import React from 'react';
 import './TutorialPage.css';
 import Header from './Header';
-// import {Row, Col} from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
 import designImg from './designImg.png';
@@ -17,7 +16,7 @@ import pantherImg from './pantherImg.png';
 
 
 
-export default class Tutorial2 extends React.Component {
+export default class Tutorial extends React.Component {
     render() {
         return (
             <div className='top'>
@@ -193,8 +192,8 @@ export default class Tutorial2 extends React.Component {
                         <p className='tutorial-text'>
                             Correlation plots and coefficients for evaluating whether replicates are consistent with each other or exhibit overall discrepancy.
                         </p>
-                        <p className='tutorial-text'>
-                            The heatmap and scatter plot of the default ratio pair are included in the downloaded results. To include a scatter plot of another ratio pair, please make sure to “Make” the plot before downloading. PEELing does not automatically make scatter plots for all ratio pairs.
+                        <p className='tutorial-text box px-3 py-3'>
+                            <span className='highlight'>Note&nbsp;&nbsp;</span>The heatmap and scatter plot of the default ratio pair are included in the downloaded results. To include a scatter plot of another ratio pair, please make sure to “Make” the plot before downloading. PEELing does not automatically make scatter plots for all ratio pairs.
                         </p>
                         <div className='d-flex justify-content-center'>
                             <Image className='my-4 mx-2 tutorial-img-lg' src={corrImg} fluid alt='place holder'></Image>
@@ -248,17 +247,18 @@ export default class Tutorial2 extends React.Component {
                         <p className='my-0 py-3' id='panther-anchor'></p>
                         <h5 className='tutorial-subtitle'>Protein Location and Function Annotation (Panther)</h5>
                         <p className='tutorial-text'>
-                            Select the corresponding organism and click “Send” to perform protein ontology and pathway analyses of the post-cutoff proteome through the Panther server. Top 10 terms based on false discovery rate (FDR) are listed for protein localization (Panther GO Slim Cellular Component), function (Panther GO Slim Biological Process), and pathway (Reactome).
+                            Select the corresponding organism and click <code className='tutorial-code'>Send</code> to perform protein ontology and pathway analyses of the post-cutoff proteome through the Panther server. Top 10 terms based on false discovery rate (FDR) are listed for protein localization (Panther GO Slim Cellular Component), function (Panther GO Slim Biological Process), and pathway (Reactome).
                         </p>
                         <p className='tutorial-text'>
-                            Users can also click “Panther” in the title to go to Panther’s website to do the analysis, with the protein list from the “Post-Cutoff Proteome” section, or the post-cutoff-proteome.txt file from the downloaded results.                        </p>
+                            Users can also click <code className='tutorial-code'>Panther</code> in the title to go to Panther’s website to do the analysis, with the protein list from the “Post-Cutoff Proteome” section, or the post-cutoff-proteome.txt file from the downloaded results.                        </p>
                         <div className='d-flex justify-content-center'>
                             <Image className='my-4 mx-2 tutorial-img-lg' src={pantherImg} fluid alt='place holder'></Image>
                         </div>
-                        <p className='tutorial-text'>
-                            Note: Sometimes the Panther server becomes unresponsive. If it takes too long for the results to come back, please resend the request.
+                        <p className='tutorial-text  box px-3 py-3'>
+                            <span className='highlight'>Note&nbsp;&nbsp;</span> Sometimes the Panther server becomes unresponsive. If it takes too long for the results to come back, please resend the request.
                         </p>
                         
+                        <p className='my-0 py-3' id='panther-anchor'></p>
                         <h5 className='tutorial-subtitle'>Download Results</h5>
                         <p className='tutorial-text'>
                             All analysis results including plots are downloadable here.

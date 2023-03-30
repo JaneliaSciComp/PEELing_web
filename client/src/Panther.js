@@ -128,7 +128,7 @@ export default class Panther extends React.Component {
     render() {
         return (
             <div className='panther subsection'>
-                <h4 className='subsection-title my-5 px-4'>Protein Location and Function Annotation (<a className='link panther-link' href={'http://www.pantherdb.org/'}  target="_blank" rel="noreferrer">Panther</a>)</h4>
+                <h4 className='subsection-title my-5 px-4'>Protein Location and Function Annotation (<a className='link underline-link' href={'http://www.pantherdb.org/'}  target="_blank" rel="noreferrer">Panther</a>)</h4>
                 
                 <div className='subsection-content panther-container'>
                 <Form size='sm' className='mx-3 d-flex align-items-end' onSubmit={this.runPanther}>
