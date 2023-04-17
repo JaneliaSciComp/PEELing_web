@@ -10,7 +10,6 @@
 .nav-item {
     overflow-x: scroll;
     overflow-y: hidden;
-    /* padding-right: 2px; */
     border: solid rgb(222,226,230) 1px;
     list-style-type: none;
     border-top-left-radius: 6px;

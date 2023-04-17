@@ -8,7 +8,6 @@ export default class Panther extends React.Component {
         super(props); 
 
         this.state = {
-            // selectedCol: 0,
             organisms: null,
             selectedOrganism: 'blank',
             pantherResults: null,
@@ -27,7 +26,6 @@ export default class Panther extends React.Component {
         fetch("/api/organism", { 
             method: 'GET'
         }).then(res => {
-            //console.log(res);
             if (res.ok) {
                 return res.json(); 
             } else {
@@ -60,7 +58,6 @@ export default class Panther extends React.Component {
                     this.setState({
                         pantherResults: res,
                     }
-                    // , ()=>{console.log(this.state.pantherResults)}
                     ); 
                 }
             })
@@ -111,7 +108,6 @@ export default class Panther extends React.Component {
                         organismError: false,
                         submitted: false,
                     }
-                    // , ()=>{console.log(this.state.pantherResults)}
                     ); 
                     this.props.setOrganism(orgId);
                 }

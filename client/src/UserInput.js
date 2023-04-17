@@ -1,6 +1,5 @@
 import React from 'react';
 import {Form, Row, Col, Button} from 'react-bootstrap';
-import './UserInput.css'
 
 
 export default class UserInput extends React.Component {
@@ -18,7 +17,6 @@ export default class UserInput extends React.Component {
             replicatesInvalid:false,
             conditionsInvalid:false,
             toleranceInvalid:false,
-            //invalid:true,
         }
 
         this.submit = this.submit.bind(this);
@@ -32,14 +30,12 @@ export default class UserInput extends React.Component {
         fetch("/api/format", { 
             method: 'GET'
         }).then(res => {
-            //console.log(res);
             if (res.ok) {
                 return res.json(); 
             } else {
                 this.props.setError(res.statusText);
             }
         }).then(res => {
-            //console.log('then')
             if (res['error']) {
                 this.props.setError(res['error']);
             } else {
@@ -61,7 +57,6 @@ export default class UserInput extends React.Component {
             method: 'POST',
             body: new FormData(e.target),
         }).then(res => {
-            //console.log(res);
             if (res.ok) {
                 return res.json();
             } else {
@@ -88,7 +83,6 @@ export default class UserInput extends React.Component {
                 this.props.setColNames(res['colNames']);
                 this.props.submitIndicator(false);
                 this.props.setError(null);
-                // this.props.navigate(`/${resultsId}`);
             }
         })
     }
@@ -113,48 +107,34 @@ export default class UserInput extends React.Component {
         let value = Number(e.target.value);
         let id = e.target.id;
         if (id === 'controls') {
-            //this.setState({controlsInvalid: true});
             if (value && Number.isInteger(value) && value>0) {
-                //let totalInvalid = this.state.fileInvalid || false || this.state.replicatesInvalid || this.state.conditionsInvalid || this.state.toleranceInvalid;
                 this.setState({controls: value,
                                controlsInvalid: false,
-                               //invalid: totalInvalid
                             });
             } else {
-                //let totalInvalid = this.state.fileInvalid || true || this.state.replicatesInvalid || this.state.conditionsInvalid || this.state.toleranceInvalid;
                 this.setState({controlsInvalid: true,
-                               //invalid: totalInvalid
                             });
             }
         }
         
         if (id === 'replicates') {
-            //this.setState({replicatesInvalid: true});
             if (value && Number.isInteger(value) && value>0) {
-                //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || false || this.state.conditionsInvalid || this.state.toleranceInvalid;
                 this.setState({replicates: value,
                                replicatesInvalid: false, 
-                               //invalid: totalInvalid
                             });
             } else {
-                //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || true || this.state.conditionsInvalid || this.state.toleranceInvalid;
                 this.setState({replicatesInvalid: true,
-                               //invalid: totalInvalid
                             });
             }
         }
 
         if (id === 'tolerance') {
             if ((value===0 || value) && Number.isInteger(value) && value>=0 && value < this.state.controls*this.state.replicates) {
-                //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || this.state.conditionsInvalid || false;
                 this.setState({tolerance: value,
                                toleranceInvalid: false, 
-                               //invalid: totalInvalid
                             });
             } else {
-                //let totalInvalid = this.state.fileInvalid || this.state.controlsInvalid || this.state.replicatesInvalid || this.state.conditionsInvalid || true;
                 this.setState({toleranceInvalid: true,
-                               //invalid: totalInvalid
                             });
             }
         }
@@ -165,7 +145,6 @@ export default class UserInput extends React.Component {
         this.setState({
             plotFormat: e.target.value
         }
-        // , ()=>{console.log(this.state.plotFormat)}
         )
     }
 

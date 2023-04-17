@@ -61,7 +61,7 @@ def update_and_log_usage():
 def delete_user_results():
     try:
         files = os.listdir('../results')
-        logger.info(f'{len(files)} files exist')
+        logger.debug(f'{len(files)} files exist')
         count=0
         for f in files:
             path = f'../results/{f}'
@@ -73,7 +73,7 @@ def delete_user_results():
             if exist_time > timedelta(days=1):
                 shutil.rmtree(path, ignore_errors=True)
                 count += 1
-        logger.info(f'{count} files deleted')
+        logger.debug(f'{count} files deleted')
     except Exception as e:
         logger.error(e)
         f = open('../log/log.txt','a')

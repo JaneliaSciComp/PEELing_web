@@ -22,7 +22,7 @@ export default class Results extends React.Component {
                 {this.props.resultsId ?
                 <div className='mx-3'>
                     {this.props.failedIdMapping ? 
-                    <p className='info mx-4 mt-4'>(Note: {this.props.failedIdMapping} proteins failed for id mapping using Uniprot API, which may affect the results.)</p>
+                    <p className='info mx-4 mt-4'>(Note: {this.props.failedIdMapping} proteins failed for ID mapping using UniProt API, which may affect the results.)</p>
                     :
                     null
                     }
@@ -41,7 +41,6 @@ export default class Results extends React.Component {
                         <Button className='btn-download' type='submit'>
                             <DownloadIcon />
                             <a className='anchor-download' href={'/api/download/'+this.props.resultsId}>Download Results</a>
-                            {/* http://localhost:8000 */}
                         </Button>
                     </Row>
                 </div>
@@ -49,10 +48,8 @@ export default class Results extends React.Component {
                 <div>
                     {this.props.error ? 
                     <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
-                        {/* TODO: add a cry picture? */}
                         <p>Oops! Something went wrong!</p>
                         <p>Please check the user input and try again.</p>
-                        {/* <p>{this.props.error}</p> */}
                     </div>
                     :
                     <div className='info mx-2 my-4 d-flex flex-row justify-content-center'>

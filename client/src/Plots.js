@@ -3,7 +3,6 @@ import {ToggleButtonGroup, ToggleButton, Image, Row, Col} from 'react-bootstrap'
 import './Plots.css';
 
 
-
 export default class Plots extends React.Component {
     constructor(props) {
         super(props); 
@@ -21,48 +20,10 @@ export default class Plots extends React.Component {
         return { 
             ratioPlots: nextProps.colNames.map(col => {return 'TPR_FPR_'+col+'.jpeg'}),
             rocPlots: nextProps.colNames.map(col => {return 'ROC_'+col+'.jpeg'}),
-            // error: null, 
         };
     }
 
-    
-    // componentDidMount() {
-    //     this.setState({
-    //         ratioPlots: this.props.colNames.map(col => {return 'TPR_FPR_'+col+'.png'}),  //[],
-    //         rocPlots: this.props.colNames.map(col => {return 'ROC_'+col+'.png'}), //[],
-    //         plotNames: this.props.colNames,
-    //     })
-    // }
-    //     fetch('/api/plotslist/'+this.props.resultsId, {
-    //         method: 'GET'
-    //     }).then(res => {
-    //         //console.log(res);
-    //         if (res.ok) {
-    //             return res.json(); //TODO: await?
-    //         } else {
-    //             this.setState({error: res.statusText});
-    //         }
-    //     }).then(res => {
-    //         if (res['error']) {
-    //             this.setState({error: res['error']});
-    //         } else {
-    //             this.setState({
-    //                 ratioPlots: res['ratioPlots'],
-    //                 rocPlots: res['rocPlots'],
-    //                 plotNames: res['rocPlots'].map(this.extractName)}
-    //             )
-    //         }
-            
-    //     })
-    // }
-
-    // extractName(url) {
-    //     var name = url.substr(url.lastIndexOf('/')+1);
-    //     name = name.substring(name.indexOf('_')+1, name.lastIndexOf('.')); //TODO
-    //     return name;
-    // }
-
-    switchPlot(value) { //value is the value property of the toggleButton
+    switchPlot(value) { 
         this.setState({active: value});
     }
 
@@ -73,11 +34,6 @@ export default class Plots extends React.Component {
             <div className='plots subsection'>
                 <h4 className='subsection-title my-5 px-4'>Quality Check and Cutoff Plots</h4>
 
-                {/* {this.state.error ?
-                <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
-                    <p>Oops! Plots went wrong!</p>
-                </div>
-                : */}
                 <Row className='subsection-content plots-container mx-3'>
                     <Col className='px-0' md={2}>
                         {this.props.colNames[0] ?
@@ -112,7 +68,6 @@ export default class Plots extends React.Component {
                         }
                     </Col>
                 </Row>
-                {/* } */}
             </div>
         );
     }

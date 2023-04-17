@@ -6,7 +6,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 export default class Proteins extends React.Component {
     constructor(props) {
-        super(props); //resultsId
+        super(props); 
 
         this.state = {
             proteins: [],
@@ -20,7 +20,6 @@ export default class Proteins extends React.Component {
         fetch('/api/proteins/'+this.props.resultsId, {
             method: 'GET'
         }).then(res => {
-            //console.log(res);
             if (res.ok) {
                 return res.json(); 
             } else {

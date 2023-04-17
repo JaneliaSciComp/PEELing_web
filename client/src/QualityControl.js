@@ -3,7 +3,6 @@ import {Form, Button, Image, Row, Col} from 'react-bootstrap';
 import './QualityControl.css';
 
 
-
 export default class QualityControl extends React.Component {
     constructor(props) {
         super(props); 
@@ -32,12 +31,6 @@ export default class QualityControl extends React.Component {
         } 
     }
 
-    // componentDidMount() {
-    //     this.setState({
-    //         scatterQuery: 'x='+this.props.colNames[this.state.xIndex]+'&y='+this.props.colNames[this.state.yIndex]
-    //     })
-    // }
-
 
     makeScatter(e) {
         e.preventDefault();
@@ -49,18 +42,14 @@ export default class QualityControl extends React.Component {
                 xIndex: x,
                 yIndex: y,
                 colSelectionError: 'X and Y cannot be the same',
-                // scatterQuery: null
             }
-            // , ()=>{console.log(this.state)}
             )
         } else {
             this.setState({
                 xIndex: x,
                 yIndex: y,
                 colSelectionError: null,
-                // scatterQuery: 'x='+this.props.colNames[x]+'&y='+this.props.colNames[y]
             }
-            // , ()=>{console.log(this.state)}
             )
         }
         
@@ -69,25 +58,19 @@ export default class QualityControl extends React.Component {
     changeX(e) {
         this.setState({
             xTemp: e.target.selectedIndex,
-            // colSelectionError: null,
-            // scatterQuery: null
         }
-        // , ()=>{console.log(this.state)}
         )
     }
 
     changeY(e) {
         this.setState({
             yTemp: e.target.selectedIndex,
-            // colSelectionError: null
         }
-        // , ()=>{console.log(this.state)}
         )
     }
 
 
     render() {
-        // console.log('render');
         return (
             <div className='qc subsection'>
                 <h4 className='subsection-title my-5 px-4'>Correlation Analysis</h4>

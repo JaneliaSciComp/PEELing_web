@@ -1,6 +1,5 @@
 import React from 'react';
 import Header from './Header';
-import './AnalysisPage.css';
 import UserInput from './UserInput';
 import Results from './Results';
 // import withRouter from './utils';
@@ -12,7 +11,7 @@ export default class Analysis extends React.Component{
     
         this.state = {
             userInputSubmitted: false,
-            error: null, //'error'
+            error: null, 
         }
 
         this.submitIndicator = this.submitIndicator.bind(this);
@@ -31,7 +30,6 @@ export default class Analysis extends React.Component{
 
 
     render() {
-        // console.log('Analysis render')
         return (
             <div className='top'>
                 <Header />

@@ -51,13 +51,13 @@ export default class Tutorial extends React.Component {
                             <a className='link' href='#output-anchor'>Output</a>
                             <ListGroup className='px-2' variant='flush'>
                                  <ListGroup.Item>
-                                    <a className='link' href='#output-anchor'>Failed Id Mapping</a>
+                                    <a className='link' href='#output-anchor'>Failed ID Mapping</a>
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <a className='link' href='#corr-anchor'>Correlation Analysis</a>
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                    <a className='link' href='#plot-anchor'>Quality and Cutoff Plots</a>
+                                    <a className='link' href='#plot-anchor'>Quality Checks and Cutoff Plots</a>
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <a className='link' href='#proteins-anchor'>Post-Cutoff Proteome</a>
@@ -143,7 +143,7 @@ export default class Tutorial extends React.Component {
                             <Image className='my-4 mx-2 tutorial-img-md' src={dataImg} fluid alt='place holder'></Image>
                         </div>
                         <p className='tutorial-text'>
-                            To convert a .xlsx Excel file to a .tsv file, the user can open it in Excel, export it as “tutorial-Text (Tab delimited) (*.txt)”, and then manually change the file extension from “.txt” to “.tsv”.
+                            To convert a .xlsx Excel file to a .tsv file, the user can open it in Excel, export it as “Text (Tab delimited) (*.txt)”, and then manually change the file extension from “.txt” to “.tsv”.
                         </p>
                         <div className='d-flex justify-content-center'>
                             <Image className='my-4 mx-2 tutorial-img-lg' src={excelImg} fluid alt='place holder'></Image>
@@ -161,7 +161,7 @@ export default class Tutorial extends React.Component {
                         <p className='my-0 py-3' id='tolerance-anchor'></p>
                         <h5 className='tutorial-subtitle'>Tolerance (optional)</h5>
                         <p className='tutorial-text'>
-                            PEELing performs cutoff analysis on each “labelled-to-control” ratio and, for the final proteome, only includes proteins passing cutoff of all/multiple “labelled-to-control” ratios (the intersection of cutoff results of different “labelled-to-control” ratios). The tolerance value here controls how stringent the intersection is. Its default is set as 0, meaning that a protein must pass cutoff of all “labelled-to-control” ratios to be included in the final proteome—in the provided example, a protein must pass cutoff of all 4 ratios to be included. If the tolerance is set as 1, a protein can be filtered out by 1 ratio but still be included in the final proteome—in the provided example, a protein passing cutoff of any 3 ratios is included. We recommend setting the tolerance value to a small number to better filter out contaminants.
+                            PEELing conducts cutoff analysis on all labelled-to-control ratios individually and, for the final proteome, retains only those proteins that pass the cutoff of all or multiple ratios, which further eliminates contaminants. The "Tolerance" setting is optional and enables users to control the stringency of the cutoff. By default, it is set to 0, meaning that a protein must pass the cutoff of all ratios to be included in the final proteome—in the provided example, a protein must pass cutoff of all 4 ratios to be included. If Tolerance is set to 1, a protein can be filtered out by 1 ratio but still be included in the final proteome—in the provided example, a protein passing cutoff of any 3 ratios is included. If Tolerance is set to n, a protein can fail the cutoff in up to n ratios and still be included in the final proteome. We recommend setting the tolerance value to a small number to better filter out contaminants.
                         </p>
                         
                         <p className='my-0 py-3' id='format-anchor'></p>
@@ -180,9 +180,10 @@ export default class Tutorial extends React.Component {
                         <p className='my-0 py-3' id='output-anchor'></p>
                         <h4 className='tutorial-title' id='output'>Output</h4>
                         
-                        <h5 className='tutorial-subtitle'>Failed Id Mapping</h5>
+                        <h5 className='tutorial-subtitle'>Failed ID Mapping</h5>
                         <p className='tutorial-text'>
-                            PEELing automatically maps the protein ids in the user submitted data file to the latest version using the Uniprot API, to get the best match with our updated annotation data. Occasionally the Uniprot server may fail to map some of the ids, possibly due to a temporarily high workload. In this case, PEELing will show the number of failed ids at the top of the Results section. The user can decide whether to resubmit until all ids are successfully mapped. If all ids are successfully mapped, this “Note” information will not appear.                        </p>
+                            In order to obtain the best match with our automatically updated references, PEELing maps protein IDs in the user-submitted data file to the latest version using UniProt API. Occasionally the UniProt server may fail to map some of the IDs, possibly due to a temporarily high workload. In this case, PEELing will show the number of failed IDs at the top of the Results section. The user can resubmit until all IDs are successfully mapped. If all IDs are successfully mapped, this “Note” information will not appear.
+                        </p>
                         <div className='d-flex justify-content-center'>
                             <Image className='my-4 mx-2 tutorial-img-lg' src={idImg} fluid alt='place holder'></Image>
                         </div>
@@ -193,31 +194,31 @@ export default class Tutorial extends React.Component {
                             Correlation plots and coefficients for evaluating whether replicates are consistent with each other or exhibit overall discrepancy.
                         </p>
                         <p className='tutorial-text box px-3 py-3'>
-                            <span className='highlight'>Note&nbsp;&nbsp;</span>The heatmap and scatter plot of the default ratio pair are included in the downloaded results. To include a scatter plot of another ratio pair, please make sure to “Make” the plot before downloading. PEELing does not automatically make scatter plots for all ratio pairs.
+                            <span className='highlight'>Note&nbsp;&nbsp;</span>The heatmap and the scatter plot of the default ratio pair are included in the downloadable results. To include the scatter plot of another ratio pair, please make sure to “Make” the plot before downloading. PEELing does not automatically make scatter plots for all ratio pairs.
                         </p>
                         <div className='d-flex justify-content-center'>
                             <Image className='my-4 mx-2 tutorial-img-lg' src={corrImg} fluid alt='place holder'></Image>
                         </div>
                         
                         <p className='my-0 py-3' id='plot-anchor'></p>
-                        <h5 className='tutorial-subtitle'>Quality Check and Cutoff Plots</h5>
+                        <h5 className='tutorial-subtitle'>Quality Checks and Cutoff Plots</h5>
                         <p className='tutorial-text'>
                             For each “labelled-to-control” ratio on the left, selectable tab (e.g., 129C:127C below), two plots are shown:
                         </p>
                         <p className='tutorial-text'>
-                            The left plot shows true-positive rate (TPR, blue), false-positive rate (FPR, orange), and difference between TPR and FPR (TPR–FPR, green) along the ratio-based ranking (x-axis). For a successful cell-surface proteome capturing experiment, TPR (blue) ramps up quickly while FPR (orange) increases slowly. Consequently, “TPR–FPR” (green) initially increases and then declines, forming a single maximum peak—where the cutoff is placed.
+                            The left plot shows true-positive rate (TPR, blue), false-positive rate (FPR, orange), and difference between TPR and FPR (TPR–FPR, green) plotted against the ratio-based ranking (x-axis). In a successful cell-surface proteomics experiment, TPR (blue) increases quickly while FPR (orange) rises slowly. Consequently, “TPR–FPR” (green) initially increases and then declines, forming a single maximum peak—where the cutoff is placed.
                         </p>
                         <p className='tutorial-text'>
-                            The right plot is a receiver operating characteristic (ROC) curve, in which y-axis represents TPR while x-axis represents FPR. For a successful experiment, the ROC curve bends toward the left-upper corner as shown below. In the ROC curve, the cutoff point is marked as a red dot, along with its corresponding ranking position, protein identify, TPR, and FPR.
+                            The right plot is a receiver operating characteristic (ROC) curve, in which y-axis represents TPR while x-axis represents FPR. In a successful experiment, the ROC curve bends toward the left-upper corner as shown below. In the ROC curve, the cutoff point is marked as a red dot, along with its corresponding ranking position, protein identify, TPR, and FPR.
                         </p>
                         <div className='d-flex justify-content-center'>
                             <Image className='my-4 mx-2 tutorial-img-lg' src={lineImg} fluid alt='place holder'></Image>
                         </div>
                         <p className='tutorial-text'>
-                            If the “TPR-FPR” green line in the left plot wiggles up and down without forming a single peak or the ROC curve resembles the diagonal line without bending toward the left-upper corner, the cell-surface proteome capturing is likely suboptimal or failed. Lots of intracellular contaminants are expected to be enriched. In these cases, PEELing is not recommended for cutoff analysis.
+                            If the TPR–FPR value fluctuates up and down without forming a single peak or the ROC curve follows the diagonal line without bending towards the left-upper corner, it suggests suboptimal or failed cell-surface proteome capturing. This could be due to an abundance of intracellular contaminants being enriched. In such cases, it is not recommended to use PEELing for further analysis. Instead, improved sample preparation or other filtering methods should be considered to address the issue.
                         </p>
                         <p className='tutorial-text'>
-                            Plots for all ratios are automatically included in the downloaded results.
+                            Plots of all ratios are automatically included in the downloadable results.
                         </p>
                         
                         <p className='my-0 py-3' id='proteins-anchor'></p>
@@ -250,12 +251,13 @@ export default class Tutorial extends React.Component {
                             Select the corresponding organism and click <code className='tutorial-code'>Send</code> to perform protein ontology and pathway analyses of the post-cutoff proteome through the Panther server. Top 10 terms based on false discovery rate (FDR) are listed for protein localization (Panther GO Slim Cellular Component), function (Panther GO Slim Biological Process), and pathway (Reactome).
                         </p>
                         <p className='tutorial-text'>
-                            Users can also click <code className='tutorial-code'>Panther</code> in the title to go to Panther’s website to do the analysis, with the protein list from the “Post-Cutoff Proteome” section, or the post-cutoff-proteome.txt file from the downloaded results.                        </p>
+                            Users can also click “Panther” in the title to go to Panther’s website for this analysis, by submitting the protein list from the “Post-Cutoff Proteome” section or the post-cutoff-proteome.txt file in the downloadable results.
+                        </p>
                         <div className='d-flex justify-content-center'>
                             <Image className='my-4 mx-2 tutorial-img-lg' src={pantherImg} fluid alt='place holder'></Image>
                         </div>
                         <p className='tutorial-text  box px-3 py-3'>
-                            <span className='highlight'>Note&nbsp;&nbsp;</span> Sometimes the Panther server becomes unresponsive. If it takes too long for the results to come back, please resend the request.
+                            <span className='highlight'>Note&nbsp;&nbsp;</span> Sometimes the Panther server becomes unresponsive. If it takes too long for the results to come back, please resend the request later.
                         </p>
                         
                         <p className='my-0 py-3' id='panther-anchor'></p>

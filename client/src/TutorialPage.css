@@ -1,27 +1,15 @@
 .content {
     text-align: start;
-    /* height: 100%; */
     width: 80%;
-    /* min-width: 350px; */
     max-width: 1000px;
     margin: 0;
-    /* background-color: #ffffff; */
     border-left: solid #eeeeee;
-    /* border-right: solid #eeeeee; */
     display: flex;
-    flex-direction: column;
-    /* flex-grow: 1; */
-    
+    flex-direction: column;    
 }
-
-
-/* .tutorial-title {
-    
-} */
 
 .highlight {
     font-weight: bold;
-    /* font-style: italic; */
 }
 
 .main {
@@ -29,7 +17,6 @@
     text-align: start;
     display: flex;
     align-items: flex-start;
-    /* height: 100%; */
 }
 
 .placeholder {
@@ -37,17 +24,12 @@
 }
 
 .sidebar-menu {
-    /* border: solid; */
-    /* display: inline-block; */
-    /* height: 100%; */
     max-width: 20%;
     position: -webkit-sticky;
     position: sticky;
     top: 6em;
     z-index: 1;
     font-size: small;
-    /* white-space: nowrap; */
-    /* overflow-y: auto; */
 }
 
 .tutorial-code {
@@ -98,6 +80,7 @@
     }
 
     .sidebar-menu {
+        display: none !important;
         width: 0;
     }
 }

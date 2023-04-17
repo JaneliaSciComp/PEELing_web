@@ -4,7 +4,6 @@
 
 .panther-table {
     font-size: small;
-    /*  */
 }
 
 .panther-table-cell{
@@ -14,12 +13,6 @@
 .panther-table-container {
     margin: 4em auto !important;
 }
-
-/* .panther-table-head {
-    text-align: center;
-} */
-
-
 
 .table-title {
     font-size: 0.9em;
