@@ -2,7 +2,7 @@ version: '3'
 
 services:
   api:
-    image: registry.int.janelia.org/peeling/api:0.1.4
+    image: ghcr.io/janeliascicomp/peeling_web_api:v0.1.5
     build: ./
     ports:
       - "8000:8000"
