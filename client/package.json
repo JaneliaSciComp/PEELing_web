@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "peeling",
   "version": "0.1.5",
   "private": true,
   "dependencies": {
@@ -30,7 +30,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:8000",
   "eslintConfig": {
     "extends": [
       "react-app",
