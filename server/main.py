@@ -1,43 +1,60 @@
-import uvicorn
-from fastapi import FastAPI, Form, UploadFile
-from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware
+import os
+from csv import reader
+from io import StringIO
 from typing import Union
 from datetime import datetime, timedelta
 from time import sleep
-import schedule
+import logging
+import traceback
+import shutil
+import asyncio
 from threading import Thread
-import logging, os, traceback, shutil
+
+from fastapi import FastAPI, Form, UploadFile, File, BackgroundTasks
+from fastapi.responses import FileResponse
+from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
+import schedule
 import pandas as pd
 import matplotlib.pyplot as plt
 from peeling.webuniprotcommunicator import WebUniProtCommunicator
 from peeling.webuserinputreader import WebUserInputReader
 from peeling.webprocessor import WebProcessor
 from peeling.webpantherprocessor import WebPantherProcessor
-import asyncio
+from peeling.cellular_compartments import cellular_compartments
 
-REQUESTES = ['format', 'submit', 'heatmap', 'scatter', 'plot', 'proteins', 'proteinssorted', 'download', 'organism', 'panther', 'cachedpanther', 'exampledata']
+REQUESTES = [
+    'format', 'submit', 'heatmap', 'scatter', 'plot', 'proteins',
+    'proteinssorted', 'download', 'organism', 'panther',
+    'cachedpanther', 'exampledata'
+]
 
 #set up logger
 logger = logging.getLogger('peeling')
-#TODO: set level based on verbose option
 logger.setLevel(logging.INFO)
-log_handler = logging.FileHandler('../log/log.txt') 
-# log_handler = logging.StreamHandler() 
-log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s')) # to print out source code location: %(pathname)s %(lineno)d: 
+
+log_handler = logging.FileHandler('../log/log.txt')
+# log_handler = logging.StreamHandler()
+# to print out source code location: %(pathname)s %(lineno)d:
+log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s'))
 logger.addHandler(log_handler)
+
+debug = os.getenv("PEELING_DEBUG", 0)
+if debug == '1':
+    logger.setLevel(logging.DEBUG)
+    logger.debug('debug mode enabled')
+
 logger.info(f'\n{datetime.now()} Server starts')
 
-
-uniprot_communicator = WebUniProtCommunicator()
 
 app_usage = {}
 
 app = FastAPI()
 
 # for CORS, backend server allow these origins to send request and access the response
-#TODO change origin to the frontend server orgin when deploy 
-origins = ['http://localhost:8000', 'http://localhost:3000'] #8000 for old client, 3000 for react client
+#TODO change origin to the frontend server orgin when deploy
+# 8000 for old client, 3000 for react client
+origins = ['http://localhost:8000', 'http://localhost:3000']
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -47,14 +64,19 @@ app.add_middleware(
 )
 
 
-
 ######## Background Thread ########
 coroutine_loop = asyncio.get_running_loop()
 
 def update_and_log_usage():
-    coro = uniprot_communicator.update_data()
-    future = asyncio.run_coroutine_threadsafe(coro, coroutine_loop)
-    future.result()
+    logger.debug('updating cache in coroutine...')
+    for cellular_compartment in reversed(cellular_compartments.keys()):
+        logger.debug(f"updating {cellular_compartment}")
+        uniprot_communicator = WebUniProtCommunicator(False, cellular_compartment)
+        coro = uniprot_communicator.update_data()
+        future = asyncio.run_coroutine_threadsafe(coro, coroutine_loop)
+        future.result()
+        logger.debug(f"updated {cellular_compartment}")
+    logger.debug('updating cache complete')
     log_usage()
 
 
@@ -69,7 +91,7 @@ def delete_user_results():
             modify_time = datetime.fromtimestamp(modify_time)
             exist_time = datetime.now() - modify_time
             logger.debug(path)
-            logger.debug(exist_time > timedelta(days=1)) 
+            logger.debug(exist_time > timedelta(days=1))
             if exist_time > timedelta(days=1):
                 shutil.rmtree(path, ignore_errors=True)
                 count += 1
@@ -82,6 +104,7 @@ def delete_user_results():
 
 
 def log_usage():
+    logger.debug('logging_usage...')
     global app_usage
     file_path = '../log/app_usage.txt'
     # write column name
@@ -93,7 +116,7 @@ def log_usage():
             f.write('\n')
 
     # write request count for current period
-    with open(file_path, 'a') as f: 
+    with open(file_path, 'a') as f:
         f.write(str(datetime.now())+'\t')
         for col in REQUESTES:
             if col in app_usage:
@@ -101,27 +124,24 @@ def log_usage():
             else:
                 f.write('0\t')
         f.write('\n')
-    
-    logger.info('App usage writren')
+
+    logger.info('App usage logged')
     #refresh app_usage
     app_usage = {}
 
-    
+
 def backgroud_tasks():
     update_and_log_usage()
-    #TODO
     schedule.every().sunday.at("09:00").do(update_and_log_usage)
-    # schedule.every(2).minutes.do(update_and_log_usage)
     while True:
         delete_user_results()
         logger.debug(schedule.get_jobs())
         schedule.run_pending()
-        sleep(600) #TODO
+        sleep(600)
 
 
 daemon = Thread(target=backgroud_tasks, daemon=True, name='background_update')
 daemon.start()
-
 
 
 ######## Main Thread ########
@@ -141,7 +161,7 @@ def error_handler(err):
 
 
 @app.get("/api/format")
-async def getFormats():
+async def get_formats():
     logger.info('"/format"')
     log_request('format')
 
@@ -152,20 +172,73 @@ async def getFormats():
         return error_handler(e)
 
 
+def is_tsv_single_column(content_str):
+    rows = list(reader(StringIO(content_str), delimiter="\t"))
+    if len(rows[0]) == 1 and all(len(row) == 1 and isinstance(row[0], str) for row in rows[1:]):
+        return True
+    return False
+
+
+async def validate_and_convert_annotation_upload(file):
+    content = await file.read()
+    content_str = content.decode("utf-8")
+    if is_tsv_single_column(content_str):
+        # File is valid
+        return pd.read_table(StringIO(content_str), sep='\t')
+    # File is not valid
+    raise RequestValidationError("Uploaded file is not a TSV with a single column of ids")
+
+
 @app.post("/api/submit")
-async def handleSubmit(mass_file: UploadFile, controls: int = Form(), replicates: int = Form(), tolerance: Union[int, None] = Form(default=0), plot_format: Union[str, None] = Form(default='png')): # , conditions: Union[int, None] = Form(default=1)
+async def handleSubmit(
+    mass_file: UploadFile,
+    tp_file: UploadFile = File(None),
+    fp_file: UploadFile = File(None),
+    controls: int = Form(),
+    replicates: int = Form(),
+    tolerance: Union[int, None] = Form(default=0),
+    plot_format: Union[str, None] = Form(default='png'),
+    cellular_compartment: str = Form(default='cs'), # default is cell surface
+):
     logger.info('"/submit"')
     log_request('submit')
     try:
-        # return {'resultsId': '111', 'failedIdMapping':0} # to test error handling
+        # validate and convert the true positive and false positive upload
+        # file handles into a pandas data frame.
+        tp_data = None
+        fp_data = None
+        if cellular_compartment not in cellular_compartments:
+            logger.debug(f'*** {cellular_compartment} not in cellular_compartments list')
+            tp_data = await validate_and_convert_annotation_upload(tp_file)
+            fp_data = await validate_and_convert_annotation_upload(fp_file)
+        else:
+            logger.debug(f'*** using: {cellular_compartment} - skip validating file_uploads')
+
         start_time = datetime.now()
         logger.info(f'{start_time} Analysis starts...')
-        user_input_reader = WebUserInputReader(mass_file, controls, replicates, tolerance, plot_format) #
+        user_input_reader = WebUserInputReader(
+            mass_file,
+            controls,
+            replicates,
+            tolerance,
+            plot_format,
+            cellular_compartment
+        )
+        uniprot_communicator = WebUniProtCommunicator(
+            False,
+            cellular_compartment,
+            tp_data=tp_data,
+            fp_data=fp_data
+        )
         processor = WebProcessor(user_input_reader, uniprot_communicator)
         unique_id, failed_id_mapping, columns = await processor.start()
         end_time = datetime.now()
         logger.info(f'{end_time} Analysis finished! time: {end_time - start_time}')
-        return {'resultsId': unique_id, 'failedIdMapping': failed_id_mapping, 'colNames': columns} 
+        return {
+            'resultsId': unique_id,
+            'failedIdMapping': failed_id_mapping,
+            'colNames': columns
+        }
     except Exception as e:
         return error_handler(e)
 
@@ -230,7 +303,7 @@ async def getProteins(unique_id:str):
 async def getProteinSorted(unique_id:str, column:str):
     logger.info(f'"/proteinssorted/{unique_id}/{column}"')
     log_request('proteinssorted')
-    
+
     try:
         path = f'../results/{unique_id}/post-cutoff-proteome_with_raw_data.tsv'
         results = pd.read_table(path, sep='\t', header=0)
@@ -289,12 +362,12 @@ async def getPantherEnrich(unique_id:str, organism_id:str):
             else:
                 done = False
                 break
-        
+
         # if not done, reach out to Panther
         if not done:
             panther_processor = WebPantherProcessor(organism_id, unique_id)
             results = await panther_processor.start()
-        
+
         return results
     except Exception as e:
         return error_handler(e)
@@ -323,6 +396,7 @@ async def getCachedPanther(unique_id:str, organism_id:str):
 async def exportCached():
     logger.info('"/exportcached"')
     try:
+        uniprot_communicator = WebUniProtCommunicator(False, 'cs')
         ids = uniprot_communicator.get_ids()
         ids.to_csv('../retrieved_data/latest_ids.tsv', sep='\t', index=False)
     except Exception as e:
@@ -330,7 +404,7 @@ async def exportCached():
 
 
 @app.get("/api/exampledata")
-async def exportCached():
+async def exampleData():
     logger.info('"/exampledata"')
     log_request('exampledata')
     try:
@@ -338,6 +412,3 @@ async def exportCached():
         return FileResponse(path)
     except Exception as e:
         return error_handler(e)
-
-# def main():
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
