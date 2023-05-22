@@ -33,7 +33,7 @@ export default class Results extends React.Component {
                     <hr className='my-5 mx-4'></hr>
                     <Proteins resultsId={this.props.resultsId} />
                     <hr className='my-5 mx-4'></hr>
-                    <TopProteins resultsId={this.props.resultsId} colNames={this.props.colNames} />
+                    <TopProteins resultsId={this.props.resultsId} colNames={this.props.colNames} cellCompartment={this.props.cellCompartment} />
                     <hr className='my-5 mx-4'></hr>
                     <Panther resultsId={this.props.resultsId} setOrganism={this.props.setOrganism} organismId={this.props.organismId}/>
                     <br></br>

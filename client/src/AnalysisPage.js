@@ -11,10 +11,12 @@ export default class Analysis extends React.Component{
     
         this.state = {
             userInputSubmitted: false,
-            error: null, 
+            error: null,
+            cellCompartment: null,
         }
 
         this.submitIndicator = this.submitIndicator.bind(this);
+        this.setCellCompartment = this.setCellCompartment.bind(this);
         this.setError = this.setError.bind(this);
     }
 
@@ -28,6 +30,10 @@ export default class Analysis extends React.Component{
         this.setState({error: error})
     }
 
+    setCellCompartment(value) {
+      this.setState({cellCompartment: value});
+    }
+
 
     render() {
         return (
@@ -39,6 +45,7 @@ export default class Analysis extends React.Component{
                 setFailedIdMapping={this.props.setFailedIdMapping} 
                 setError={this.setError} 
                 setColNames={this.props.setColNames}
+                setCellCompartment={this.setCellCompartment}
                 />
                 {(this.state.userInputSubmitted || this.props.resultsId || this.state.error) ?
                 <Results 
@@ -49,7 +56,9 @@ export default class Analysis extends React.Component{
                   error={this.state.error}
                   setError={this.setError}
                   setOrganism={this.props.setOrganism}
-                  organismId={this.props.organismId}/>
+                  organismId={this.props.organismId}
+                  cellCompartment={this.state.cellCompartment}
+                />
                 : null}
             </div>
         )

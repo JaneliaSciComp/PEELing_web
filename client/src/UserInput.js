@@ -1,5 +1,6 @@
 import React from 'react';
 import {Form, Row, Col, Button} from 'react-bootstrap';
+import { cellCompartmentList } from './utils.js';
 
 
 export default class UserInput extends React.Component {
@@ -13,12 +14,6 @@ export default class UserInput extends React.Component {
             plotFormat: 'png',
             plotFormatList: ['png'],
             cellCompartment: 'cs',
-            cellCompartmentList: [
-              {label: 'Cell Surface', value: 'cs'},
-              {label: 'Mitochondrion', value: 'mt'},
-              {label: 'Nucleus', value: 'nu'},
-              {label: 'Other (Custom TP / FP lists)', value: 'ot'}
-            ],
             fileInvalid:false,
             fpFileInvalid:false,
             tpFileInvalid:false,
@@ -61,6 +56,7 @@ export default class UserInput extends React.Component {
     submit(e) {
         e.preventDefault();
         this.props.submitIndicator(true);
+        this.props.setCellCompartment(null)
         this.props.setResultsId(null);
         this.props.setFailedIdMapping(null);
         this.props.setColNames(null);
@@ -73,6 +69,7 @@ export default class UserInput extends React.Component {
                 return res.json();
             } else {
                 this.props.setError(res.statusText);
+                this.props.setCellCompartment(this.state.cellCompartment)
                 this.props.setResultsId(null);
                 this.props.setFailedIdMapping(null);
                 this.props.setColNames(null);
@@ -81,6 +78,7 @@ export default class UserInput extends React.Component {
         }).then((res)=>{
             if (res['error']) {
                 this.props.setError(res['error']);
+                this.props.setCellCompartment(this.state.cellCompartment)
                 this.props.setResultsId(null);
                 this.props.setFailedIdMapping(null);
                 this.props.setColNames(null);
@@ -91,6 +89,7 @@ export default class UserInput extends React.Component {
                     resultsId = resultsId.replaceAll('"', '');
                 }
                 this.props.setResultsId(resultsId);
+                this.props.setCellCompartment(this.state.cellCompartment)
                 this.props.setFailedIdMapping(res['failedIdMapping']);
                 this.props.setColNames(res['colNames']);
                 this.props.submitIndicator(false);
@@ -195,7 +194,7 @@ export default class UserInput extends React.Component {
                         <Form.Label column sm={5}>Cellular Compartment</Form.Label>
                         <Col sm={7}>
                             <Form.Select name='cellular_compartment' value={this.state.cellCompartment} onChange={this.cellCompartmentHandler}>
-                            {this.state.cellCompartmentList.map((format, i) =>
+                            {cellCompartmentList.map((format, i) =>
                              <option key={i} value={format.value} >{format.label}</option>
                             )}
                             </Form.Select>

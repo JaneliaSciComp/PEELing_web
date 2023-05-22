@@ -1,6 +1,7 @@
 import React from 'react';
 import {Table, Tab, Tabs} from 'react-bootstrap';
 import './TopProteins.css';
+import { cellCompartmentNameFromAbbr } from './utils';
 
 
 export default class TopProteins extends React.Component {
@@ -53,7 +54,7 @@ export default class TopProteins extends React.Component {
     render() {
         return (
             <div className='top-proteins subsection'>
-                <h4 className='subsection-title my-5 px-4'>Top Surface Proteins</h4>
+                <h4 className='subsection-title my-5 px-4'>Top {cellCompartmentNameFromAbbr(this.props.cellCompartment)} Proteins</h4>
 
                 {this.state.error ?
                 <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
