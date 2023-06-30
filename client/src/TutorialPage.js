@@ -144,11 +144,11 @@ export default class Tutorial extends React.Component {
                         <p className='tutorial-text'>
                             <span className='highlight'>The first column contains UniProt accession numbers of proteins </span>(e.g., Q9JHU4).
                             Although PEELing automatically connects to UniProt and maps accession numbers from user input, it is best to use updated databases during mass spectrometry data processing to minimize obsolete accession numbers.
-                            &nbsp;<span className='highlight'>Remaining columns contain “labelled-to-control” ratios of proteins.</span>&nbsp;
-                            The “labelled-to-control” ratio can be derived from any mass spectrometry quantification strategy: SILAC, TMT, iTRAQ, label-free, or others. In the provided example using TMT, 2 labelled replicates (129C and 128C) and 2 non-labelled controls (127C and 127N) produce 4 “labelled-to-control” ratios (129C:127C, 129C:127N, 128C:127C, 128C:127N).
+                            &nbsp;<span className='highlight'>Remaining columns contain labelled-to-control ratios of proteins.</span>&nbsp;
+                            The labelled-to-control ratio can be derived from any mass spectrometry quantification strategy: SILAC, TMT, iTRAQ, label-free, or others. In the provided example using TMT, 2 labelled replicates (129C and 128C) and 2 non-labelled controls (127C and 127N) produce 4 labelled-to-control ratios (129C:127C, 129C:127N, 128C:127C, 128C:127N).
                         </p>
                         <p className='tutorial-text'>
-                            <span className='highlight'>The first row lists indexes of “labelled-to-control” ratios.</span>&nbsp;
+                            <span className='highlight'>The first row lists indexes of labelled-to-control ratios.</span>&nbsp;
                             We recommend keeping them informative and concise since these indexes will be displayed in the output.
                         </p>
                         <div className='d-flex justify-content-center'>
@@ -164,10 +164,10 @@ export default class Tutorial extends React.Component {
                         <p className='my-0 py-3' id='ctrl-rep-anchor'></p>
                         <h5 className='tutorial-subtitle'># Non-Labelled Controls and # Labelled Replicates</h5>
                         <p className='tutorial-text'>
-                         For spatially-resolved proteomics, it is necessary (or exceedingly recommended) to include non-labelled controls, which capture non-specific bead binders and other contaminants and thus enable the cutoff analysis. Please type in the number of non-labelled controls at “# Non-Labelled Controls” (e.g., 2 for the provided example). For “# Labelled Replicates,” please type in the number of cell-surface-labelled replicates (e.g., 2 for the provided example).
+                         For spatially-resolved proteomics, it is necessary (or exceedingly recommended) to include non-labelled controls, which capture non-specific bead binders and other contaminants and thus enable the cutoff analysis. Please type in the number of non-labelled controls at “# Non-Labelled Controls” (e.g., 2 for the provided example). For “# Labelled Replicates,” please type in the number of labelled replicates (e.g., 2 for the provided example).
                         </p>
                         <p className='tutorial-text'>
-                            PEELing expects all possible “labelled-to-control” ratios from the .tsv input file. In the provided example, there are 2 labelled replicates (129C and 128C) and 2 non-labelled controls (127C and 127N). Thus, 4 ratios (129C:127C, 129C:127N, 128C:127C, 128C:127N) should be included in the .tsv file.
+                            PEELing expects all possible labelled-to-control ratios from the .tsv input file. In the provided example, there are 2 labelled replicates (129C and 128C) and 2 non-labelled controls (127C and 127N). Thus, 4 ratios (129C:127C, 129C:127N, 128C:127C, 128C:127N) should be included in the .tsv file.
                         </p>
 
                         <p className='my-0 py-3' id='tolerance-anchor'></p>
@@ -215,13 +215,13 @@ export default class Tutorial extends React.Component {
                         <p className='my-0 py-3' id='plot-anchor'></p>
                         <h5 className='tutorial-subtitle'>Quality Checks and Cutoff Plots</h5>
                         <p className='tutorial-text'>
-                            For each “labelled-to-control” ratio on the left, selectable tab (e.g., 129C:127C below), two plots are shown:
+                            For each labelled-to-control ratio on the left, selectable tab (e.g., 129C:127C below), two plots are shown:
                         </p>
                         <p className='tutorial-text'>
                             The left plot shows true-positive rate (TPR, blue), false-positive rate (FPR, orange), and difference between TPR and FPR (TPR–FPR, green) plotted against the ratio-based ranking (x-axis). In a successful enrichment experiment, TPR (blue) increases quickly while FPR (orange) rises slowly. Consequently, “TPR–FPR” (green) initially increases and then declines, forming a single maximum peak—where the cutoff is placed.
                         </p>
                         <p className='tutorial-text'>
-                            The right plot is a receiver operating characteristic (ROC) curve, in which y-axis represents TPR while x-axis represents FPR. In a successful experiment, the ROC curve bends toward the left-upper corner as shown below. In the ROC curve, the cutoff point is marked as a red dot, along with its corresponding ranking position, protein identify, TPR, and FPR.
+                            The right plot is a receiver operating characteristic (ROC) curve, in which y-axis represents TPR while x-axis represents FPR. In a successful experiment, the ROC curve bends toward the left-upper corner as shown below. In the ROC curve, the cutoff point is marked as a red dot, along with its corresponding ranking position, protein identity, TPR, and FPR.
                         </p>
                         <div className='d-flex justify-content-center'>
                             <Image className='my-4 mx-2 tutorial-img-lg' src={lineImg} fluid alt='place holder'></Image>
@@ -248,7 +248,7 @@ export default class Tutorial extends React.Component {
                         <p className='my-0 py-3' id='top-proteins-anchor'></p>
                         <h5 className='tutorial-subtitle'>Top Surface Proteins</h5>
                         <p className='tutorial-text'>
-                            List of the top 100 most enriched proteins based on each “labelled-to-control” ratio.
+                            List of the top 100 most enriched proteins based on each labelled-to-control ratio.
                         </p>
                         <p className='tutorial-text'>
                             Click each UniProt accession number to jump to the corresponding UniProt protein page.
