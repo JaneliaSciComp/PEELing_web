@@ -91,6 +91,12 @@ export default class Tutorial extends React.Component {
 
                         </p>
 
+                        <p className='tutorial-text tutorial-text box px-3 py-3'>
+                            Manuscript preprint: 
+                            &nbsp;<a href="https://www.biorxiv.org/content/10.1101/2023.04.21.537871" target="_blank" rel="noreferrer">https://www.biorxiv.org/content/10.1101/2023.04.21.537871</a>.
+                            Please note that this bioRxiv preprint will be updated as we add new functionalities to PEELing.
+                        </p>
+
                         <p className='my-0 py-3' id='input-anchor'></p>
                         <h4 className='tutorial-title' id='input'>Input</h4>
 

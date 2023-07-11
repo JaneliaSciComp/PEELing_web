@@ -48,6 +48,7 @@ logger.info(f'\n{datetime.now()} Server starts')
 
 
 app_usage = {}
+track_update = 0
 
 app = FastAPI()
 
@@ -69,13 +70,15 @@ coroutine_loop = asyncio.get_running_loop()
 
 def update_and_log_usage():
     logger.debug('updating cache in coroutine...')
+    global track_update
     for cellular_compartment in reversed(cellular_compartments.keys()):
         logger.debug(f"updating {cellular_compartment}")
-        uniprot_communicator = WebUniProtCommunicator(False, cellular_compartment)
+        uniprot_communicator = WebUniProtCommunicator(False, cellular_compartment, track_update)
         coro = uniprot_communicator.update_data()
         future = asyncio.run_coroutine_threadsafe(coro, coroutine_loop)
         future.result()
         logger.debug(f"updated {cellular_compartment}")
+    track_update += 1
     logger.debug('updating cache complete')
     log_usage()
 
@@ -132,7 +135,8 @@ def log_usage():
 
 def backgroud_tasks():
     update_and_log_usage()
-    schedule.every().sunday.at("09:00").do(update_and_log_usage)
+    # schedule.every().sunday.at("09:00").do(update_and_log_usage)
+    schedule.every(2).minutes.do(update_and_log_usage)
     while True:
         delete_user_results()
         logger.debug(schedule.get_jobs())
@@ -227,6 +231,7 @@ async def handleSubmit(
         uniprot_communicator = WebUniProtCommunicator(
             False,
             cellular_compartment,
+            track_update,
             tp_data=tp_data,
             fp_data=fp_data
         )
@@ -396,7 +401,7 @@ async def getCachedPanther(unique_id:str, organism_id:str):
 async def exportCached():
     logger.info('"/exportcached"')
     try:
-        uniprot_communicator = WebUniProtCommunicator(False, 'cs')
+        uniprot_communicator = WebUniProtCommunicator(False, 'cs', track_update)
         ids = uniprot_communicator.get_ids()
         ids.to_csv('../retrieved_data/latest_ids.tsv', sep='\t', index=False)
     except Exception as e:
