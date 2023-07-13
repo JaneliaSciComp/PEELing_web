@@ -34,7 +34,7 @@ logger = logging.getLogger('peeling')
 logger.setLevel(logging.INFO)
 
 log_handler = logging.FileHandler('../log/log.txt')
-# log_handler = logging.StreamHandler()
+#log_handler = logging.StreamHandler()
 # to print out source code location: %(pathname)s %(lineno)d:
 log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s'))
 logger.addHandler(log_handler)
@@ -135,8 +135,8 @@ def log_usage():
 
 def backgroud_tasks():
     update_and_log_usage()
-    # schedule.every().sunday.at("09:00").do(update_and_log_usage)
-    schedule.every(2).minutes.do(update_and_log_usage)
+    schedule.every().sunday.at("09:00").do(update_and_log_usage)
+    # schedule.every(2).minutes.do(update_and_log_usage)
     while True:
         delete_user_results()
         logger.debug(schedule.get_jobs())

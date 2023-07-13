@@ -2,7 +2,7 @@ version: '3'
 
 services:
   api:
-    image: ghcr.io/janeliascicomp/peeling_web_api:v0.1.8
+    image: ghcr.io/janeliascicomp/peeling_web_api:v0.1.10
     build: ./
     ports:
       - "8000:8000"
@@ -14,7 +14,7 @@ services:
     networks:
       - peeling-net
   client:
-    image: registry.int.janelia.org/peeling/client:0.1.8
+    image: registry.int.janelia.org/peeling/client:0.1.10
     build: ./client
     depends_on:
       - api
