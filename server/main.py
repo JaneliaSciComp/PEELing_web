@@ -34,7 +34,7 @@ logger = logging.getLogger('peeling')
 logger.setLevel(logging.INFO)
 
 log_handler = logging.FileHandler('../log/log.txt')
-#log_handler = logging.StreamHandler()
+# log_handler = logging.StreamHandler()
 # to print out source code location: %(pathname)s %(lineno)d:
 log_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s: %(message)s'))
 logger.addHandler(log_handler)
