@@ -1,5 +1,6 @@
 # PEELing Web Portal
 
+[![DOI](https://zenodo.org/badge/566411845.svg)](https://doi.org/10.5281/zenodo.15692516)
 
 
 ### Introduction
