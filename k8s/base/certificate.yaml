@@ -1,0 +1,32 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: peeling 
+  namespace: peeling-app
+spec:
+  secretName: peeling-cert
+  duration: 2160h
+  renewBefore: 240h
+  commonName: peeling.janelia.org
+  dnsNames:
+    - peeling.janelia.org
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: peeling-test 
+  namespace: peeling-app
+spec:
+  secretName: peeling-test-cert
+  duration: 2160h
+  renewBefore: 240h
+  commonName: peeling-test.janelia.org
+  dnsNames:
+    - peeling-test.janelia.org
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer

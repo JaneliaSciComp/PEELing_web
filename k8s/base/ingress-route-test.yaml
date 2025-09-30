@@ -1,0 +1,37 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: peeling-test
+  namespace: peeling-app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`peeling-test.janelia.org`) 
+      kind: Rule
+      services:
+        - name: peeling-service
+          namespace: peeling-app
+          port: 80
+  tls:
+    secretName: peeling-test-cert
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: peeling-test-http
+  namespace: peeling-app
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`peeling-test.janelia.org`) 
+      kind: Rule
+      services:
+        - name: peeling-service
+          namespace: peeling-app
+          port: 80
+      middlewares:
+        - name: redirect
+          namespace: peeling-app

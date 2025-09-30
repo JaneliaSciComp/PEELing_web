@@ -1,0 +1,45 @@
+---
+# PersistentVolumeClaim for data directory
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: peeling-data-pvc
+  namespace: peeling-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi  
+  storageClassName: gp2
+  volumeMode: Filesystem
+---
+# PersistentVolumeClaim for results directory
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: peeling-results-pvc
+  namespace: peeling-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi  
+  storageClassName: gp2
+  volumeMode: Filesystem
+---
+# PersistentVolumeClaim for log directory
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: peeling-log-pvc
+  namespace: peeling-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi  
+  storageClassName: gp2
+  volumeMode: Filesystem

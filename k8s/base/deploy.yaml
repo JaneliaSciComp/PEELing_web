@@ -1,0 +1,76 @@
+---
+# Single Deployment with both API and Client containers
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: peeling-app
+  namespace: peeling-app
+  labels:
+    app: peeling-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: peeling-app
+  template:
+    metadata:
+      labels:
+        app: peeling-app
+    spec:
+      containers:
+      # API Container
+      - name: api
+        image: 777794738451.dkr.ecr.us-east-1.amazonaws.com/peeling/web_api:v0.1.12 
+        ports:
+        - containerPort: 8000  # Adjust based on actual API port
+          name: api
+        volumeMounts:
+        - name: data-volume
+          mountPath: /retrieved_data
+        - name: results-volume
+          mountPath: /results
+        - name: log-volume
+          mountPath: /log
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      
+      # Client Container (Nginx)
+      - name: client
+        image: 777794738451.dkr.ecr.us-east-1.amazonaws.com/peeling/web_client:v0.1.12  
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+
+      #Persistent Volumes
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: peeling-data-pvc
+      - name: results-volume
+        persistentVolumeClaim:
+          claimName: peeling-results-pvc
+      - name: log-volume
+        persistentVolumeClaim:
+          claimName: peeling-log-pvc
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+          defaultMode: 0644

@@ -1,0 +1,17 @@
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deploy.yaml
+- ingress-route.yaml
+- ingress-route-test.yaml
+- service.yaml
+- pvc.yaml
+- certificate.yaml
+- namespace.yaml
+- https-redirect.yaml
+configMapGenerator:
+  - name: nginx-config 
+    namespace: peeling-app 
+    files:
+    - ./config/default.conf
