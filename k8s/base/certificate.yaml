@@ -11,7 +11,7 @@ spec:
   dnsNames:
     - peeling.janelia.org
   issuerRef:
-    name: letsencrypt-prod
+    name: sectigo-prod
     kind: ClusterIssuer
 ---
 
