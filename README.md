@@ -25,10 +25,5 @@ Please note that this bioRxiv preprint will be updated as we add new functionali
 
 
 
-### Deployment
-See [deployment.md](deployment.md) for instructions on deploying PEELing Web to Kubernetes.
-
-
-
 ### Command Line Program
 PEELing also provides a command line program. Please refer to this [repo](https://github.com/JaneliaSciComp/peeling).
