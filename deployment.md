@@ -80,13 +80,46 @@ kubectl get svc -n peeling-app
 kubectl get ingressroute -n peeling-app
 ```
 
-## Building Container Images
+## Building and Pushing Container Images
 
-The API image is built from the root `Dockerfile`:
+Both images are hosted in AWS ECR under account `777794738451` in `us-east-1`.
+
+### Authenticate with ECR
+
+```bash
+aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin 777794738451.dkr.ecr.us-east-1.amazonaws.com
+```
+
+### API image
+
+Built from the root `Dockerfile` (Python/FastAPI with uvicorn):
 
 ```bash
 podman build -t 777794738451.dkr.ecr.us-east-1.amazonaws.com/peeling/web_api:<tag> .
 podman push 777794738451.dkr.ecr.us-east-1.amazonaws.com/peeling/web_api:<tag>
 ```
 
-The client image build is not defined in this repo (likely built separately from the `client/` directory).
+### Client image
+
+Built from `client/Dockerfile` (Node.js build stage + Nginx):
+
+```bash
+podman build -t 777794738451.dkr.ecr.us-east-1.amazonaws.com/peeling/web_client:<tag> ./client
+podman push 777794738451.dkr.ecr.us-east-1.amazonaws.com/peeling/web_client:<tag>
+```
+
+### Update the deployment to use the new images
+
+After pushing, update the image tags in `k8s/base/deploy.yaml`:
+
+```yaml
+# API Container
+- name: api
+  image: 777794738451.dkr.ecr.us-east-1.amazonaws.com/peeling/web_api:<new-tag>
+
+# Client Container
+- name: client
+  image: 777794738451.dkr.ecr.us-east-1.amazonaws.com/peeling/web_client:<new-tag>
+```
+
+Commit and push the change. ArgoCD will detect the updated manifests and sync the new images to the cluster.
