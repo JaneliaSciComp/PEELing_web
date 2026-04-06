@@ -50,7 +50,7 @@ Certificates are managed by cert-manager:
 
 ### Syncing via ArgoCD
 
-The `peeling` ArgoCD Application is configured on the `aws-eks-janelia` cluster. Changes pushed to this repo's `k8s/base/` directory will be picked up by ArgoCD automatically (or can be manually synced).
+The `peeling` ArgoCD Application is configured on the production cluster. Changes pushed to this repo's `k8s/base/` directory will be picked up by ArgoCD automatically (or can be manually synced).
 
 ```bash
 # Check sync status
