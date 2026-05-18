@@ -46,10 +46,10 @@ export default class Results extends React.Component {
                 </div>
                 :
                 <div>
-                    {this.props.error ? 
+                    {this.props.error ?
                     <div className='info-error mx-4 my-5 d-flex flex-column align-content-center'>
                         <p>Oops! Something went wrong!</p>
-                        <p>Please check the user input and try again.</p>
+                        <p>{typeof this.props.error === 'string' && this.props.error.length > 0 ? this.props.error : 'Please check the user input and try again.'}</p>
                     </div>
                     :
                     <div className='info mx-2 my-4 d-flex flex-row justify-content-center'>

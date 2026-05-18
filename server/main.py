@@ -22,6 +22,7 @@ from peeling.webuserinputreader import WebUserInputReader
 from peeling.webprocessor import WebProcessor
 from peeling.webpantherprocessor import WebPantherProcessor
 from peeling.cellular_compartments import cellular_compartments
+from peeling.uniprotcommunicator import UniProtServiceError
 
 REQUESTES = [
     'format', 'submit', 'heatmap', 'scatter', 'plot', 'proteins',
@@ -161,7 +162,9 @@ def error_handler(err):
     f = open('../log/log.txt','a')
     traceback.print_exc(file=f)
     f.close()
-    return {'error': ', '.join(list(err.args))}
+    if isinstance(err, UniProtServiceError):
+        return {'error': str(err), 'errorKind': 'upstream'}
+    return {'error': ', '.join(str(arg) for arg in err.args)}
 
 
 @app.get("/api/format")
